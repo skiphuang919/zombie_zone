@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, request, session
+from flask import Flask, redirect, url_for, request, session, jsonify
 from flask_script import Manager
 from config import Config
 from lib.wc_lib import WeChat
@@ -10,7 +10,7 @@ manager = Manager(app)
 
 @app.before_request
 def before_request():
-    if request.endpoint != 'sc_oauth2':
+    if request.endpoint != 'wc_oauth2':
         if session.get('openid') is None:
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(app.config.get('APP_ID'), app.config.get('APP_SECRET'))
@@ -21,7 +21,6 @@ def before_request():
 @app.route('/oauth2', methods=['GET', 'POST'])
 def wc_oauth2():
     code = request.args.get('code', None)
-    result = {'msg': 'Authorization failed, please try again.'}
     if code is not None:
         we_chat = WeChat(app.config.get('APP_ID'), app.config.get('APP_SECRET'))
         token_info = we_chat.get_web_access_token_by_code(code)
@@ -30,13 +29,12 @@ def wc_oauth2():
             session['openid'] = openid
             url_endpoint = session.get('redirect_url_endpoint', 'index')
             return redirect(url_for(url_endpoint))
-    return result
+    return jsonify({'msg': 'Authorization failed, please try again.'})
 
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    pass
-
+    return 'ok'
 
 if __name__ == '__main__':
     manager.run()
