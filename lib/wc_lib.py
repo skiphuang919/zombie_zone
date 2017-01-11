@@ -15,9 +15,9 @@ class WeChat(object):
         self.app_id = app_id
         self.app_secret = app_secret
 
-    def get_oauth2_url(self, redirect_uri, scope='snsapi_base', response_type='code', state='1'):
+    def get_oauth2_url(self, redirect_url, scope='snsapi_base', response_type='code', state='1'):
         """
-        :param redirect_uri: url for wechat callback
+        :param redirect_url: url for wechat callback
         :param scope: 'snsapi_base' or 'snsapi_base'
         :param response_type: 'code'
         :param state: 'q'
@@ -25,7 +25,7 @@ class WeChat(object):
         """
         params = {"appid": self.app_id,
                   "response_type": response_type,
-                  "redirect_uri": redirect_uri,
+                  "redirect_uri": redirect_url,
                   "scope": scope,
                   "state": state}
         url = "%s%s#wechat_redirect" % (self.OAUTH_URL, urllib.urlencode(params))
