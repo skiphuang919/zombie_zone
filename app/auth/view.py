@@ -3,7 +3,7 @@ from ..lib.wc_lib import WeChat
 from . import auth
 
 
-@auth.before_app_request
+#@auth.before_app_request
 def before_request():
     if request.endpoint != 'auth.wc_oauth2':
         if session.get('openid') is None:

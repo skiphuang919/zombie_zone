@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+        <title>MyZone</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/weui.css') }}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    </head>
+    <body>
+        <div class="container">
+            <div class="page-hd">
+                <h1>Fuck you and have a nice day.</h1>
+            </div>
+            <div class="page-bd">
+                {% block page_content %}{% endblock %}
+            </div>
+            <div class="page-ft">
+                <p>That's right, I am an asshole absolutely!</p>
+            </div>
+        </div>
+    </body>
+</html>
