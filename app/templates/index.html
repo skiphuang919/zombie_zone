@@ -1,8 +1,5 @@
 {% extends "base.html" %}
 {% block page_content %}
-    {% if form.errors %}
-        <div class="weui-toptips weui-toptips_warn js_tooltips" style="display: block">{{ form.errors }}</div>
-    {% endif %}
     <form method="post">
         {{ form.hidden_tag()  }}
         <div class="weui-cells__title">门店信息</div>
@@ -60,7 +57,7 @@
                 </div>
             </div>
         </div>
-        <div class="weui-btn-area">
+        <div class="weui-btn-area showToast">
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
         </div>
     </form>

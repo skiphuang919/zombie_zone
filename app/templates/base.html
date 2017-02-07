@@ -6,18 +6,49 @@
         <title>MyZone</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/weui.css') }}"/>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     </head>
     <body>
         <div class="container">
+            <div id="toast" style="display: none;">
+                <div class="weui-mask_transparent"></div>
+                <div class="weui-toast">
+                    <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                    <p class="weui-toast__content">ok</p>
+                </div>
+            </div>
+            <div id="loadingToast" class="weui-loading_toast" style="display:none;">
+                <div class="weui-mask_transparent"></div>
+                <div class="weui-toast">
+                    <div class="weui-loading weui-icon_toast"></div>
+                    <p class="weui-toast__content">loading</p>
+                </div>
+            </div>
             <div class="page-hd">
                 <h1>Fuck you and have a nice day.</h1>
             </div>
             <div class="page-bd">
+                {% for message in get_flashed_messages() %}
+                    <div class="weui-toptips weui-toptips_warn" style="display: block">{{ message }}</div>
+                {% endfor %}
                 {% block page_content %}{% endblock %}
             </div>
             <div class="page-ft">
                 <p>That's right, I am an asshole absolutely!</p>
             </div>
         </div>
+        <script>
+            // toast
+            $(function(){
+                var $toast = $('#toast');
+                $('.showToast').on('click', function(){
+                    if ($toast.css('display') != 'none') return;
+                    $toast.show();
+                    setTimeout(function () {
+                        $toast.fadeOut(500);
+                    }, 2000);
+                });
+            });
+        </script>
     </body>
 </html>
