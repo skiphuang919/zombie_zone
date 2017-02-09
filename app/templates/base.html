@@ -42,6 +42,15 @@
                     }, 2000);
                 });
             });
+            // tips
+            $(function(){
+                var $tips = $('.flash_tip');
+                if ($tips.is(':visible')) {
+                    setTimeout(function (){
+                        $tips.remove()
+                    }, 4000)
+                }
+            });
         </script>
     </body>
 </html>

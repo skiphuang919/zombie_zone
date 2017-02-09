@@ -20,7 +20,7 @@ class WeChat(object):
         :param redirect_url: url for wechat callback
         :param scope: 'snsapi_base' or 'snsapi_base'
         :param response_type: 'code'
-        :param state: 'q'
+        :param state: '1'
         :return: url to oauth
         """
         params = {"appid": self.app_id,

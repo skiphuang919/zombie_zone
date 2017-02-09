@@ -8,7 +8,8 @@ def index():
     form = OrderForm()
     if form.is_submitted():
         if form.validate():
-            return 'ok'
+            # DO SOMETHING HERE
+            return render_template('success.html')
         else:
             form_error = form.errors.items()[0]
             f_error = form_error[1][0]
