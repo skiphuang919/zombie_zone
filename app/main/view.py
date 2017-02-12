@@ -1,4 +1,4 @@
-from flask import render_template, flash
+from flask import render_template, flash, current_app
 from . import main
 from .form import OrderForm
 

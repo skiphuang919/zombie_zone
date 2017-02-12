@@ -2,18 +2,43 @@ import urllib
 import urllib2
 import json
 import traceback
+from .. import cache
 
 
 class WeChat(object):
 
     OAUTH_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?"
-    ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?"
+    ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?"
+    WEB_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/access_token?"
     REFRESH_TOKEN_URL = "https://api.weixin.qq.com/sns/oauth2/refresh_token?"
     GET_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?"
 
     def __init__(self, app_id, app_secret):
         self.app_id = app_id
         self.app_secret = app_secret
+
+    def get_access_token(self):
+        """
+        :return:
+            "ACCESS_TOKEN"
+        """
+        try:
+            access_token = cache.get('access_token')
+            if access_token:
+                return access_token
+            params = {"appid": self.app_id,
+                      "secret": self.app_secret,
+                      "grant_type": "client_credential"}
+            url = "%s%s" % (self.ACCESS_TOKEN_URL, urllib.urlencode(params))
+            res = urllib2.urlopen(url)
+            access_token_info = json.loads(res.read())
+            access_token = access_token_info.get('access_token')
+            if access_token is not None:
+                expires_in = int(access_token_info.get('expires_in', 0))
+                cache.set('access_token', access_token, timeout=expires_in)
+                return access_token
+        except:
+            print traceback.format_exc()
 
     def get_oauth2_url(self, redirect_url, scope='snsapi_base', response_type='code', state='1'):
         """
@@ -49,7 +74,7 @@ class WeChat(object):
                       "secret": self.app_secret,
                       "code": code,
                       "grant_type": grant_type}
-            url = "%s%s" % (self.ACCESS_TOKEN_URL, urllib.urlencode(params))
+            url = "%s%s" % (self.WEB_ACCESS_TOKEN_URL, urllib.urlencode(params))
             res = urllib2.urlopen(url)
             data = res.read()
             return json.loads(data)
