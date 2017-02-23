@@ -1,6 +1,7 @@
-from flask import redirect, url_for, request, session, jsonify, current_app
+from flask import redirect, url_for, request, session, jsonify, current_app, render_template
 from ..lib.wc_lib import WeChat
 from . import auth
+from .form import UserForm
 
 
 #@auth.before_app_request
@@ -25,3 +26,9 @@ def wc_oauth2():
             url_endpoint = session.get('redirect_url_endpoint', 'index')
             return redirect(url_for(url_endpoint))
     return jsonify({'msg': 'Authorization failed, please try again.'})
+
+
+@auth.route('/register', methods=['GET', 'POST'])
+def register():
+    form = UserForm()
+    return render_template('register.html', form=form)

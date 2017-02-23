@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Length, Regexp
+from wtforms.validators import DataRequired, Length, Regexp, Email
 
 
 class OrderForm(FlaskForm):
     contacts = StringField(u'contacts', validators=[DataRequired(message=u'Contacts is required.'),
-                                                    Length(max=16, message=u'contacts out of limitation 32')])
+                                                    Length(max=32, message=u'contacts out of limitation 32')])
     tel = StringField(u'tel', validators=[DataRequired(message=u'Phone number is required'),
                                           Length(min=11, max=11, message=u'Invalid phone number.'),
                                           Regexp('^\d{11}$', message=u'Invalid phone number.')])
@@ -17,5 +17,7 @@ class OrderForm(FlaskForm):
     accident_desc = TextAreaField(u'accident desc',
                                   validators=[Length(max=128, message=u'Accident desc out of limitation 128')])
     submit = SubmitField(u'submit')
+
+
 
 
