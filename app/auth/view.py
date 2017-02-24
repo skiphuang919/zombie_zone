@@ -1,5 +1,7 @@
-from flask import redirect, url_for, request, session, jsonify, current_app, render_template
+from flask import redirect, url_for, request, session, jsonify, \
+    current_app, render_template, flash
 from ..lib.wc_lib import WeChat
+from ..lib import user
 from . import auth
 from .form import UserForm
 
@@ -31,4 +33,16 @@ def wc_oauth2():
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = UserForm()
+    if form.is_submitted():
+        if form.validate():
+            user.add_user(name=form.name.data,
+                          email=form.email.data,
+                          gender=form.gender.data,
+                          city=form.gender.data,
+                          slogan=form.slogan.data)
+            return render_template('success.html')
+        else:
+            form_error = form.errors.items()[0]
+            f_error = form_error[1][0]
+            flash(f_error)
     return render_template('register.html', form=form)
