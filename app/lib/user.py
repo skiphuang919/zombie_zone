@@ -13,3 +13,13 @@ def add_user(open_id=None, name=None, email=None, gender=None, city=None, slogan
                 slogan=slogan)
     db.session.add(user)
     db.session.commit()
+
+
+def is_email_exist(email):
+    user = User.query.filter_by(email=email).first()
+    return True if user else False
+
+
+def is_name_exist(name):
+    user = User.query.filter_by(name=name).first()
+    return True if user else False

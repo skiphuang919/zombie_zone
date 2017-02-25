@@ -4,6 +4,7 @@ from ..lib.wc_lib import WeChat
 from ..lib import user
 from . import auth
 from .form import UserForm
+from ..lib.user import is_email_exist, is_name_exist
 
 
 #@auth.before_app_request
@@ -35,12 +36,17 @@ def register():
     form = UserForm()
     if form.is_submitted():
         if form.validate():
-            user.add_user(name=form.name.data,
-                          email=form.email.data,
-                          gender=form.gender.data,
-                          city=form.gender.data,
-                          slogan=form.slogan.data)
-            return render_template('success.html')
+            if is_email_exist(form.email.data):
+                flash('Email already exist.')
+            elif is_name_exist(form.name.data):
+                flash('Name already exist.')
+            else:
+                user.add_user(name=form.name.data,
+                              email=form.email.data,
+                              gender=form.gender.data,
+                              city=form.gender.data,
+                              slogan=form.slogan.data)
+                return render_template('success.html')
         else:
             form_error = form.errors.items()[0]
             f_error = form_error[1][0]
