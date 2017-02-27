@@ -13,6 +13,7 @@ def add_user(open_id=None, name=None, email=None, gender=None, city=None, slogan
                 slogan=slogan)
     db.session.add(user)
     db.session.commit()
+    return user
 
 
 def is_email_exist(email):
