@@ -1,10 +1,16 @@
-from flask import render_template, flash, current_app
+from flask import render_template, flash, current_app, session
 from . import main
 from .form import OrderForm
+from ..lib import user
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    pass
+
+
+@main.route('/order', methods=['GET', 'POST'])
+def order():
     form = OrderForm()
     if form.is_submitted():
         if form.validate():

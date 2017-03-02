@@ -1,16 +1,15 @@
 from flask import redirect, url_for, request, session, jsonify, \
     current_app, render_template, flash
 from ..lib.wc_lib import WeChat
-from ..lib import user
 from . import auth
 from .form import UserForm
-from ..lib.user import is_email_exist, is_name_exist
+from ..lib import user
 from ..email import send_confirm_mail
 
 
 #@auth.before_app_request
 def before_request():
-    if request.endpoint != 'auth.wc_oauth2':
+    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm']:
         if session.get('openid') is None:
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
@@ -37,9 +36,9 @@ def register():
     form = UserForm()
     if form.is_submitted():
         if form.validate():
-            if is_email_exist(form.email.data):
+            if user.is_email_exist(form.email.data):
                 flash('Email already exist.')
-            elif is_name_exist(form.name.data):
+            elif user.is_name_exist(form.name.data):
                 flash('Name already exist.')
             else:
                 new_user = user.add_user(name=form.name.data,
@@ -47,8 +46,8 @@ def register():
                                          gender=form.gender.data,
                                          city=form.gender.data,
                                          slogan=form.slogan.data)
-                token = new_user.generate_confirm_token()
-                send_confirm_mail('Confirm Your Account', new_user.email, new_user.name, token)
+                token = user.generate_confirm_token(new_user.user_id)
+                send_confirm_mail('Confirm Your Email', new_user.email, new_user.name, token)
                 return redirect(url_for('auth.reg_success'))
         else:
             form_error = form.errors.items()[0]
@@ -59,10 +58,19 @@ def register():
 
 @auth.route('/reg_success')
 def reg_success():
-    return render_template('success.html', success_title='Register Successfully',
+    return render_template('success.html',
+                           success_title='Register Successfully',
                            success_detail='A confirmation email has been sent to you by email.')
 
 
-@auth.route('/confirm')
-def confirm():
-    pass
+@auth.route('/confirm/<token>')
+def confirm(token):
+    if user.confirm(token):
+        return render_template('success.html',
+                               success_title='Success',
+                               success_detail='Your email address has been confirmed successfully.')
+    else:
+        return render_template('warn.html',
+                               warn_title='Failed',
+                               warn_detail='The confirmation link is invalid or has expired.')
+
