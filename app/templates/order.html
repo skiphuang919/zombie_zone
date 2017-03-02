@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <form method="post">
+        {{ form.hidden_tag()  }}
+        <div class="weui-cells__title">门店信息</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.contacts.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.contacts(class="weui-input" ,placeholder="请输入联系人") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.tel.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.tel(class="weui-input" ,placeholder="请输入手机号") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.store_name.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.store_name(class="weui-input" ,placeholder="请输入门店名称") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.store_addr.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.store_addr(class="weui-input" ,placeholder="请输入门店地址") }}
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">设备信息</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.device_id.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.device_id(class="weui-input" ,placeholder="请输入设备序列号") }}
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">故障描述</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    {{ form.accident_desc(class="weui-textarea" ,placeholder="请输入文本", row="3") }}
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area showToast">
+            {{ form.submit(class="weui-btn weui-btn_primary" ) }}
+        </div>
+    </form>
+{% endblock %}
+

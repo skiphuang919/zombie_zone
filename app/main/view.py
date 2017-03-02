@@ -6,7 +6,7 @@ from ..lib import user
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    pass
+    return render_template('index.html')
 
 
 @main.route('/order', methods=['GET', 'POST'])
@@ -20,4 +20,4 @@ def order():
             form_error = form.errors.items()[0]
             f_error = form_error[1][0]
             flash(f_error)
-    return render_template('index.html', form=form)
+    return render_template('order.html', form=form)
