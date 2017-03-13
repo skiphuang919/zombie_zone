@@ -4,8 +4,7 @@ from . import db
 
 class User(db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_id = db.Column(db.String(64), nullable=False, unique=True, index=True)
+    user_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
     open_id = db.Column(db.String(64), index=True, unique=True)
     name = db.Column(db.String(64), nullable=False, unique=True, index=True)
     email = db.Column(db.String(128), nullable=False, unique=True, index=True)
@@ -19,4 +18,5 @@ class User(db.Model):
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
         pass
+
 
