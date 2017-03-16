@@ -7,7 +7,7 @@ party_guy_table = db.Table('party_guy_table',
                            db.Column('party_id', db.String(64), db.ForeignKey('parties.party_id')))
 
 
-class User(db.Model):
+class Users(db.Model):
     __tablename__ = 'users'
     user_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
     open_id = db.Column(db.String(64), index=True, unique=True)
@@ -24,7 +24,7 @@ class User(db.Model):
                                       backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, *args, **kwargs):
-        super(User, self).__init__(*args, **kwargs)
+        super(Users, self).__init__(*args, **kwargs)
         pass
 
 

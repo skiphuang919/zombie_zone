@@ -1,18 +1,18 @@
 from .. import db
 from flask import current_app
-from ..model import User
+from ..model import Users
 from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 def add_user(open_id=None, name=None, email=None, gender=None, city=None, slogan=None):
-    user = User(user_id=get_db_unique_id(),
-                open_id=open_id,
-                name=name,
-                email=email,
-                gender=gender,
-                city=city,
-                slogan=slogan)
+    user = Users(user_id=get_db_unique_id(),
+                 open_id=open_id,
+                 name=name,
+                 email=email,
+                 gender=gender,
+                 city=city,
+                 slogan=slogan)
     db.session.add(user)
     db.session.commit()
     return user
@@ -20,13 +20,13 @@ def add_user(open_id=None, name=None, email=None, gender=None, city=None, slogan
 
 def get_user(user_id=None, open_id=None, name=None, email=None):
     if user_id is not None:
-        return User.query.filter_by(user_id=user_id).first()
+        return Users.query.filter_by(user_id=user_id).first()
     elif open_id is not None:
-        return User.query.filter_by(open_id=open_id).first()
+        return Users.query.filter_by(open_id=open_id).first()
     elif name is not None:
-        return User.query.filter_by(name=name).first()
+        return Users.query.filter_by(name=name).first()
     elif email is not None:
-        return User.query.filter_by(email=email).first()
+        return Users.query.filter_by(email=email).first()
     else:
         return None
 
