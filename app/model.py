@@ -19,9 +19,9 @@ class Users(db.Model):
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.utcnow())
     update_time = db.Column(db.DateTime)
-    party_guy_table = db.relationship('Parties',
-                                      secondary=party_guy_table,
-                                      backref=db.backref('users', lazy='dynamic'))
+    parties = db.relationship('Parties',
+                              secondary=party_guy_table,
+                              backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)
