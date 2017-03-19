@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <form method="post">
+        {{ form.hidden_tag()  }}
+        <div class="weui-cells__title">Party Info.</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.subject.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.subject(class="weui-input" ,placeholder="聚会主题") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.party_time.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.party_time(class="weui-input", type="date") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.address.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.address(class="weui-input" ,placeholder="聚会地点") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.required_count.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.required_count(class="weui-input" ,placeholder="期望人数") }}
+                </div>
+            </div>
+        </div>
+        <div class="weui-cells__title">Extra note</div>
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    {{ form.note(class="weui-textarea" ,placeholder="请输入文本", row="3") }}
+                </div>
+            </div>
+        </div>
+        <div class="weui-btn-area showToast">
+            {{ form.submit(class="weui-btn weui-btn_primary" ) }}
+        </div>
+    </form>
+{% endblock %}
+
