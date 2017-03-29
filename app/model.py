@@ -1,5 +1,8 @@
 from datetime import datetime
-from . import db
+from . import db, login_manager
+from flask_login import UserMixin
+from flask import current_app
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 party_guy_table = db.Table('party_guy_table',
@@ -7,7 +10,7 @@ party_guy_table = db.Table('party_guy_table',
                            db.Column('party_id', db.String(64), db.ForeignKey('parties.party_id')))
 
 
-class Users(db.Model):
+class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     user_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
     open_id = db.Column(db.String(64), index=True, unique=True)
@@ -26,6 +29,35 @@ class Users(db.Model):
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)
         pass
+
+    def get_id(self):
+        """
+        overwrite the method inherit from UserMixin
+        return `user_id` attr instead of default `id`
+        """
+        return self.user_id
+
+    def generate_confirm_token(self, expiration=3600):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'confirm': self.user_id})
+
+    def confirm(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+        if data.get('confirm') != self.user_id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        db.session.commit()
+        return True
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.get(user_id)
 
 
 class Parties(db.Model):
