@@ -3,18 +3,23 @@ from flask import redirect, url_for, request, session, jsonify, \
 from ..lib.wc_lib import WeChat
 from . import auth
 from .form import UserForm
-from ..lib import user
+from ..lib import users
 from ..email import send_confirm_mail
+from flask_login import login_user
 
 
-#@auth.before_app_request
+@auth.before_app_request
 def before_request():
-    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm']:
+    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
         if session.get('openid') is None:
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
             return redirect(oauth2_url)
+        else:
+            user = users.get_user(open_id=session.get('openid'))
+            if user:
+                login_user(user, remember=True)
 
 
 @auth.route('/wc_oauth2', methods=['GET', 'POST'])
@@ -26,6 +31,9 @@ def wc_oauth2():
         openid = token_info.get('openid', None)
         if openid:
             session['openid'] = openid
+            user = users.get_user(open_id=session.get('openid'))
+            if user:
+                login_user(user, remember=True)
             url_endpoint = session.get('redirect_url_endpoint', 'index')
             return redirect(url_for(url_endpoint))
     return jsonify({'msg': 'Authorization failed, please try again.'})
@@ -36,17 +44,17 @@ def register():
     form = UserForm()
     if form.is_submitted():
         if form.validate():
-            if user.is_email_exist(form.email.data):
+            if users.is_email_exist(form.email.data):
                 flash('Email already exist.')
-            elif user.is_name_exist(form.name.data):
+            elif users.is_name_exist(form.name.data):
                 flash('Name already exist.')
             else:
-                new_user = user.add_user(name=form.name.data,
-                                         email=form.email.data,
-                                         gender=form.gender.data,
-                                         city=form.gender.data,
-                                         slogan=form.slogan.data)
-                token = user.generate_confirm_token(new_user.user_id)
+                new_user = users.add_user(name=form.name.data,
+                                          email=form.email.data,
+                                          gender=form.gender.data,
+                                          city=form.gender.data,
+                                          slogan=form.slogan.data)
+                token = users.generate_confirm_token(new_user.user_id)
                 send_confirm_mail('Confirm Your Email', new_user.email, new_user.name, token)
                 return redirect(url_for('auth.reg_success'))
         else:
@@ -65,7 +73,7 @@ def reg_success():
 
 @auth.route('/confirm/<token>')
 def confirm(token):
-    if user.confirm(token):
+    if users.confirm(token):
         return render_template('success.html',
                                success_title='Success',
                                success_detail='Your email address has been confirmed successfully.')

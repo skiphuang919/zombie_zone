@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, current_app, session
 from . import main
 from .form import OrderForm, PartyForm
-from ..lib import user
+from ..lib import users
 
 
 @main.route('/', methods=['GET', 'POST'])
