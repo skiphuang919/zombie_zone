@@ -5,10 +5,10 @@ from . import auth
 from .form import UserForm
 from ..lib import users
 from ..email import send_confirm_mail
-from flask_login import login_user
+from flask_login import login_user, current_user
 
 
-@auth.before_app_request
+@auth.before_app_first_request
 def before_request():
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
         if session.get('openid') is None:
@@ -43,24 +43,29 @@ def wc_oauth2():
 def register():
     form = UserForm()
     if form.is_submitted():
-        if form.validate():
-            if users.is_email_exist(form.email.data):
-                flash('Email already exist.')
-            elif users.is_name_exist(form.name.data):
-                flash('Name already exist.')
-            else:
-                new_user = users.add_user(name=form.name.data,
-                                          email=form.email.data,
-                                          gender=form.gender.data,
-                                          city=form.gender.data,
-                                          slogan=form.slogan.data)
-                token = users.generate_confirm_token(new_user.user_id)
-                send_confirm_mail('Confirm Your Email', new_user.email, new_user.name, token)
-                return redirect(url_for('auth.reg_success'))
+        open_id = session.get('openid')
+        if users.get_user(open_id=open_id):
+            flash('You have registered before.')
         else:
-            form_error = form.errors.items()[0]
-            f_error = form_error[1][0]
-            flash(f_error)
+            if form.validate():
+                if users.is_email_exist(form.email.data):
+                    flash('Email already exist.')
+                elif users.is_name_exist(form.name.data):
+                    flash('Name already exist.')
+                else:
+                    new_user = users.add_user(open_id=open_id,
+                                              name=form.name.data,
+                                              email=form.email.data,
+                                              gender=form.gender.data,
+                                              city=form.gender.data,
+                                              slogan=form.slogan.data)
+                    token = new_user.generate_confirm_token()
+                    send_confirm_mail('Confirm Your Email', new_user.email, new_user.name, token)
+                    return redirect(url_for('auth.reg_success'))
+            else:
+                form_error = form.errors.items()[0]
+                f_error = form_error[1][0]
+                flash(f_error)
     return render_template('register.html', form=form)
 
 

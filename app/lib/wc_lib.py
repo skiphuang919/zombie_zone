@@ -29,7 +29,7 @@ class WeChat(object):
             params = {"appid": self.app_id,
                       "secret": self.app_secret,
                       "grant_type": "client_credential"}
-            url = "%s%s" % (self.ACCESS_TOKEN_URL, urllib.urlencode(params))
+            url = "{0}{1}".format(self.ACCESS_TOKEN_URL, urllib.urlencode(params))
             res = urllib2.urlopen(url)
             access_token_info = json.loads(res.read())
             access_token = access_token_info.get('access_token')
@@ -53,7 +53,7 @@ class WeChat(object):
                   "redirect_uri": redirect_url,
                   "scope": scope,
                   "state": state}
-        url = "%s%s#wechat_redirect" % (self.OAUTH_URL, urllib.urlencode(params))
+        url = "{0}{1}#wechat_redirect".format(self.OAUTH_URL, urllib.urlencode(params))
         return url
 
     def get_web_access_token_by_code(self, code, grant_type="authorization_code"):
@@ -74,7 +74,7 @@ class WeChat(object):
                       "secret": self.app_secret,
                       "code": code,
                       "grant_type": grant_type}
-            url = "%s%s" % (self.WEB_ACCESS_TOKEN_URL, urllib.urlencode(params))
+            url = "{0}{1}".format(self.WEB_ACCESS_TOKEN_URL, urllib.urlencode(params))
             res = urllib2.urlopen(url)
             data = res.read()
             return json.loads(data)
@@ -98,7 +98,7 @@ class WeChat(object):
             params = {"appid": self.app_id,
                       "secret": self.app_secret,
                       "grant_type": refresh_token}
-            url = "%s%s" % (self.REFRESH_TOKEN_URL, urllib.urlencode(params))
+            url = "{0}{1}".format(self.REFRESH_TOKEN_URL, urllib.urlencode(params))
             res = urllib2.urlopen(url)
             data = res.read()
             return json.loads(data)
@@ -131,7 +131,7 @@ class WeChat(object):
             params = {"access_token": access_token,
                       "openid": open_id,
                       "lang": lang}
-            url = "%s%s" % (self.GET_USER_INFO_URL, urllib.urlencode(params))
+            url = "{0}{1}".format(self.GET_USER_INFO_URL, urllib.urlencode(params))
             res = urllib2.urlopen(url)
             data = res.read()
             return json.loads(data)
