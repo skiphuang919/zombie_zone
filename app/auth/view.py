@@ -5,10 +5,10 @@ from . import auth
 from .form import UserForm
 from ..lib import users
 from ..email import send_confirm_mail
-from flask_login import login_user, current_user
+from flask_login import login_user, login_required, current_user, logout_user
 
 
-@auth.before_app_first_request
+@auth.before_app_request
 def before_request():
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
         if session.get('openid') is None:
@@ -40,6 +40,7 @@ def wc_oauth2():
 
 
 @auth.route('/register', methods=['GET', 'POST'])
+@login_required
 def register():
     form = UserForm()
     if form.is_submitted():

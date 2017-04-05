@@ -41,11 +41,6 @@ def is_name_exist(name):
     return True if user else False
 
 
-def generate_confirm_token(user_id, expiration=3600):
-    s = Serializer(current_app.config['SECRET_KEY'], expiration)
-    return s.dumps({'confirm': user_id})
-
-
 def confirm(token):
     s = Serializer(current_app.config['SECRET_KEY'])
     try:
