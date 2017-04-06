@@ -5,11 +5,15 @@ from . import auth
 from .form import UserForm
 from ..lib import users
 from ..email import send_confirm_mail
-from flask_login import login_user, login_required, current_user, logout_user
+from flask_login import login_user, current_user
 
 
 @auth.before_app_request
 def before_request():
+    """
+    login the user by open id if it exist
+    otherwise redirect to wechat oauth url
+    """
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
         if session.get('openid') is None:
             session['redirect_url_endpoint'] = request.endpoint
@@ -24,6 +28,10 @@ def before_request():
 
 @auth.route('/wc_oauth2', methods=['GET', 'POST'])
 def wc_oauth2():
+    """
+    to be call back by wechat oauth with code
+    then get open id by the code
+    """
     code = request.args.get('code', None)
     if code is not None:
         we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
@@ -40,12 +48,10 @@ def wc_oauth2():
 
 
 @auth.route('/register', methods=['GET', 'POST'])
-@login_required
 def register():
     form = UserForm()
     if form.is_submitted():
-        open_id = session.get('openid')
-        if users.get_user(open_id=open_id):
+        if not current_user.is_anonymous:
             flash('You have registered before.')
         else:
             if form.validate():
@@ -54,6 +60,7 @@ def register():
                 elif users.is_name_exist(form.name.data):
                     flash('Name already exist.')
                 else:
+                    open_id = session.get('openid')
                     new_user = users.add_user(open_id=open_id,
                                               name=form.name.data,
                                               email=form.email.data,

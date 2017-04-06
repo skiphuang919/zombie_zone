@@ -18,7 +18,9 @@
                 </div>
             </div>
             <div class="page-hd">
-                <h1>Fuck you and have a nice day.</h1>
+                <span>
+                    <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
+                </span>
             </div>
             <div class="page-bd">
                 {% for message in get_flashed_messages() %}

@@ -1,6 +1,6 @@
 .container{
     position: absolute;
-    top: 0;
+    top: 50px;
     right: 0;
     bottom: 0;
     left: 0;
@@ -15,6 +15,17 @@
 }
 
 .page-hd{
-    padding: 40px;
-    text-align: center;
+    position: fixed;
+    z-index: 9999 !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: black;
+}
+
+#logo_img{
+    height: 50px;
+    width: 50px;
+    padding-left: 15px;
 }
