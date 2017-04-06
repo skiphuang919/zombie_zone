@@ -3,13 +3,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-        <title>MyZone</title>
+        <title>Zombie Zone</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/weui.css') }}"/>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     </head>
     <body>
-        <div class="container">
+        <div id="container">
             <div id="loadingToast" class="weui-loading_toast" style="display:none;">
                 <div class="weui-mask_transparent"></div>
                 <div class="weui-toast">
@@ -31,7 +31,8 @@
             <div class="page-ft">
                 <p>That's right, I am an asshole absolutely!</p>
             </div>
-        </div>
+        <div>
+
         <script>
             // toast
             $(function(){
