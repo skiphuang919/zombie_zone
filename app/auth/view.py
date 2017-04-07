@@ -5,7 +5,9 @@ from . import auth
 from .form import UserForm
 from ..lib import users
 from ..email import send_confirm_mail
-from flask_login import login_user, current_user
+from flask_login import login_user, current_user, login_required
+
+CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email From'
 
 
 @auth.before_app_request
@@ -68,7 +70,7 @@ def register():
                                               city=form.gender.data,
                                               slogan=form.slogan.data)
                     token = new_user.generate_confirm_token()
-                    send_confirm_mail('Confirm Your Email', new_user.email, new_user.name, token)
+                    send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
                     return redirect(url_for('auth.reg_success'))
             else:
                 form_error = form.errors.items()[0]
@@ -95,3 +97,11 @@ def confirm(token):
                                warn_title='Failed',
                                warn_detail='The confirmation link is invalid or has expired.')
 
+
+@auth.route('/re_confirm')
+@login_required
+def resend_confirmation():
+    token = current_user.generate_confirm_token()
+    send_confirm_mail(CONFIRM_MAIL_SUBJECT, current_user.email, current_user.name, token)
+    flash('A new confirmation email has been sent to you by email.')
+    return redirect(url_for('main.index'))
