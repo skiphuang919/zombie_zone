@@ -54,13 +54,13 @@ def register():
     form = UserForm()
     if form.is_submitted():
         if not current_user.is_anonymous:
-            flash('You have registered before.')
+            warn_msg = 'You have registered before.'
         else:
             if form.validate():
                 if users.is_email_exist(form.email.data):
-                    flash('Email already exist.')
+                    warn_msg = 'Email already exist.'
                 elif users.is_name_exist(form.name.data):
-                    flash('Name already exist.')
+                    warn_msg = 'Name already exist.'
                 else:
                     open_id = session.get('openid')
                     new_user = users.add_user(open_id=open_id,
@@ -71,19 +71,14 @@ def register():
                                               slogan=form.slogan.data)
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
-                    return redirect(url_for('auth.reg_success'))
+                    print token
+                    flash('A confirmation email has been sent to your mailbox.', category='message')
+                    return redirect(url_for('main.index'))
             else:
                 form_error = form.errors.items()[0]
-                f_error = form_error[1][0]
-                flash(f_error)
+                warn_msg = form_error[1][0]
+        flash(warn_msg, category='warn')
     return render_template('register.html', form=form)
-
-
-@auth.route('/reg_success')
-def reg_success():
-    return render_template('success.html',
-                           success_title='Register Successfully',
-                           success_detail='A confirmation email has been sent to you by email.')
 
 
 @auth.route('/confirm/<token>')
@@ -98,10 +93,10 @@ def confirm(token):
                                warn_detail='The confirmation link is invalid or has expired.')
 
 
-@auth.route('/re_confirm')
+@auth.route('/resend_confirm')
 @login_required
 def resend_confirmation():
     token = current_user.generate_confirm_token()
     send_confirm_mail(CONFIRM_MAIL_SUBJECT, current_user.email, current_user.name, token)
-    flash('A new confirmation email has been sent to you by email.')
+    flash('A new confirmation email has been sent to you by email.', category='message')
     return redirect(url_for('main.index'))

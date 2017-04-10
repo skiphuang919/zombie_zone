@@ -55,7 +55,8 @@ def confirm(token):
     if user_obj is None:
         return False
 
-    user_obj.confirmed = True
-    db.session.add(user_obj)
-    db.session.commit()
+    if not user_obj.confirmed:
+        user_obj.confirmed = True
+        db.session.add(user_obj)
+        db.session.commit()
     return True

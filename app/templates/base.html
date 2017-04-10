@@ -23,8 +23,20 @@
                 </span>
             </div>
             <div class="page-bd">
-                {% for message in get_flashed_messages() %}
-                    <div class="weui-toptips weui-toptips_warn flash_tip" style="display: block">{{ message }}</div>
+                {% for categry, message in get_flashed_messages(with_categories=True) %}
+                    {% if categry == 'warn' %}
+                        <div class="weui-toptips weui-toptips_warn flash_tip" style="display: block">{{ message }}</div>
+                    {% elif categry == 'message' %}
+                        <div class="dialog">
+                            <div class="weui-mask"></div>
+                            <div class="weui-dialog">
+                                <div class="weui-dialog__bd">{{ message }}</div>
+                                <div class="weui-dialog__ft">
+                                    <a href="#" class="weui-dialog__btn weui-dialog__btn_primary">OK</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
                 {% block page_content %}{% endblock %}
             </div>
@@ -51,9 +63,15 @@
                 if ($tips.is(':visible')) {
                     setTimeout(function (){
                         $tips.remove()
-                    }, 4000)
+                    }, 2000)
                 }
             });
+            // dialog
+            $(function () {
+                $('.weui-dialog__btn').on('click', function(){
+                    $(this).parents('.dialog ').fadeOut(200);
+                });
+            })
         </script>
     </body>
 </html>

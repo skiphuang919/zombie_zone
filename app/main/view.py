@@ -19,7 +19,7 @@ def add_party():
         else:
             form_error = form.errors.items()[0]
             f_error = form_error[1][0]
-            flash(f_error)
+            flash(f_error, category='warn')
     return render_template('party.html', form=form)
 
 
