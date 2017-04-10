@@ -7,7 +7,7 @@ from ..lib import users
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required
 
-CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email From'
+CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email'
 
 
 @auth.before_app_request
@@ -16,6 +16,7 @@ def before_request():
     login the user by open id if it exist
     otherwise redirect to wechat oauth url
     """
+    session['openid'] = '0000000'
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
         if session.get('openid') is None:
             session['redirect_url_endpoint'] = request.endpoint
@@ -62,18 +63,21 @@ def register():
                 elif users.is_name_exist(form.name.data):
                     warn_msg = 'Name already exist.'
                 else:
-                    open_id = session.get('openid')
-                    new_user = users.add_user(open_id=open_id,
-                                              name=form.name.data,
-                                              email=form.email.data,
-                                              gender=form.gender.data,
-                                              city=form.gender.data,
-                                              slogan=form.slogan.data)
-                    token = new_user.generate_confirm_token()
-                    send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
-                    print token
-                    flash('A confirmation email has been sent to your mailbox.', category='message')
-                    return redirect(url_for('main.index'))
+                    try:
+                        open_id = session.get('openid')
+                        new_user = users.add_user(open_id=open_id,
+                                                  name=form.name.data,
+                                                  email=form.email.data,
+                                                  gender=form.gender.data,
+                                                  city=form.gender.data,
+                                                  slogan=form.slogan.data)
+                        token = new_user.generate_confirm_token()
+                        send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
+                    except:
+                        warn_msg = 'Register failed.'
+                    else:
+                        flash('A confirmation email has been sent to your mailbox.', category='message')
+                        return redirect(url_for('main.index'))
             else:
                 form_error = form.errors.items()[0]
                 warn_msg = form_error[1][0]
@@ -96,7 +100,11 @@ def confirm(token):
 @auth.route('/resend_confirm')
 @login_required
 def resend_confirmation():
-    token = current_user.generate_confirm_token()
-    send_confirm_mail(CONFIRM_MAIL_SUBJECT, current_user.email, current_user.name, token)
-    flash('A new confirmation email has been sent to you by email.', category='message')
-    return redirect(url_for('main.index'))
+    try:
+        token = current_user.generate_confirm_token()
+        send_confirm_mail(CONFIRM_MAIL_SUBJECT, current_user.email, current_user.name, token)
+    except:
+        return jsonify({'msg': 'resend confirmation email failed.'})
+    else:
+        flash('A new confirmation email has been sent to you by email.', category='message')
+        return redirect(url_for('main.index'))
