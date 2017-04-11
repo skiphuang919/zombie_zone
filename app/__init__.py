@@ -8,7 +8,11 @@ from flask_login import LoginManager
 cache = Cache()
 mail = Mail()
 db = SQLAlchemy()
+
 login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.register'
+login_manager.login_message = u'Please register and confirm email to access this page.'
 
 
 def create_app(config):

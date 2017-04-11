@@ -16,15 +16,15 @@ def before_request():
     login the user by open id if it exist
     otherwise redirect to wechat oauth url
     """
-    session['openid'] = '0000000'
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
-        if session.get('openid') is None:
+        openid = session.get('openid')
+        if openid is None:
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
             return redirect(oauth2_url)
         else:
-            user = users.get_user(open_id=session.get('openid'))
+            user = users.get_user(open_id=openid)
             if user:
                 login_user(user, remember=True)
 

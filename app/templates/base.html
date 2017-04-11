@@ -26,6 +26,8 @@
                 {% for categry, message in get_flashed_messages(with_categories=True) %}
                     {% if categry == 'warn' %}
                         <div class="weui-toptips weui-toptips_warn flash_tip" style="display: block">{{ message }}</div>
+                    {% elif categry == 'info' %}
+                        <div class="weui-toptips weui-toptips_info flash_tip" style="display: block">{{ message }}</div>
                     {% elif categry == 'message' %}
                         <div class="dialog">
                             <div class="weui-mask"></div>

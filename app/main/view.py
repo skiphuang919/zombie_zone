@@ -1,7 +1,8 @@
-from flask import render_template, flash, redirect, url_for, current_app, session
+from flask import render_template, flash, redirect, url_for
 from . import main
-from .form import OrderForm, PartyForm
-from ..lib import users
+from .form import PartyForm
+from ..lib import parties
+from flask_login import current_user, login_required
 
 
 @main.route('/', methods=['GET', 'POST'])
@@ -10,21 +11,30 @@ def index():
 
 
 @main.route('/add_party', methods=['GET', 'POST'])
+@login_required
 def add_party():
     form = PartyForm()
     if form.is_submitted():
         if form.validate():
-            # DO SOMETHING HERE
-            return redirect(url_for('main.add_party_success'))
+            if not current_user.confirmed:
+                flash('You have not confirmed your email.', category='message')
+                return redirect(url_for('main.index'))
+            try:
+                parties.add_party(subject=form.subject.data,
+                                  party_time=form.party_time.data,
+                                  address=form.address.data,
+                                  host_id=current_user.user_id,
+                                  required_count=form.required_count.data,
+                                  note=form.note.data)
+            except Exception as ex:
+                print str(ex)
+                flash('Create party failed.', category='warn')
+            else:
+                flash('Create party success', category='info')
+                return redirect(url_for('main.index'))
         else:
             form_error = form.errors.items()[0]
-            f_error = form_error[1][0]
-            flash(f_error, category='warn')
+            warn_msg = form_error[1][0]
+            flash(warn_msg, category='warn')
     return render_template('party.html', form=form)
 
-
-@main.route('/add_party_success')
-def add_party_success():
-    return render_template('success.html',
-                           success_title='Success',
-                           success_detail='You have create a party successfully.')
