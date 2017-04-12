@@ -15,3 +15,15 @@ def add_party(subject=None, party_time=None, address=None, host_id=None,
     db.session.add(party)
     db.session.commit()
     return party
+
+
+def get_all_parties():
+    return Parties.query.order_by(Parties.create_time.desc()).all()
+
+
+def get_party_by_id(party_id):
+    return Parties.query.filter_by(party_id=party_id).first()
+
+
+def get_parties_by_host(host_id):
+    return Parties.query.filter_by(host=host_id).all()

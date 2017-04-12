@@ -37,3 +37,9 @@
 .weui-toptips_info{
     background: #1AAD19;
 }
+
+.preview_card{
+    margin: 20px;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+}

@@ -7,7 +7,10 @@ from flask_login import current_user, login_required
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    party_list = parties.get_all_parties()
+    party_info_list = [{'party': party, 'joined_count': len(party.users.all())}
+                       for party in party_list]
+    return render_template('index.html', party_info_list=party_info_list)
 
 
 @main.route('/add_party', methods=['GET', 'POST'])
