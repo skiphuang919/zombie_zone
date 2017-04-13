@@ -5,10 +5,10 @@ from ..lib import parties
 from flask_login import current_user, login_required
 
 
-@main.route('/', methods=['GET', 'POST'])
+@main.route('/')
 def index():
     party_list = parties.get_all_parties()
-    party_info_list = [{'party': party, 'joined_count': len(party.users.all())}
+    party_info_list = [{'party': party, 'joined_count': len(party.joined_users)}
                        for party in party_list]
     return render_template('index.html', party_info_list=party_info_list)
 
@@ -40,4 +40,22 @@ def add_party():
             warn_msg = form_error[1][0]
             flash(warn_msg, category='warn')
     return render_template('party.html', form=form)
+
+
+@main.route('/party_detail/<party_id>')
+@login_required
+def party_detail(party_id):
+    if not current_user.confirmed:
+        flash('You have not confirmed your email.', category='message')
+        return redirect(url_for('main.index'))
+    party = parties.get_party_by_id(party_id=party_id)
+    if not party:
+        flash('Party not exist.', category='warn')
+        return redirect(url_for('main.index'))
+    joined = True if party.party_id in current_user.joined_parties else False
+    return render_template('party_detail.html', party=party,
+                           joined_count=len(party.joined_users), joined=joined)
+
+
+
 
