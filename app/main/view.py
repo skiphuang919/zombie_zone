@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 @main.route('/')
 def index():
     party_list = parties.get_all_parties()
-    party_info_list = [{'party': party, 'joined_count': len(party.joined_users)}
+    party_info_list = [{'party': party, 'joined_count': len(party.joined_user_ids)}
                        for party in party_list]
     return render_template('index.html', party_info_list=party_info_list)
 
@@ -52,9 +52,9 @@ def party_detail(party_id):
     if not party:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
-    joined = True if party.party_id in current_user.joined_parties else False
+    joined = True if party.party_id in current_user.joined_party_ids else False
     return render_template('party_detail.html', party=party,
-                           joined_count=len(party.joined_users), joined=joined)
+                           joined_count=len(party.joined_user_ids), joined=joined)
 
 
 

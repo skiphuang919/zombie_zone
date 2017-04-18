@@ -9,7 +9,7 @@ def add_party(subject=None, party_time=None, address=None, host_id=None,
                     subject=subject,
                     party_time=party_time,
                     address=address,
-                    host=host_id,
+                    host_id=host_id,
                     required_count=required_count,
                     note=note)
     db.session.add(party)
