@@ -5,7 +5,7 @@ from . import auth
 from .form import UserForm
 from ..lib import users
 from ..email import send_confirm_mail
-from flask_login import login_user, current_user, login_required
+from flask_login import login_user, current_user, login_required, logout_user
 
 CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email'
 
@@ -23,7 +23,7 @@ def before_request():
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
             return redirect(oauth2_url)
-        else:
+        elif current_user.is_anonymous:
             user = users.get_user(open_id=openid)
             if user:
                 login_user(user, remember=True)
@@ -42,7 +42,7 @@ def wc_oauth2():
         openid = token_info.get('openid', None)
         if openid:
             session['openid'] = openid
-            user = users.get_user(open_id=session.get('openid'))
+            user = users.get_user(open_id=openid)
             if user:
                 login_user(user, remember=True)
             url_endpoint = session.get('redirect_url_endpoint', 'index')
@@ -108,3 +108,14 @@ def resend_confirmation():
     else:
         flash('A new confirmation email has been sent to you by email.', category='message')
         return redirect(url_for('main.index'))
+
+
+@auth.route('/logout')
+@login_required
+def logout():
+    try:
+        logout_user()
+    except:
+        return jsonify({'msg': 'logout failed'})
+    else:
+        return jsonify({'msg': 'logout success'})
