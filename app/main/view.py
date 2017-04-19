@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from . import main
 from .form import PartyForm
 from ..lib import parties
@@ -8,7 +8,7 @@ from flask_login import current_user, login_required
 @main.route('/')
 def index():
     party_list = parties.get_all_parties()
-    party_info_list = [{'party': party, 'joined_count': len(party.joined_user_ids)}
+    party_info_list = [{'party': party, 'joined_count': len(party.participators)}
                        for party in party_list]
     return render_template('index.html', party_info_list=party_info_list)
 
@@ -16,12 +16,12 @@ def index():
 @main.route('/add_party', methods=['GET', 'POST'])
 @login_required
 def add_party():
+    if not current_user.confirmed:
+        flash('You have not confirmed your email.', category='message')
+        return redirect(url_for('main.index'))
     form = PartyForm()
-    if form.is_submitted():
-        if form.validate():
-            if not current_user.confirmed:
-                flash('You have not confirmed your email.', category='message')
-                return redirect(url_for('main.index'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
             try:
                 parties.add_party(subject=form.subject.data,
                                   party_time=form.party_time.data,
@@ -29,8 +29,7 @@ def add_party():
                                   host_id=current_user.user_id,
                                   required_count=form.required_count.data,
                                   note=form.note.data)
-            except Exception as ex:
-                print str(ex)
+            except:
                 flash('Create party failed.', category='warn')
             else:
                 flash('Create party success', category='info')
@@ -48,14 +47,16 @@ def party_detail(party_id):
     if not current_user.confirmed:
         flash('You have not confirmed your email.', category='message')
         return redirect(url_for('main.index'))
+
     party = parties.get_party_by_id(party_id=party_id)
     if not party:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
-    joined = True if party.party_id in current_user.joined_party_ids else False
+
+    joined = True if filter(lambda user_obj: user_obj.user_id == current_user.user_id,
+                            party.participators) else False
+
     return render_template('party_detail.html', party=party,
-                           joined_count=len(party.joined_user_ids), joined=joined)
-
-
+                           joined_count=len(party.participators), joined=joined)
 
 

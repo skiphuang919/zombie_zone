@@ -1,5 +1,5 @@
 from flask import redirect, url_for, request, session, jsonify, \
-    current_app, render_template, flash
+    current_app, render_template, flash, request
 from ..lib.wc_lib import WeChat
 from . import auth
 from .form import UserForm
@@ -52,35 +52,35 @@ def wc_oauth2():
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    if not current_user.is_anonymous:
+        flash('You have registered before.', category='message')
+        return redirect(url_for('main.index'))
     form = UserForm()
-    if form.is_submitted():
-        if not current_user.is_anonymous:
-            warn_msg = 'You have registered before.'
-        else:
-            if form.validate():
-                if users.is_email_exist(form.email.data):
-                    warn_msg = 'Email already exist.'
-                elif users.is_name_exist(form.name.data):
-                    warn_msg = 'Name already exist.'
-                else:
-                    try:
-                        open_id = session.get('openid')
-                        new_user = users.add_user(open_id=open_id,
-                                                  name=form.name.data,
-                                                  email=form.email.data,
-                                                  gender=form.gender.data,
-                                                  city=form.gender.data,
-                                                  slogan=form.slogan.data)
-                        token = new_user.generate_confirm_token()
-                        send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
-                    except:
-                        warn_msg = 'Register failed.'
-                    else:
-                        flash('A confirmation email has been sent to your mailbox.', category='message')
-                        return redirect(url_for('main.index'))
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            if users.is_email_exist(form.email.data):
+                warn_msg = 'Email already exist.'
+            elif users.is_name_exist(form.name.data):
+                warn_msg = 'Name already exist.'
             else:
-                form_error = form.errors.items()[0]
-                warn_msg = form_error[1][0]
+                try:
+                    open_id = session.get('openid')
+                    new_user = users.add_user(open_id=open_id,
+                                              name=form.name.data,
+                                              email=form.email.data,
+                                              gender=form.gender.data,
+                                              city=form.gender.data,
+                                              slogan=form.slogan.data)
+                    token = new_user.generate_confirm_token()
+                    send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
+                except:
+                    warn_msg = 'Register failed.'
+                else:
+                    flash('A confirmation email has been sent to your mailbox.', category='message')
+                    return redirect(url_for('main.index'))
+        else:
+            form_error = form.errors.items()[0]
+            warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
     return render_template('register.html', form=form)
 

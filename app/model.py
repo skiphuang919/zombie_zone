@@ -44,10 +44,6 @@ class Users(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.user_id})
 
-    @property
-    def joined_party_ids(self):
-        return [party.party_id for party in self.joined_parties]
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -71,8 +67,9 @@ class Parties(db.Model):
         pass
 
     @property
-    def joined_user_ids(self):
-        return [user.user_id for user in self.joined_users.all()]
+    def participators(self):
+        return self.joined_users.all()
+
 
 
 
