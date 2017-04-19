@@ -114,6 +114,8 @@ def resend_confirmation():
 @login_required
 def logout():
     try:
+        if 'openid' in session:
+            session.pop('openid')
         logout_user()
     except:
         return jsonify({'msg': 'logout failed'})
