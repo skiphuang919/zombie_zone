@@ -1,41 +1,45 @@
 {% extends "base.html" %}
 {% block page_content %}
     <div class="weui-panel weui-panel_access">
-            <div class="weui-panel__hd">Party Detail Info</div>
-            <div class="weui-panel__bd">
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Subject</h4>
-                    <p class="weui-media-box__desc">{{ party.subject }}</p>
-                </div>
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Party Time</h4>
-                    <p class="weui-media-box__desc">{{ party.party_time }}</p>
-                </div>
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Party Address</h4>
-                    <p class="weui-media-box__desc">{{ party.address }}</p>
-                </div>
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Party Host</h4>
-                    <p class="weui-media-box__desc">{{ party.host.name }}</p>
-                </div>
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Party Guys</h4>
-                    <p class="weui-media-box__desc">{{ joined_count }}/{{ party.required_count }}</p>
-                </div>
-                <div class="weui-media-box weui-media-box_text">
-                    <h4 class="weui-media-box__title">Extra Note</h4>
-                    <p class="weui-media-box__desc">{{ party.note }}</p>
-                </div>
+        <div class="weui-panel__hd">Party Detail Info</div>
+        <div class="weui-panel__bd">
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Subject</h4>
+                <p class="weui-media-box__desc">{{ party.subject }}</p>
             </div>
-            <div class="weui-panel__ft">
-                <div class="weui-btn-area">
-                    {% if not joined %}
-                        <a href="javascript:;" class="weui-btn weui-btn_primary">Join</a>
-                    {% else %}
-                        <a href="javascript:;" class="weui-btn weui-btn_warn">Quit</a>
-                    {% endif %}
-                </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Party Time</h4>
+                <p class="weui-media-box__desc">{{ party.party_time }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Party Address</h4>
+                <p class="weui-media-box__desc">{{ party.address }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Party Host</h4>
+                <p class="weui-media-box__desc">{{ party.host.name }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Party Guys</h4>
+                <p class="weui-media-box__desc">{{ joined_count }}/{{ party.required_count }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Extra Note</h4>
+                <p class="weui-media-box__desc">{{ party.note }}</p>
             </div>
         </div>
+        <div class="weui-panel__ft">
+            <div class="weui-btn-area">
+                {% if not joined %}
+                    <a href="javascript:;" class="weui-btn weui-btn_primary">Join</a>
+                {% else %}
+                    <a href="javascript:;" class="weui-btn weui-btn_warn">Quit</a>
+                {% endif %}
+                <a href="{{ url_for('main.index') }}" class="weui-btn weui-btn_default">Back</a>
+            </div>
+        </div>
+    </div>
+    <script>
+
+    </script>
 {% endblock %}

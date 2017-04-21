@@ -27,7 +27,8 @@ class Users(db.Model, UserMixin):
                                       lazy='dynamic')
     joined_parties = db.relationship('Parties',
                                      secondary=party_guy_table,
-                                     backref=db.backref('joined_users', lazy='dynamic'))
+                                     backref=db.backref('joined_users', lazy='dynamic'),
+                                     lazy='dynamic')
 
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)
@@ -43,6 +44,21 @@ class Users(db.Model, UserMixin):
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.user_id})
+
+    def has_joined(self, party):
+        return True if self.joined_parties.filter_by(party_id=party.party_id).first() \
+            else False
+
+    def join(self, party):
+        if not self.has_joined(party):
+            self.joined_parties.append(party)
+            db.session.commit()
+
+    def quit(self, party):
+        join_rel = self.joined_parties.filter_by(party_id=party.party_id).first()
+        if join_rel:
+            db.session.delete(join_rel)
+            db.session.commit()
 
 
 @login_manager.user_loader
