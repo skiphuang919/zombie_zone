@@ -3,6 +3,17 @@ from . import main
 from .form import PartyForm
 from ..lib import parties
 from flask_login import current_user, login_required
+from functools import wraps
+
+
+def confirmed_required(func):
+    @wraps(func)
+    def inner(*args, **kwargs):
+        if not current_user.confirmed:
+            flash('You have not confirmed your email.', category='message')
+            return redirect(url_for('main.index'))
+        return func(*args, **kwargs)
+    return inner
 
 
 @main.route('/')
@@ -15,10 +26,8 @@ def index():
 
 @main.route('/add_party', methods=['GET', 'POST'])
 @login_required
+@confirmed_required
 def add_party():
-    if not current_user.confirmed:
-        flash('You have not confirmed your email.', category='message')
-        return redirect(url_for('main.index'))
     form = PartyForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -43,11 +52,8 @@ def add_party():
 
 @main.route('/party_detail/<party_id>')
 @login_required
+@confirmed_required
 def party_detail(party_id):
-    if not current_user.confirmed:
-        flash('You have not confirmed your email.', category='message')
-        return redirect(url_for('main.index'))
-
     party = parties.get_party_by_id(party_id=party_id)
     if not party:
         flash('Party not exist.', category='warn')
