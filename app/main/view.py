@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from . import main
 from .form import PartyForm
 from ..lib import parties
@@ -55,8 +55,6 @@ def add_party():
 @confirmed_required
 def party_detail(party_id):
     party = parties.get_party_by_id(party_id=party_id)
-    import pdb
-    pdb.set_trace()
     if not party:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
@@ -64,13 +62,13 @@ def party_detail(party_id):
                            joined_count=len(party.participators), joined=current_user.has_joined(party))
 
 
-@main.route('/_join_or_quit', methods=['POST'])
+@main.route('/_join_or_quit')
 def join_or_quit():
     result = {'status': -1, 'msg': 'failed'}
-    party_id = request.args.get('party', None)
+    party_id = request.args.get('party_id', None)
     action_type = request.args.get('action_type', None)
     if (party_id is None) or (action_type is None) or (action_type not in ('join', 'quit')):
-        return result
+        return jsonify(result)
     party = parties.get_party_by_id(party_id)
     if party:
         try:
@@ -81,5 +79,5 @@ def join_or_quit():
         else:
             result['status'] = 0
             result['msg'] = 'success'
-    return result
+    return jsonify(result)
 

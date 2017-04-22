@@ -17,6 +17,13 @@
                     <p class="weui-toast__content">loading</p>
                 </div>
             </div>
+            <div id="finishToast" class="weui-loading_toast" style="display:none;">
+                <div class="weui-mask_transparent"></div>
+                <div class="weui-toast">
+                    <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+                    <p class="weui-toast__content">ok</p>
+                </div>
+            </div>
             <div class="page-hd">
                 <span>
                     <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
@@ -48,17 +55,6 @@
         <div>
 
         <script>
-            // toast
-            $(function(){
-                var $toast = $('#loadingToast');
-                $('.showToast').on('click', function(){
-                    if ($toast.css('display') != 'none') return;
-                    $toast.show();
-                    setTimeout(function () {
-                        $toast.fadeOut(500);
-                    }, 2000);
-                });
-            });
             // tips
             $(function(){
                 var $tips = $('.flash_tip');
@@ -73,7 +69,15 @@
                 $('.weui-dialog__btn').on('click', function(){
                     $(this).parents('.dialog ').fadeOut(200);
                 });
-            })
+            });
+            // flash toast
+            function flash_finish_toast() {
+                var $finishToast = $('#finishToast');
+                $finishToast.show();
+                setTimeout(function () {
+                    $finishToast.fadeOut(500);
+                }, 2000);
+            }
         </script>
     </body>
 </html>

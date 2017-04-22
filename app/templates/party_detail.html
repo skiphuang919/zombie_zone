@@ -31,15 +31,40 @@
         <div class="weui-panel__ft">
             <div class="weui-btn-area">
                 {% if not joined %}
-                    <a href="javascript:;" class="weui-btn weui-btn_primary">Join</a>
+                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary" data-type="join">Join</a>
                 {% else %}
-                    <a href="javascript:;" class="weui-btn weui-btn_warn">Quit</a>
+                    <a href="javascript:void (0)" class="weui-btn weui-btn_warn" data-type="quit">Quit</a>
                 {% endif %}
                 <a href="{{ url_for('main.index') }}" class="weui-btn weui-btn_default">Back</a>
             </div>
         </div>
     </div>
     <script>
-
+        $(function () {
+            $('.weui-btn').bind('click', function () {
+                var $this = $(this);
+                var action_type = $this.data('type');
+                $.ajax({
+                    type: 'GET',
+                    url: '/_join_or_quit',
+                    dataType: 'json',
+                    data: {'action_type': action_type,
+                        'party_id': '{{ party.party_id }}',
+                        'a': Math.random()},
+                    success: function (data) {
+                        flash_finish_toast();
+                        if(data.status==0){
+                            if(action_type=='join'){
+                                $this.data('type', 'quit').addClass('weui-btn_warn').text('Quit').
+                                removeClass('weui-btn_primary');
+                            }else if(action_type=='quit'){
+                                $this.data('type', 'join').addClass('weui-btn_primary').text('Join').
+                                removeClass('weui-btn_warn');
+                            }
+                        }
+                    }
+                })
+            })
+        })
     </script>
 {% endblock %}
