@@ -55,9 +55,8 @@ class Users(db.Model, UserMixin):
             db.session.commit()
 
     def quit(self, party):
-        join_rel = self.joined_parties.filter_by(party_id=party.party_id).first()
-        if join_rel:
-            db.session.delete(join_rel)
+        if self.has_joined(party):
+            self.joined_parties.remove(party)
             db.session.commit()
 
 

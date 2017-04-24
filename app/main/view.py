@@ -63,6 +63,8 @@ def party_detail(party_id):
 
 
 @main.route('/_join_or_quit')
+@login_required
+@confirmed_required
 def join_or_quit():
     result = {'status': -1, 'msg': 'failed'}
     party_id = request.args.get('party_id', None)

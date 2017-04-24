@@ -31,9 +31,9 @@
         <div class="weui-panel__ft">
             <div class="weui-btn-area">
                 {% if not joined %}
-                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary" data-type="join">Join</a>
+                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary act_btn" data-type="join">Join</a>
                 {% else %}
-                    <a href="javascript:void (0)" class="weui-btn weui-btn_warn" data-type="quit">Quit</a>
+                    <a href="javascript:void (0)" class="weui-btn weui-btn_warn act_btn" data-type="quit">Quit</a>
                 {% endif %}
                 <a href="{{ url_for('main.index') }}" class="weui-btn weui-btn_default">Back</a>
             </div>
@@ -41,7 +41,7 @@
     </div>
     <script>
         $(function () {
-            $('.weui-btn').bind('click', function () {
+            $('.act_btn').bind('click', function () {
                 var $this = $(this);
                 var action_type = $this.data('type');
                 $.ajax({
