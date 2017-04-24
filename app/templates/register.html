@@ -2,14 +2,14 @@
 {% block page_content %}
     <form method="post">
         {{ form.hidden_tag()  }}
-        <div class="weui-cells__title">个人信息</div>
+        <div class="weui-cells__title">Contact way</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    {{ form.name.label(class="weui-label") }}
+                    {{ form.cellphone.label(class="weui-label") }}
                 </div>
                 <div class="weui-cell__bd">
-                    {{ form.name(class="weui-input" ,placeholder="请输入昵称") }}
+                    {{ form.cellphone(class="weui-input" ,placeholder="Cellphone number") }}
                 </div>
             </div>
             <div class="weui-cell">
@@ -17,32 +17,15 @@
                     {{ form.email.label(class="weui-label") }}
                 </div>
                 <div class="weui-cell__bd">
-                    {{ form.email(class="weui-input" ,placeholder="请输入邮箱") }}
-                </div>
-            </div>
-
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
-                <div class="weui-cell__hd">
-                    {{ form.gender.label(class="weui-label") }}
-                </div>
-                <div class="weui-cell__bd">
-                    {{ form.gender(class="weui-select") }}
-                </div>
-            </div>
-            <div class="weui-cell weui-cell_select weui-cell_select-after">
-                <div class="weui-cell__hd">
-                    {{ form.city.label(class="weui-label") }}
-                </div>
-                <div class="weui-cell__bd">
-                    {{ form.city(class="weui-select") }}
+                    {{ form.email(class="weui-input" ,placeholder="E-mail address") }}
                 </div>
             </div>
         </div>
-        <div class="weui-cells__title">个性签名</div>
+        <div class="weui-cells__title">Slogan</div>
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    {{ form.slogan(class="weui-textarea" ,placeholder="请输入文本", row="3") }}
+                    {{ form.slogan(class="weui-textarea" ,placeholder="say something here...", row="3") }}
                 </div>
             </div>
         </div>

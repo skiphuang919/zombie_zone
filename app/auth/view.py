@@ -1,8 +1,8 @@
-from flask import redirect, url_for, request, session, jsonify, \
+from flask import redirect, url_for, session, jsonify, \
     current_app, render_template, flash, request
 from ..lib.wc_lib import WeChat
 from . import auth
-from .form import UserForm
+from .form import RegisterForm
 from ..lib import users
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
@@ -17,6 +17,7 @@ def before_request():
     otherwise redirect to wechat oauth url
     """
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
+        session['openid'] = '111'
         openid = session.get('openid')
         if openid is None:
             session['redirect_url_endpoint'] = request.endpoint
@@ -55,22 +56,20 @@ def register():
     if not current_user.is_anonymous:
         flash('You have registered before.', category='message')
         return redirect(url_for('main.index'))
-    form = UserForm()
+    form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             if users.is_email_exist(form.email.data):
                 warn_msg = 'Email already exist.'
-            elif users.is_name_exist(form.name.data):
-                warn_msg = 'Name already exist.'
+            elif users.is_cellphone_exist(form.cellphone.data):
+                warn_msg = 'Cellphone already exist.'
             else:
                 try:
                     open_id = session.get('openid')
-                    new_user = users.add_user(open_id=open_id,
-                                              name=form.name.data,
-                                              email=form.email.data,
-                                              gender=form.gender.data,
-                                              city=form.gender.data,
-                                              slogan=form.slogan.data)
+                    new_user = users.update_user(open_id=open_id,
+                                                 email=form.email.data,
+                                                 cellphone=form.cellphone.data,
+                                                 slogan=form.slogan.data)
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
                 except:
