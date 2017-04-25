@@ -1,3 +1,4 @@
+import traceback
 from flask import redirect, url_for, session, jsonify, \
     current_app, render_template, flash, request
 from ..lib.wc_lib import WeChat
@@ -17,17 +18,16 @@ def before_request():
     otherwise redirect to wechat oauth url
     """
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
-        session['openid'] = '111'
         openid = session.get('openid')
         if openid is None:
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
             return redirect(oauth2_url)
-        elif current_user.is_anonymous:
+        else:
             user = users.get_user(open_id=openid)
-            if user:
-                login_user(user, remember=True)
+            if user and user.cellphone and user.email and current_user.is_anonymous:
+                login_user(user)
 
 
 @auth.route('/wc_oauth2', methods=['GET', 'POST'])
@@ -36,18 +36,27 @@ def wc_oauth2():
     to be call back by wechat oauth with code
     then get open id by the code
     """
-    code = request.args.get('code', None)
+    code = request.args.get('code')
     if code is not None:
-        we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
-        token_info = we_chat.get_web_access_token_by_code(code)
-        openid = token_info.get('openid', None)
-        if openid:
-            session['openid'] = openid
-            user = users.get_user(open_id=openid)
-            if user:
-                login_user(user, remember=True)
-            url_endpoint = session.get('redirect_url_endpoint', 'index')
-            return redirect(url_for(url_endpoint))
+        try:
+            we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
+            token_info = we_chat.get_web_access_token_by_code(code)
+            openid = token_info.get('openid')
+            if openid:
+                access_token = we_chat.get_access_token()
+                user_info = we_chat.get_wc_user_info(openid, access_token)
+                user = users.update_user(open_id=openid,
+                                         name=user_info.get('nickname', 'Curry'),
+                                         gender=user_info.get('sex', 1),
+                                         city=user_info.get('city', 'Shanghai'),
+                                         head_img_url=user_info.get('headimgurl', 'http:127.0.0.1:5000/static/img/zombie_zone.png'))
+                session['openid'] = openid
+                if user.cellphone and user.email:
+                    login_user(user)
+                url_endpoint = session.get('redirect_url_endpoint', 'index')
+                return redirect(url_for(url_endpoint))
+        except:
+            print traceback.format_exc()
     return jsonify({'msg': 'Authorization failed, please try again.'})
 
 
