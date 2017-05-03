@@ -12,13 +12,20 @@ def update_user(open_id=None, name=None, email=None, cellphone=None,
     if not user:
         user = Users(user_id=get_db_unique_id(),
                      open_id=open_id)
-    user.cellphone = cellphone
-    user.name = name
-    user.email = email
-    user.gender = gender
-    user.city = city
-    user.slogan = slogan
-    user.head_img_url = head_img_url
+    if cellphone is not None:
+        user.cellphone = cellphone
+    if name is not None:
+        user.name = name
+    if email is not None:
+        user.email = email
+    if gender is not None:
+        user.gender = gender
+    if city is not None:
+        user.city = city
+    if slogan is not None:
+        user.slogan = slogan
+    if head_img_url is not None:
+        user.head_img_url = head_img_url
     user.update_time = datetime.utcnow()
     db.session.add(user)
     db.session.commit()

@@ -20,8 +20,8 @@
                 <p class="weui-media-box__desc">{{ party.host.name }}</p>
             </div>
             <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Party Guys</h4>
-                <p class="weui-media-box__desc">{{ joined_count }}/{{ party.required_count }}</p>
+                <h4 class="weui-media-box__title">Party Guys &nbsp;[&nbsp;<span id="joined_count">{{ joined_count }}</span>/{{ party.required_count }}&nbsp;]</h4>
+                <p class="weui-media-box__desc"><span id="participators">{{ participators }}</span></p>
             </div>
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">Extra Note</h4>
@@ -54,6 +54,9 @@
                     success: function (data) {
                         flash_finish_toast();
                         if(data.status==0){
+                            var res_data = data.data;
+                            $('#joined_count').text(res_data.joined_count);
+                            $('#participators').text(res_data.participators);
                             if(action_type=='join'){
                                 $this.data('type', 'quit').addClass('weui-btn_warn').text('Quit').
                                 removeClass('weui-btn_primary');

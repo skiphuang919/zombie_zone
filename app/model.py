@@ -39,7 +39,7 @@ class Users(db.Model, UserMixin):
     def get_id(self):
         """
         overwrite the method inherit from UserMixin
-        return `user_id` attr instead of default `id`
+        return `open_id` attr instead of default `id`
         """
         return self.open_id
 

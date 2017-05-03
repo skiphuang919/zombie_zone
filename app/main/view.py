@@ -58,15 +58,18 @@ def party_detail(party_id):
     if not party:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
+
+    participators = ', '.join([p.name for p in party.participators])
     return render_template('party_detail.html', party=party,
-                           joined_count=len(party.participators), joined=current_user.has_joined(party))
+                           joined_count=len(party.participators), joined=current_user.has_joined(party),
+                           participators=participators)
 
 
 @main.route('/_join_or_quit')
 @login_required
 @confirmed_required
 def join_or_quit():
-    result = {'status': -1, 'msg': 'failed'}
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id', None)
     action_type = request.args.get('action_type', None)
     if (party_id is None) or (action_type is None) or (action_type not in ('join', 'quit')):
@@ -76,10 +79,13 @@ def join_or_quit():
         try:
             current_user.join(party) if action_type == 'join' \
                 else current_user.quit(party)
+            participators = [p.name for p in party.participators]
         except Exception as ex:
             print str(ex)
         else:
             result['status'] = 0
             result['msg'] = 'success'
+            result['data'] = {'joined_count': len(participators),
+                              'participators': ', '.join(participators)}
     return jsonify(result)
 
