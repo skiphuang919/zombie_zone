@@ -18,7 +18,6 @@ def before_request():
     otherwise redirect to wechat oauth url
     """
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
-        session['openid'] = '123'
         openid = session.get('openid')
         if openid is None:
             session['redirect_url_endpoint'] = request.endpoint

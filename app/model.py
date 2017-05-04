@@ -87,6 +87,10 @@ class Parties(db.Model):
     def participators(self):
         return self.joined_users.all()
 
+    @property
+    def is_full(self):
+        return False if len(self.participators) < self.required_count else True
+
 
 
 

@@ -72,20 +72,23 @@ def join_or_quit():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id', None)
     action_type = request.args.get('action_type', None)
-    if (party_id is None) or (action_type is None) or (action_type not in ('join', 'quit')):
-        return jsonify(result)
-    party = parties.get_party_by_id(party_id)
-    if party:
-        try:
-            current_user.join(party) if action_type == 'join' \
-                else current_user.quit(party)
-            participators = [p.name for p in party.participators]
-        except Exception as ex:
-            print str(ex)
-        else:
-            result['status'] = 0
-            result['msg'] = 'success'
-            result['data'] = {'joined_count': len(participators),
-                              'participators': ', '.join(participators)}
+    if party_id and (action_type in ('join', 'quit')):
+        party = parties.get_party_by_id(party_id)
+        if party:
+            try:
+                if action_type == 'join':
+                    if party.is_full:
+                        result['msg'] = 'participators is full'
+                        return jsonify(result)
+                    current_user.join(party)
+                else:
+                    current_user.quit(party)
+                participators = [p.name for p in party.participators]
+                result['status'] = 0
+                result['msg'] = 'success'
+                result['data'] = {'joined_count': len(participators),
+                                  'participators': ', '.join(participators)}
+            except Exception as ex:
+                print str(ex)
     return jsonify(result)
 

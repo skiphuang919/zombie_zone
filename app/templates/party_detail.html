@@ -20,7 +20,7 @@
                 <p class="weui-media-box__desc">{{ party.host.name }}</p>
             </div>
             <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Party Guys &nbsp;[&nbsp;<span id="joined_count">{{ joined_count }}</span>/{{ party.required_count }}&nbsp;]</h4>
+                <h4 class="weui-media-box__title">Participators &nbsp;[&nbsp;<span id="joined_count">{{ joined_count }}</span>/<span id="required_count">{{ party.required_count }}</span>&nbsp;]</h4>
                 <p class="weui-media-box__desc"><span id="participators">{{ participators }}</span></p>
             </div>
             <div class="weui-media-box weui-media-box_text">
@@ -41,6 +41,11 @@
     </div>
     <script>
         $(function () {
+            bind_btn_act();
+            set_join_disabled();
+        });
+
+        function bind_btn_act() {
             $('.act_btn').bind('click', function () {
                 var $this = $(this);
                 var action_type = $this.data('type');
@@ -52,8 +57,8 @@
                         'party_id': '{{ party.party_id }}',
                         'a': Math.random()},
                     success: function (data) {
-                        flash_finish_toast();
                         if(data.status==0){
+                            flash_finish_toast();
                             var res_data = data.data;
                             $('#joined_count').text(res_data.joined_count);
                             $('#participators').text(res_data.participators);
@@ -67,7 +72,16 @@
                         }
                     }
                 })
-            })
-        })
+            });
+        }
+
+        function set_join_disabled() {
+            if(parseInt($('#required_count').text())==parseInt($('#joined_count').text())){
+                $('.act_btn[data-type="join"]').addClass('weui-btn_disabled');
+            }else{
+                $('.act_btn[data-type="join"]').removeClass('weui-btn_disabled');
+            }
+        }
+
     </script>
 {% endblock %}
