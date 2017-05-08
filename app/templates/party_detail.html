@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block page_content %}
     <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__hd">Party Detail Info</div>
+        <div class="weui-panel__hd party_info_title">Party Detail Info</div>
         <div class="weui-panel__bd">
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">Subject</h4>
@@ -26,6 +26,15 @@
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">Extra Note</h4>
                 <p class="weui-media-box__desc">{{ party.note }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <a class="weui-cell weui-cell_access participators_access" href="{{ url_for('main.party_guys', party_id=party.party_id) }}">
+                    <div class="weui-cell__bd">
+                        <p>Participators Info</p>
+                    </div>
+                    <div class="weui-cell__ft">
+                    </div>
+                </a>
             </div>
         </div>
         <div class="weui-panel__ft">

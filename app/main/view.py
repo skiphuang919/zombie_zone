@@ -92,3 +92,10 @@ def join_or_quit():
                 print str(ex)
     return jsonify(result)
 
+
+@main.route('/party_guys/<party_id>')
+@login_required
+@confirmed_required
+def party_guys(party_id):
+    return jsonify({'msg': 'to be continue'})
+

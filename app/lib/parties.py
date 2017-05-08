@@ -1,6 +1,6 @@
 from .. import db
 from ..model import Parties
-from tools import get_db_unique_id
+from tools import get_db_unique_id, get_calculated_datetime, current_time
 
 
 def add_party(subject=None, party_time=None, address=None, host_id=None,
@@ -17,8 +17,12 @@ def add_party(subject=None, party_time=None, address=None, host_id=None,
     return party
 
 
-def get_all_parties():
-    return Parties.query.order_by(Parties.create_time.desc()).all()
+def get_all_parties(available=True):
+    sql = Parties.query
+    if available:
+        dead_line = get_calculated_datetime(current_time(), hours=1)
+        sql = sql.filter(Parties.party_time > dead_line)
+    return sql.order_by(Parties.create_time.desc()).all()
 
 
 def get_party_by_id(party_id):

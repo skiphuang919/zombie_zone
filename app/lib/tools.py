@@ -30,3 +30,11 @@ def get_calculated_datetime(origin_dt, days=None, hours=None, seconds=None):
         print str(ex)
         result_dt = ''
     return result_dt
+
+
+def current_time():
+    """
+    get the local datetime
+    :return: datetime obj
+    """
+    return datetime.now()
