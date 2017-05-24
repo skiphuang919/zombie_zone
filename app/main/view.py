@@ -97,5 +97,11 @@ def join_or_quit():
 @login_required
 @confirmed_required
 def party_guys(party_id):
-    return jsonify({'msg': 'to be continue'})
+    party = parties.get_party_by_id(party_id=party_id)
+    if not current_user.has_joined(party):
+        flash('Access failed for passerby.', category='message')
+        return redirect(url_for('main.party_detail', party_id=party_id))
+    return render_template('participators.html', participators=party.participators)
+
+
 
