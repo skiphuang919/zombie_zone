@@ -10,4 +10,7 @@
             </div>
         </div>
     {% endfor %}
+    <div class="weui-btn-area button-sp-area">
+        <a href="{{ url_for('main.party_detail', party_id=party_id) }}" class="weui-btn weui-btn_primary">Back</a>
+    </div>
 {% endblock %}

@@ -49,7 +49,7 @@ def wc_oauth2():
                                          name=user_info.get('nickname', 'Curry'),
                                          gender=user_info.get('sex', 1),
                                          city=user_info.get('city', 'Shanghai'),
-                                         head_img_url=user_info.get('headimgurl', 'http:127.0.0.1:5000/static/img/zombie_zone.png'))
+                                         head_img_url=user_info.get('headimgurl', '/static/img/head_test.jpeg'))
                 session['openid'] = openid
                 if user.cellphone and user.email:
                     login_user(user)

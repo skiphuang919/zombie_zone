@@ -101,7 +101,7 @@ def party_guys(party_id):
     if not current_user.has_joined(party):
         flash('Access failed for passerby.', category='message')
         return redirect(url_for('main.party_detail', party_id=party_id))
-    return render_template('participators.html', participators=party.participators)
+    return render_template('participators.html', participators=party.participators, party_id=party_id)
 
 
 
