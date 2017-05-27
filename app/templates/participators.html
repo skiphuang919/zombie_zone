@@ -3,9 +3,10 @@
     {% for guy in participators %}
         <div class="weui-form-preview participator_card weui-flex">
             <div class="weui-flex__item"><img src="{{ guy.head_img_url }}" class="participators_head"></div>
-            <div class="weui-flex__item weui-flex">
-                <div class="weui-flex__item">{{ guy.name }}</div>
-                <div class="weui-flex__item">{{ guy.gender }}</div>
+            <div class="weui-flex__item">
+                <div class="guy_info">{{ guy.name }}</div>
+                <div class="guy_info">{{ 'Male' if guy.gender == 1 else 'Female' }}</div>
+                <div class="guy_info">{{ guy.city }}</div>
             </div>
         </div>
     {% endfor %}
