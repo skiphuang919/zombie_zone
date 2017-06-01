@@ -1,14 +1,10 @@
-from flask import render_template
-from flask_mail import Message
 from tasks import task
+from flask import current_app
 
 
-def send_mail(subject, recipient, template, **kwargs):
-    msg = Message(subject=subject, recipients=[recipient])
-    msg.html = render_template(template, **kwargs)
-    task.send_mail.delay(msg)
-
-
-def send_confirm_mail(subject, recipient, name, token):
-    send_mail(subject, recipient, 'confirm_email.html', name=name, token=token)
+def send_confirm_mail(recipient, mail_info):
+    task.send_mail.apply_async(args=[current_app.config.get('CONFIRM_MAIL_SUBJECT'),
+                                     recipient,
+                                     'confirm_email.html',
+                                     mail_info],)
 

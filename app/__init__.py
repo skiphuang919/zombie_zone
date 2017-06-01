@@ -19,12 +19,11 @@ login_manager.login_message = u'Please register and confirm email to access this
 celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 
 
-def create_app(config_name=None):
+def create_app(config_name):
     app = Flask(__name__)
 
-    if config_name is not None:
-        app.config.from_object(config_name)
-        config_name.init_app(app)
+    app.config.from_object(config_name)
+    config_name.init_app(app)
 
     cache.init_app(app)
 

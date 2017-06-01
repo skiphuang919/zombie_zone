@@ -17,7 +17,7 @@ class Config(object):
 
     CELERY_BROKER_URL = 'redis://localhost:6379/0'
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-    CELERY_TASK_SERIALIZER = 'pickle'
+    CELERY_TASK_SERIALIZER = 'json'
 
     MAIL_SERVER = 'smtp.163.com'
     MAIL_PORT = 25
@@ -27,6 +27,8 @@ class Config(object):
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '')
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+
+    CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email'
 
     @staticmethod
     def init_app(app):

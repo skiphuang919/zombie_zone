@@ -8,8 +8,6 @@ from ..lib import users
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
 
-CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email'
-
 
 @auth.before_app_request
 def before_request():
@@ -18,6 +16,7 @@ def before_request():
     otherwise redirect to wechat oauth url
     """
     if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
+        session['openid'] = 'xxx'
         openid = session.get('openid')
         if openid is None:
             session['redirect_url_endpoint'] = request.endpoint
@@ -80,7 +79,9 @@ def register():
                                                  cellphone=form.cellphone.data,
                                                  slogan=form.slogan.data)
                     token = new_user.generate_confirm_token()
-                    send_confirm_mail(CONFIRM_MAIL_SUBJECT, new_user.email, new_user.name, token)
+                    send_confirm_mail(recipient=new_user.email,
+                                      mail_info=dict(name=current_user.name,
+                                                     confirm_url=url_for('auth.confirm', token=token, _external=True)))
                 except:
                     warn_msg = 'Register failed.'
                 else:
@@ -110,7 +111,9 @@ def confirm(token):
 def resend_confirmation():
     try:
         token = current_user.generate_confirm_token()
-        send_confirm_mail(CONFIRM_MAIL_SUBJECT, current_user.email, current_user.name, token)
+        send_confirm_mail(recipient=current_user.email,
+                          mail_info=dict(name=current_user.name,
+                                         confirm_url=url_for('auth.confirm', token=token, _external=True)))
     except:
         return jsonify({'msg': 'resend confirmation email failed.'})
     else:
