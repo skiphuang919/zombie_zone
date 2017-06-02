@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from . import main
 from .form import PartyForm
-from ..lib import parties
+from ..lib import party, tools
 from flask_login import current_user, login_required
 from functools import wraps
 
@@ -18,9 +18,9 @@ def confirmed_required(func):
 
 @main.route('/')
 def index():
-    party_list = parties.get_all_parties()
-    party_info_list = [{'party': party, 'joined_count': len(party.participators)}
-                       for party in party_list]
+    party_list = party.get_all_parties()
+    party_info_list = [{'party': party_obj, 'joined_count': len(party_obj.participators)}
+                       for party_obj in party_list]
     return render_template('index.html', party_info_list=party_info_list)
 
 
@@ -32,12 +32,12 @@ def add_party():
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
-                parties.add_party(subject=form.subject.data,
-                                  party_time=form.party_time.data,
-                                  address=form.address.data,
-                                  host_id=current_user.user_id,
-                                  required_count=form.required_count.data,
-                                  note=form.note.data)
+                party.add_party(subject=form.subject.data,
+                                party_time=form.party_time.data,
+                                address=form.address.data,
+                                host_id=current_user.user_id,
+                                required_count=form.required_count.data,
+                                note=form.note.data)
             except:
                 flash('Create party failed.', category='warn')
             else:
@@ -54,36 +54,36 @@ def add_party():
 @login_required
 @confirmed_required
 def party_detail(party_id):
-    party = parties.get_party_by_id(party_id=party_id)
-    if not party:
+    party_obj = party.get_party_by_id(party_id=party_id)
+    if not party_obj:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
 
-    participators = ', '.join([p.name for p in party.participators])
-    return render_template('party_detail.html', party=party,
-                           joined_count=len(party.participators), joined=current_user.has_joined(party),
+    participators = ', '.join([p.name for p in party_obj.participators])
+    return render_template('party_detail.html', party=party_obj,
+                           joined_count=len(party_obj.participators), joined=current_user.has_joined(party_obj),
                            participators=participators)
 
 
 @main.route('/_join_or_quit')
 @login_required
 @confirmed_required
-def join_or_quit():
+def ajax_join_or_quit():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
-    party_id = request.args.get('party_id', None)
-    action_type = request.args.get('action_type', None)
+    party_id = request.args.get('party_id')
+    action_type = request.args.get('action_type')
     if party_id and (action_type in ('join', 'quit')):
-        party = parties.get_party_by_id(party_id)
-        if party:
+        party_obj = party.get_party_by_id(party_id)
+        if party_obj:
             try:
                 if action_type == 'join':
-                    if party.is_full:
+                    if party_obj.is_full:
                         result['msg'] = 'participators is full'
                         return jsonify(result)
-                    current_user.join(party)
+                    current_user.join(party_obj)
                 else:
-                    current_user.quit(party)
-                participators = [p.name for p in party.participators]
+                    current_user.quit(party_obj)
+                participators = [p.name for p in party_obj.participators]
                 result['status'] = 0
                 result['msg'] = 'success'
                 result['data'] = {'joined_count': len(participators),
@@ -93,15 +93,33 @@ def join_or_quit():
     return jsonify(result)
 
 
+@main.route('/_get_parties')
+@login_required
+@confirmed_required
+def ajax_get_parties():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    _type = request.args.get('_type')
+    if _type in ('all', 'created', 'joined'):
+        try:
+            party_list = party.get_parties(_type=_type)
+            if party_list:
+                result['data'] = [tools.obj2dic(p) for p in party_list]
+            result['status'] = 0
+            result['msg'] = 'success'
+        except Exception as ex:
+            print str(ex)
+    return jsonify(result)
+
+
 @main.route('/party_guys/<party_id>')
 @login_required
 @confirmed_required
 def party_guys(party_id):
-    party = parties.get_party_by_id(party_id=party_id)
-    if not current_user.has_joined(party):
+    party_obj = party.get_party_by_id(party_id=party_id)
+    if not current_user.has_joined(party_obj):
         flash('Access failed for passerby.', category='message')
         return redirect(url_for('main.party_detail', party_id=party_id))
-    return render_template('participators.html', participators=party.participators, party_id=party_id)
+    return render_template('participators.html', participators=party_obj.participators, party_id=party_id)
 
 
 

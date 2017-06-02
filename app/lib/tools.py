@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 
 def get_db_unique_id():
@@ -38,3 +38,24 @@ def current_time():
     :return: datetime obj
     """
     return datetime.now()
+
+
+def obj2dic(obj):
+    """
+    convert the obj to dict
+    :param obj:
+    :return: dict
+    """
+    res = {}
+    try:
+        for k, v in vars(obj).items():
+            if k.startswith('_'):
+                continue
+            if isinstance(v, date):
+                v = v.strftime("%Y-%m-%d %H:%M:%S")
+            res[k] = v
+    except Exception as ex:
+        print ex
+    return res
+
+
