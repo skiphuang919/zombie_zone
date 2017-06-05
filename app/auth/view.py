@@ -15,7 +15,7 @@ def before_request():
     login the user by open id if it exist
     otherwise redirect to wechat oauth url
     """
-    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static']:
+    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static', 'auth.logout']:
         openid = session.get('openid')
         if openid is None:
             session['redirect_url_endpoint'] = request.endpoint
@@ -51,7 +51,7 @@ def wc_oauth2():
                 session['openid'] = openid
                 if user.cellphone and user.email:
                     login_user(user)
-                url_endpoint = session.get('redirect_url_endpoint', 'index')
+                url_endpoint = session.get('redirect_url_endpoint', 'main.index')
                 return redirect(url_for(url_endpoint))
         except:
             print traceback.format_exc()

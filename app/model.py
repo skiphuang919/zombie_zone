@@ -7,7 +7,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 party_guy_table = db.Table('party_guy_table',
                            db.Column('user_id', db.String(64), db.ForeignKey('users.user_id')),
-                           db.Column('party_id', db.String(64), db.ForeignKey('parties.party_id')))
+                           db.Column('party_id', db.String(64), db.ForeignKey('parties.party_id')),
+                           db.Column('join_time', db.DateTime, default=datetime.utcnow()))
 
 
 class Users(db.Model, UserMixin):
@@ -87,9 +88,17 @@ class Parties(db.Model):
     def participators(self):
         return self.joined_users.all()
 
+    @participators.setter
+    def participators(self, v):
+        raise AttributeError('Read only attribute')
+
     @property
     def is_full(self):
         return False if len(self.participators) < self.required_count else True
+
+    @is_full.setter
+    def is_full(self, v):
+        raise AttributeError('Read only attribute')
 
 
 

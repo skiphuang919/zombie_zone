@@ -32,12 +32,12 @@ def get_calculated_datetime(origin_dt, days=None, hours=None, seconds=None):
     return result_dt
 
 
-def current_time():
+def current_utc_time():
     """
-    get the local datetime
+    get the utc datetime
     :return: datetime obj
     """
-    return datetime.now()
+    return datetime.utcnow()
 
 
 def obj2dic(obj):

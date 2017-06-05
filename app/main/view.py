@@ -18,7 +18,7 @@ def confirmed_required(func):
 
 @main.route('/')
 def index():
-    party_list = party.get_all_parties()
+    party_list = party.get_parties(limit=10)
     party_info_list = [{'party': party_obj, 'joined_count': len(party_obj.participators)}
                        for party_obj in party_list]
     return render_template('index.html', party_info_list=party_info_list)
@@ -95,7 +95,6 @@ def ajax_join_or_quit():
 
 @main.route('/_get_parties')
 @login_required
-@confirmed_required
 def ajax_get_parties():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     _type = request.args.get('_type')
