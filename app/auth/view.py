@@ -39,7 +39,7 @@ def wc_oauth2():
         try:
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             token_info = we_chat.get_web_access_token_by_code(code)
-            openid = token_info.get('openid')
+            openid = token_info.get('openid', 123)
             if openid:
                 access_token = we_chat.get_access_token()
                 user_info = we_chat.get_wc_user_info(openid, access_token)

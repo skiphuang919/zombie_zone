@@ -27,16 +27,15 @@ def get_participators(party_id):
 
 
 def get_parties(available=False, limit=None, offset=None):
-    res = Parties.query
+    sql = Parties.query
     if available:
         dead_line = get_calculated_datetime(current_utc_time(), hours=1)
-        res = res.filter(Parties.party_time > dead_line)
-        res.order_by(Parties.create_time.desc())
-
+        sql = sql.filter(Parties.party_time > dead_line)
+    sql = sql.order_by(Parties.create_time.desc())
     if limit is not None:
-        res = res.limit(limit)
+        sql = sql.limit(limit)
 
     if offset is not None:
-        res = res.offset(offset)
+        sql = sql.offset(offset)
 
-    return res.all()
+    return sql.all()

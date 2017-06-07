@@ -89,7 +89,7 @@ def get_joined_parties(user_id, limit=None, offset=None):
 
 
 def get_created_parties(user_id, limit=None, offset=None):
-    sql = Parties.query.filter_by(host_id=user_id)
+    sql = Parties.query.filter_by(host_id=user_id).order_by(Parties.create_time.desc())
 
     if limit is not None:
         sql = sql.limit(limit)

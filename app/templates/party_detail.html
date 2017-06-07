@@ -78,6 +78,9 @@
                                 $this.data('type', 'join').addClass('weui-btn_primary').text('Join').
                                 removeClass('weui-btn_warn');
                             }
+                        }else{
+                            $('#ajax_dialog').show().find('.weui-dialog__bd').text(data.msg)
+
                         }
                     }
                 })

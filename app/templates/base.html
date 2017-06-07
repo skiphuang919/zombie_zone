@@ -38,7 +38,7 @@
                     {% elif categry == 'info' %}
                         <div class="weui-toptips weui-toptips_info flash_tip" style="display: block">{{ message }}</div>
                     {% elif categry == 'message' %}
-                        <div class="dialog">
+                        <div class="dialog flash_dialog">
                             <div class="weui-mask"></div>
                             <div class="weui-dialog">
                                 <div class="weui-dialog__bd">{{ message }}</div>
@@ -49,6 +49,15 @@
                         </div>
                     {% endif %}
                 {% endfor %}
+                <div class="dialog" id="ajax_dialog">
+                    <div class="weui-mask"></div>
+                    <div class="weui-dialog">
+                        <div class="weui-dialog__bd">{{ message }}</div>
+                        <div class="weui-dialog__ft">
+                            <a href="#" class="weui-dialog__btn weui-dialog__btn_primary">OK</a>
+                        </div>
+                    </div>
+                </div>
                 {% block page_content %}{% endblock %}
             </div>
             <div class="page-ft">
@@ -57,11 +66,19 @@
             <div class="weui-tabbar" style="position: fixed">
                 <a href="javascript:;" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
-                    <p class="weui-tabbar__label">通讯录</p>
+                    <p class="weui-tabbar__label">All</p>
                 </a>
                 <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
                     <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
-                    <p class="weui-tabbar__label">我</p>
+                    <p class="weui-tabbar__label">As host</p>
+                </a>
+                <a href="javascript:;" class="weui-tabbar__item">
+                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">As Guest</p>
+                </a>
+                <a href="javascript:;" class="weui-tabbar__item">
+                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">Me</p>
                 </a>
             </div>
         <div>
@@ -76,10 +93,16 @@
                     }, 2000)
                 }
             });
-            // dialog
+            // dialog for flash
             $(function () {
-                $('.weui-dialog__btn').on('click', function(){
-                    $(this).parents('.dialog').fadeOut(200);
+                $('.flash_dialog .weui-dialog__btn').on('click', function(){
+                    $(this).parents('.flash_dialog').fadeOut(200).remove();
+                });
+            });
+            // dialog for ajax
+            $(function () {
+                $('#ajax_dialog').find('.weui-dialog__btn').on('click', function(){
+                    $(this).parents('#ajax_dialog').fadeOut(200);
                 });
             });
             // flash toast

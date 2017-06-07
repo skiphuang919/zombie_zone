@@ -68,7 +68,7 @@ def party_detail(party_id):
 @login_required
 @confirmed_required
 def ajax_join_or_quit():
-    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    result = {'status': -1, 'msg': 'internal error', 'data': ''}
     party_id = request.args.get('party_id')
     action_type = request.args.get('action_type')
     if party_id and (action_type in ('join', 'quit')):
@@ -77,7 +77,10 @@ def ajax_join_or_quit():
             try:
                 if action_type == 'join':
                     if party_obj.is_full:
-                        result['msg'] = 'participators is full'
+                        result['msg'] = 'Participators is full'
+                        return jsonify(result)
+                    if party_obj.host_id == current_user.user_id:
+                        result['msg'] = "Host needn't join"
                         return jsonify(result)
                     current_user.join(party_obj)
                 else:
@@ -119,7 +122,7 @@ def ajax_get_parties():
 @confirmed_required
 def party_guys(party_id):
     party_obj = party.get_party_by_id(party_id=party_id)
-    if not current_user.has_joined(party_obj):
+    if not current_user.has_joined(party_obj) and party_obj.host_id != current_user.user_id:
         flash('Access failed for passerby.', category='message')
         return redirect(url_for('main.party_detail', party_id=party_id))
     return render_template('participators.html', participators=party.get_participators(party_id), party_id=party_id)
