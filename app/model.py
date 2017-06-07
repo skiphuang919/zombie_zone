@@ -5,10 +5,11 @@ from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
-party_guy_table = db.Table('party_guy_table',
-                           db.Column('user_id', db.String(64), db.ForeignKey('users.user_id')),
-                           db.Column('party_id', db.String(64), db.ForeignKey('parties.party_id')),
-                           db.Column('join_time', db.DateTime, default=datetime.utcnow()))
+class Participate(db.Model):
+    __tablename__ = 'participate'
+    participator_id = db.Column(db.String(64), db.ForeignKey('users.user_id'), primary_key=True)
+    joined_party_id = db.Column(db.String(64), db.ForeignKey('parties.party_id'), primary_key=True)
+    join_time = db.Column(db.DateTime, default=datetime.utcnow())
 
 
 class Users(db.Model, UserMixin):
@@ -28,10 +29,12 @@ class Users(db.Model, UserMixin):
     created_parties = db.relationship('Parties',
                                       backref='host',
                                       lazy='dynamic')
-    joined_parties = db.relationship('Parties',
-                                     secondary=party_guy_table,
-                                     backref=db.backref('joined_users', lazy='dynamic'),
-                                     lazy='dynamic')
+
+    joined_parties = db.relationship('Participate',
+                                     foreign_keys=[Participate.participator_id],
+                                     backref=db.backref('participator', lazy='joined'),
+                                     lazy='dynamic',
+                                     cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)
@@ -49,17 +52,18 @@ class Users(db.Model, UserMixin):
         return s.dumps({'confirm': self.user_id})
 
     def has_joined(self, party):
-        return True if self.joined_parties.filter_by(party_id=party.party_id).first() \
-            else False
+        return self.joined_parties.filter_by(joined_party_id=party.party_id).first() is not None
 
     def join(self, party):
-        if not self.has_joined(party):
-            self.joined_parties.append(party)
+        if self.has_joined(party) is False:
+            participate = Participate(participator=self, joined_party=party)
+            db.session.add(participate)
             db.session.commit()
 
     def quit(self, party):
-        if self.has_joined(party):
-            self.joined_parties.remove(party)
+        participate = self.joined_parties.filter_by(joined_party_id=party.party_id).first()
+        if participate:
+            db.session.delete(participate)
             db.session.commit()
 
 
@@ -79,22 +83,27 @@ class Parties(db.Model):
     note = db.Column(db.String(512))
     status = db.Column(db.Integer, default=0)
     create_time = db.Column(db.DateTime, default=datetime.utcnow())
+    participators = db.relationship('Participate',
+                                    foreign_keys=[Participate.joined_party_id],
+                                    backref=db.backref('joined_party', lazy='joined'),
+                                    lazy='dynamic',
+                                    cascade='all, delete-orphan')
 
     def __init__(self, *args, **kwargs):
         super(Parties, self).__init__(*args, **kwargs)
         pass
 
     @property
-    def participators(self):
-        return self.joined_users.all()
+    def participant_count(self):
+        return self.participators.count()
 
-    @participators.setter
-    def participators(self, v):
+    @participant_count.setter
+    def participant_count(self, v):
         raise AttributeError('Read only attribute')
 
     @property
     def is_full(self):
-        return False if len(self.participators) < self.required_count else True
+        return self.participant_count >= self.required_count
 
     @is_full.setter
     def is_full(self, v):

@@ -79,9 +79,10 @@ def register():
                                                  slogan=form.slogan.data)
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(recipient=new_user.email,
-                                      mail_info=dict(name=current_user.name,
+                                      mail_info=dict(name=new_user.name,
                                                      confirm_url=url_for('auth.confirm', token=token, _external=True)))
                 except:
+                    raise
                     warn_msg = 'Register failed.'
                 else:
                     flash('A confirmation email has been sent to your mailbox.', category='message')

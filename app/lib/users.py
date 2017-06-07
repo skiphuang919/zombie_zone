@@ -1,7 +1,7 @@
 from datetime import datetime
 from .. import db
 from flask import current_app
-from ..model import Users
+from ..model import Users, Participate, Parties
 from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
@@ -75,3 +75,26 @@ def confirm(token):
         db.session.commit()
     return True
 
+
+def get_joined_parties(user_id, limit=None, offset=None):
+    sql = Participate.query.filter_by(participator_id=user_id).order_by(Participate.join_time.desc())
+
+    if limit is not None:
+        sql = sql.limit(limit)
+
+    if offset is not None:
+        sql = sql.offset(offset)
+
+    return [p.joined_party for p in sql.all()]
+
+
+def get_created_parties(user_id, limit=None, offset=None):
+    sql = Parties.query.filter_by(host_id=user_id)
+
+    if limit is not None:
+        sql = sql.limit(limit)
+
+    if offset is not None:
+        sql = sql.offset(offset)
+
+    return sql.all()

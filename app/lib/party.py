@@ -1,5 +1,5 @@
 from .. import db
-from ..model import Parties
+from ..model import Parties, Participate
 from tools import get_db_unique_id, get_calculated_datetime, current_utc_time
 from flask_login import current_user
 
@@ -22,29 +22,21 @@ def get_party_by_id(party_id):
     return Parties.query.filter_by(party_id=party_id).first()
 
 
-def get_parties(_type='all', available=False, limit=None, offset=None):
-    res = None
+def get_participators(party_id):
+    return [p.participator for p in Participate.query.filter_by(joined_party_id=party_id).all()]
 
-    # get all the parties
-    if _type == 'all':
-        res = Parties.query
-        if available:
-            dead_line = get_calculated_datetime(current_utc_time(), hours=1)
-            res = res.filter(Parties.party_time > dead_line)
-            res.order_by(Parties.create_time.desc())
 
-    # get parties current user ever created
-    if _type == 'created':
-        res = current_user.created_parties.order_by(Parties.create_time.desc())
+def get_parties(available=False, limit=None, offset=None):
+    res = Parties.query
+    if available:
+        dead_line = get_calculated_datetime(current_utc_time(), hours=1)
+        res = res.filter(Parties.party_time > dead_line)
+        res.order_by(Parties.create_time.desc())
 
-    # get parties current user ever joined
-    if _type == 'joined':
-        res = current_user.joined_parties.all()
+    if limit is not None:
+        res = res.limit(limit)
 
-    if res is not None:
-        if limit is not None:
-            res = res.limit(limit)
-        if offset is not None:
-            res = res.offset(offset)
-        return res.all()
-    return []
+    if offset is not None:
+        res = res.offset(offset)
+
+    return res.all()

@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from . import main
 from .form import PartyForm
-from ..lib import party, tools
+from ..lib import party, tools, users
 from flask_login import current_user, login_required
 from functools import wraps
 
@@ -19,7 +19,7 @@ def confirmed_required(func):
 @main.route('/')
 def index():
     party_list = party.get_parties(limit=10)
-    party_info_list = [{'party': party_obj, 'joined_count': len(party_obj.participators)}
+    party_info_list = [{'party': party_obj, 'joined_count': party_obj.participant_count}
                        for party_obj in party_list]
     return render_template('index.html', party_info_list=party_info_list)
 
@@ -58,11 +58,10 @@ def party_detail(party_id):
     if not party_obj:
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
-
-    participators = ', '.join([p.name for p in party_obj.participators])
+    participators = [p.name for p in party.get_participators(party_obj.party_id)]
     return render_template('party_detail.html', party=party_obj,
-                           joined_count=len(party_obj.participators), joined=current_user.has_joined(party_obj),
-                           participators=participators)
+                           joined_count=len(participators), joined=current_user.has_joined(party_obj),
+                           participators=', '.join(participators))
 
 
 @main.route('/_join_or_quit')
@@ -83,7 +82,7 @@ def ajax_join_or_quit():
                     current_user.join(party_obj)
                 else:
                     current_user.quit(party_obj)
-                participators = [p.name for p in party_obj.participators]
+                participators = [p.name for p in party.get_participators(party_id)]
                 result['status'] = 0
                 result['msg'] = 'success'
                 result['data'] = {'joined_count': len(participators),
@@ -100,7 +99,12 @@ def ajax_get_parties():
     _type = request.args.get('_type')
     if _type in ('all', 'created', 'joined'):
         try:
-            party_list = party.get_parties(_type=_type)
+            if _type == 'all':
+                party_list = party.get_parties()
+            elif _type == 'joined':
+                party_list = users.get_joined_parties(current_user.user_id)
+            else:
+                party_list = users.get_created_parties(current_user.user_id)
             if party_list:
                 result['data'] = [tools.obj2dic(p) for p in party_list]
             result['status'] = 0
@@ -118,7 +122,7 @@ def party_guys(party_id):
     if not current_user.has_joined(party_obj):
         flash('Access failed for passerby.', category='message')
         return redirect(url_for('main.party_detail', party_id=party_id))
-    return render_template('participators.html', participators=party_obj.participators, party_id=party_id)
+    return render_template('participators.html', participators=party.get_participators(party_id), party_id=party_id)
 
 
 
