@@ -25,11 +25,10 @@
                 </div>
             </div>
             <div class="page-hd">
-                <span>
-                    <a href="{{ url_for('main.index') }}">
-                        <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
-                    </a>
-                </span>
+                <a href="{{ url_for('main.index') }}">
+                    <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
+                </a>
+
             </div>
             <div class="page-bd">
                 {% for categry, message in get_flashed_messages(with_categories=True) %}
@@ -64,19 +63,15 @@
                 <p>That's right, I am an asshole absolutely!</p>
             </div>
             <div class="weui-tabbar" style="position: fixed">
-                <a href="javascript:;" class="weui-tabbar__item">
+                <a href="{{ url_for('main.index') }}" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">All</p>
                 </a>
-                <a href="javascript:;" class="weui-tabbar__item weui-bar__item_on">
+                <a href="{{ url_for('main.add_party') }}" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
-                    <p class="weui-tabbar__label">As host</p>
+                    <p class="weui-tabbar__label">Create Pa</p>
                 </a>
-                <a href="javascript:;" class="weui-tabbar__item">
-                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
-                    <p class="weui-tabbar__label">As Guest</p>
-                </a>
-                <a href="javascript:;" class="weui-tabbar__item">
+                <a href="{{ url_for('main.my_zone') }}" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">Me</p>
                 </a>

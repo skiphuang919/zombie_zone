@@ -128,4 +128,7 @@ def party_guys(party_id):
     return render_template('participators.html', participators=party.get_participators(party_id), party_id=party_id)
 
 
+@main.route('/my_zone')
+def my_zone():
+    return render_template('my_zone.html', me=current_user)
 

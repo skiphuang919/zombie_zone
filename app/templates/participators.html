@@ -1,15 +1,20 @@
 {% extends "base.html" %}
 {% block page_content %}
-    {% for guy in participators %}
-        <div class="weui-form-preview participator_card weui-flex">
-            <div class="weui-flex__item"><img src="{{ guy.head_img_url }}" class="participators_head"></div>
-            <div class="weui-flex__item">
-                <div class="guy_info">{{ guy.name }}</div>
-                <div class="guy_info">{{ 'Male' if guy.gender == 1 else 'Female' }}</div>
-                <div class="guy_info">{{ guy.city }}</div>
+    <h3 class="page_title">Participator Info.</h3>
+    {% if participators %}
+        {% for guy in participators %}
+            <div class="weui-form-preview participator_card weui-flex">
+                <div class="weui-flex__item"><img src="{{ guy.head_img_url }}" class="participators_head"></div>
+                <div class="weui-flex__item">
+                    <div class="guy_info">{{ guy.name }}</div>
+                    <div class="guy_info">{{ 'Male' if guy.gender == 1 else 'Female' }}</div>
+                    <div class="guy_info">{{ guy.city }}</div>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <p class="tip_p">Sorry, no one joined the party...</p>
+    {% endif %}
     <div class="weui-btn-area button-sp-area">
         <a href="{{ url_for('main.party_detail', party_id=party_id) }}" class="weui-btn weui-btn_primary">Back</a>
     </div>

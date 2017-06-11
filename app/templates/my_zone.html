@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <h3 class="page_title">My Zone</h3>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__hd"><img class="my_head_img" src="{{ current_user.head_img_url }}"></div>
+            <div class="weui-cell__bd">
+                <div class="u_info">{{ current_user.name }}</div>
+                <div class="u_info">Email: {{ current_user.email }}</div>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
+    <div class="weui-cells__title">Party Info.</div>
+    <div class="weui-cells">
+
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__hd"><img src="" alt="" style="width:20px;margin-right:5px;display:block"></div>
+            <div class="weui-cell__bd">
+                <p>cell standard</p>
+            </div>
+            <div class="weui-cell__ft">说明文字</div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__hd"><img src="" alt="" style="width:20px;margin-right:5px;display:block"></div>
+            <div class="weui-cell__bd">
+                <p>cell standard</p>
+            </div>
+            <div class="weui-cell__ft">说明文字</div>
+        </a>
+    </div>
+{% endblock %}
