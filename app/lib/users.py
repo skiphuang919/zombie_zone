@@ -76,25 +76,35 @@ def confirm(token):
     return True
 
 
-def get_joined_parties(user_id, limit=None, offset=None):
-    sql = Participate.query.filter_by(participator_id=user_id).order_by(Participate.join_time.desc())
+def get_joined_parties(user_id, limit=None, offset=None, get_count=False):
+    sql = Participate.query.filter_by(participator_id=user_id)
 
-    if limit is not None:
-        sql = sql.limit(limit)
+    if get_count:
+        return sql.count()
+    else:
+        sql = sql.order_by(Participate.join_time.desc())
 
-    if offset is not None:
-        sql = sql.offset(offset)
+        if limit is not None:
+            sql = sql.limit(limit)
 
-    return [p.joined_party for p in sql.all()]
+        if offset is not None:
+            sql = sql.offset(offset)
+
+        return [p.joined_party for p in sql.all()]
 
 
-def get_created_parties(user_id, limit=None, offset=None):
-    sql = Parties.query.filter_by(host_id=user_id).order_by(Parties.create_time.desc())
+def get_created_parties(user_id, limit=None, offset=None, get_count=False):
+    sql = Parties.query.filter_by(host_id=user_id)
 
-    if limit is not None:
-        sql = sql.limit(limit)
+    if get_count:
+        return sql.count()
+    else:
+        sql = sql.order_by(Parties.create_time.desc())
 
-    if offset is not None:
-        sql = sql.offset(offset)
+        if limit is not None:
+            sql = sql.limit(limit)
 
-    return sql.all()
+        if offset is not None:
+            sql = sql.offset(offset)
+
+        return sql.all()

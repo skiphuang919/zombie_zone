@@ -11,22 +11,30 @@
             <div class="weui-cell__ft"></div>
         </a>
     </div>
-    <div class="weui-cells__title">Party Info.</div>
+
     <div class="weui-cells">
 
         <a class="weui-cell weui-cell_access" href="javascript:;">
-            <div class="weui-cell__hd"><img src="" alt="" style="width:20px;margin-right:5px;display:block"></div>
-            <div class="weui-cell__bd">
-                <p>cell standard</p>
+            <div class="weui-cell__hd">
+                <img class='party_icon' src="{{ url_for('static', filename='img/party_host.png') }}">
             </div>
-            <div class="weui-cell__ft">说明文字</div>
+            <div class="weui-cell__bd">
+                <div class="u_info">Created Parties</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div class="p_count">{{ created_c }}</div>
+            </div>
         </a>
         <a class="weui-cell weui-cell_access" href="javascript:;">
-            <div class="weui-cell__hd"><img src="" alt="" style="width:20px;margin-right:5px;display:block"></div>
-            <div class="weui-cell__bd">
-                <p>cell standard</p>
+            <div class="weui-cell__hd">
+                <img class='party_icon' src="{{ url_for('static', filename='img/party_join.png') }}">
             </div>
-            <div class="weui-cell__ft">说明文字</div>
+            <div class="weui-cell__bd">
+                <div class="u_info">Joined Parties</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div class="p_count">{{ joined_c }}</div>
+            </div>
         </a>
     </div>
 {% endblock %}

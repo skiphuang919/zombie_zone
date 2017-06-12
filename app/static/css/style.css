@@ -107,3 +107,14 @@
     padding-left: 15px;
     padding-top: 5px;
 }
+
+.party_icon{
+    width: 30px;
+    height: 30px;
+    margin-top: 7px;
+}
+
+.p_count{
+    padding-top: 2px;
+    padding-right: 20px;
+}
