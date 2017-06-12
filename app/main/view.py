@@ -3,17 +3,7 @@ from . import main
 from .form import PartyForm
 from ..lib import party, tools, users
 from flask_login import current_user, login_required
-from functools import wraps
-
-
-def confirmed_required(func):
-    @wraps(func)
-    def inner(*args, **kwargs):
-        if not current_user.confirmed:
-            flash('You have not confirmed your email.', category='message')
-            return redirect(url_for('main.index'))
-        return func(*args, **kwargs)
-    return inner
+from ..wrap import confirmed_required
 
 
 @main.route('/')
