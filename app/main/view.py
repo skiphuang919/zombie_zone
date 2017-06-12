@@ -129,8 +129,11 @@ def party_guys(party_id):
 
 
 @main.route('/my_zone')
+@login_required
+@confirmed_required
 def my_zone():
     return render_template('my_zone.html',
                            joined_c=users.get_joined_parties(current_user.user_id, get_count=True),
                            created_c=users.get_created_parties(current_user.user_id, get_count=True))
+
 
