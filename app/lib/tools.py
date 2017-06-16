@@ -1,4 +1,6 @@
 import uuid
+import traceback
+from flask import current_app
 from datetime import date, datetime, timedelta
 
 
@@ -26,8 +28,8 @@ def get_calculated_datetime(origin_dt, days=None, hours=None, seconds=None):
         result_dt = origin_dt + timedelta(days=days if days is not None else 0,
                                           hours=hours if hours is not None else 0,
                                           seconds=seconds if seconds is not None else 0)
-    except Exception as ex:
-        print str(ex)
+    except:
+        current_app.logger.error(traceback.format_exc())
         result_dt = ''
     return result_dt
 
@@ -48,14 +50,16 @@ def obj2dic(obj):
     """
     res = {}
     try:
+        if not obj:
+            return res
         for k, v in vars(obj).items():
             if k.startswith('_'):
                 continue
             if isinstance(v, date):
                 v = v.strftime("%Y-%m-%d %H:%M:%S")
             res[k] = v
-    except Exception as ex:
-        print ex
+    except:
+        current_app.logger.warning(traceback.format_exc())
     return res
 
 

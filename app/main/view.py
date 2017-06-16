@@ -1,4 +1,5 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+import traceback
+from flask import render_template, flash, redirect, url_for, request, jsonify, current_app
 from . import main
 from .form import PartyForm
 from ..lib import party, tools, users
@@ -80,8 +81,8 @@ def ajax_join_or_quit():
                 result['msg'] = 'success'
                 result['data'] = {'joined_count': len(participators),
                                   'participators': ', '.join(participators)}
-            except Exception as ex:
-                print str(ex)
+            except:
+                current_app.logger.error(traceback.format_exc())
     return jsonify(result)
 
 
@@ -102,8 +103,8 @@ def ajax_get_parties():
                 result['data'] = [tools.obj2dic(p) for p in party_list]
             result['status'] = 0
             result['msg'] = 'success'
-        except Exception as ex:
-            print str(ex)
+        except:
+            current_app.logger.error(traceback.format_exc())
     return jsonify(result)
 
 

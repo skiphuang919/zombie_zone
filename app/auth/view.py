@@ -15,7 +15,6 @@ def before_request():
     login the user by open id if it exist
     otherwise redirect to wechat oauth url
     """
-    print session
     if current_user.is_anonymous and request.endpoint not in \
             ['auth.wc_oauth2', 'auth.confirm', 'static', 'auth.logout']:
         openid = session.get('openid')
@@ -44,6 +43,7 @@ def wc_oauth2():
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             token_info = we_chat.get_web_access_token_by_code(code)
             openid = token_info.get('openid')
+            current_app.logger.debug('openid: {}'.format(openid))
             if openid:
                 # get user info by openid
                 access_token = we_chat.get_access_token()
@@ -63,7 +63,7 @@ def wc_oauth2():
                 url_endpoint = session.get('redirect_url_endpoint', 'main.index')
                 return redirect(url_for(url_endpoint))
         except:
-            print traceback.format_exc()
+            current_app.logger.error(traceback.format_exc())
     return jsonify({'msg': 'Authorization failed, please try again.'})
 
 
@@ -92,6 +92,7 @@ def register():
                                                      confirm_url=url_for('auth.confirm', token=token, _external=True)))
                 except:
                     warn_msg = 'Register failed.'
+                    current_app.logger.error(traceback.format_exc())
                 else:
                     flash('A confirmation email has been sent to your mailbox.', category='message')
                     return redirect(url_for('main.index'))
@@ -123,6 +124,7 @@ def resend_confirmation():
                           mail_info=dict(name=current_user.name,
                                          confirm_url=url_for('auth.confirm', token=token, _external=True)))
     except:
+        current_app.logger.error(traceback.format_exc())
         return jsonify({'msg': 'resend confirmation email failed.'})
     else:
         flash('A new confirmation email has been sent to you by email.', category='message')
@@ -137,6 +139,7 @@ def logout():
             session.pop('openid')
         logout_user()
     except:
+        current_app.logger.error(traceback.format_exc())
         return jsonify({'msg': 'logout failed'})
     else:
         return jsonify({'msg': 'logout success'})

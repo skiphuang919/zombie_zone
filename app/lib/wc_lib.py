@@ -2,6 +2,7 @@ import urllib
 import urllib2
 import json
 import traceback
+from flask import current_app
 from .. import cache
 
 
@@ -38,7 +39,7 @@ class WeChat(object):
                 cache.set('access_token', access_token, timeout=expires_in)
                 return access_token
         except:
-            print traceback.format_exc()
+            current_app.logger.error(traceback.format_exc())
 
     def get_oauth2_url(self, redirect_url, scope='snsapi_base', response_type='code', state='1'):
         """
@@ -79,7 +80,7 @@ class WeChat(object):
             data = res.read()
             return json.loads(data)
         except:
-            print traceback.format_exc()
+            current_app.logger.error(traceback.format_exc())
             return {}
 
     def refresh_token(self, refresh_token):
@@ -103,7 +104,7 @@ class WeChat(object):
             data = res.read()
             return json.loads(data)
         except:
-            print traceback.format_exc()
+            current_app.logger.error(traceback.format_exc())
             return {}
 
     def get_wc_user_info(self, open_id, access_token, lang='zh_CN'):
@@ -136,5 +137,5 @@ class WeChat(object):
             data = res.read()
             return json.loads(data)
         except:
-            print traceback.format_exc()
+            current_app.logger.error(traceback.format_exc())
             return {}
