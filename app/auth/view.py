@@ -15,16 +15,20 @@ def before_request():
     login the user by open id if it exist
     otherwise redirect to wechat oauth url
     """
-    if request.endpoint not in ['auth.wc_oauth2', 'auth.confirm', 'static', 'auth.logout']:
+    print session
+    if current_user.is_anonymous and request.endpoint not in \
+            ['auth.wc_oauth2', 'auth.confirm', 'static', 'auth.logout']:
         openid = session.get('openid')
         if openid is None:
+            # get the openid process
             session['redirect_url_endpoint'] = request.endpoint
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
             return redirect(oauth2_url)
         else:
+            # login the user only if it has registered before
             user = users.get_user(open_id=openid)
-            if user and user.cellphone and user.email and current_user.is_anonymous:
+            if user and user.cellphone and user.email:
                 login_user(user)
 
 
@@ -39,18 +43,23 @@ def wc_oauth2():
         try:
             we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
             token_info = we_chat.get_web_access_token_by_code(code)
-            openid = token_info.get('openid', 123)
+            openid = token_info.get('openid')
             if openid:
+                # get user info by openid
                 access_token = we_chat.get_access_token()
                 user_info = we_chat.get_wc_user_info(openid, access_token)
+
                 user = users.update_user(open_id=openid,
                                          name=user_info.get('nickname', 'Curry'),
                                          gender=user_info.get('sex', 1),
                                          city=user_info.get('city', 'Shanghai'),
                                          head_img_url=user_info.get('headimgurl', '/static/img/head_test.jpeg'))
                 session['openid'] = openid
+
+                # login the user only if the user has registered, even got the openid
                 if user.cellphone and user.email:
                     login_user(user)
+
                 url_endpoint = session.get('redirect_url_endpoint', 'main.index')
                 return redirect(url_for(url_endpoint))
         except:
@@ -82,7 +91,6 @@ def register():
                                       mail_info=dict(name=new_user.name,
                                                      confirm_url=url_for('auth.confirm', token=token, _external=True)))
                 except:
-                    raise
                     warn_msg = 'Register failed.'
                 else:
                     flash('A confirmation email has been sent to your mailbox.', category='message')

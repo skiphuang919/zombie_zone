@@ -43,9 +43,9 @@ class Users(db.Model, UserMixin):
     def get_id(self):
         """
         overwrite the method inherit from UserMixin
-        return `open_id` attr instead of default `id`
+        return `user_id` attr instead of default `id`
         """
-        return self.open_id
+        return self.user_id
 
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
@@ -69,7 +69,7 @@ class Users(db.Model, UserMixin):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Users.query.filter_by(open_id=user_id).first()
+    return Users.query.filter_by(user_id=user_id).first()
 
 
 class Parties(db.Model):
