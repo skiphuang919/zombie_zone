@@ -2,7 +2,7 @@
 {% block page_content %}
     <h3 class="page_title">My Zone</h3>
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="javascript:;">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('main.user_info') }}">
             <div class="weui-cell__hd"><img class="my_head_img" src="{{ current_user.head_img_url }}"></div>
             <div class="weui-cell__bd">
                 <div class="u_info">{{ current_user.name }}</div>

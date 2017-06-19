@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <div>Profile Photo</div>
+            </div>
+            <div class="weui-cell__ft">
+                <img class="my_head_img" src="{{ current_user.head_img_url }}">
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+
+            <div class="weui-cell__bd">
+                <div>Name</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div>{{ current_user.name }}</div>
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <div>E-mail</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div>{{ current_user.email }}</div>
+            </div>
+        </a>
+    </div>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <div >Gender</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div>
+                {% if current_user.gender == 1 %}
+                    Male
+                {% else %}
+                    Female
+                {% endif %}
+                </div>
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+
+            <div class="weui-cell__bd">
+                <div>City</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div>{{ current_user.city }}</div>
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <div>Slogan</div>
+            </div>
+            <div class="weui-cell__ft">
+                <div>{{ current_user.slogan }}</div>
+            </div>
+        </a>
+    </div>
+{% endblock %}

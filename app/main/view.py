@@ -128,3 +128,10 @@ def my_zone():
                            created_c=users.get_created_parties(current_user.user_id, get_count=True))
 
 
+@main.route('/user_info')
+@login_required
+@confirmed_required
+def user_info():
+    return render_template('user_info.html', user=current_user)
+
+
