@@ -62,32 +62,32 @@
         </div>
         <script>
             $(function () {
-                update_bind();
-            });
-            function update_bind() {
                 $('.update_act').bind('click', function () {
-                    var item = '{{ item }}';
-                    var value;
-                    if(item=='gender'){
-                        value = $(".profile_item input[name='gender']:checked").val();
-                    }else{
-                        value = $(".profile_item input,textarea").val();
-                    }
-                    $.ajax({
-                        url: '/_update_profile',
-                        dataType: 'json',
-                        data: {'item': item,
-                            'value': value,
-                            'a': Math.random()},
-                        success: function (data) {
-                            if(data.status==0){
-                                flash_finish_toast();
-                                window.location = '{{ url_for('main.user_info') }}'
-                            }else{
-                                $('#ajax_dialog').show().find('.weui-dialog__bd').text(data.msg)
-                            }
+                    ajax_update_profile()
+                })
+            });
+            function ajax_update_profile() {
+                var item = '{{ item }}';
+                var value;
+                if(item=='gender'){
+                    value = $(".profile_item input[name='gender']:checked").val();
+                }else{
+                    value = $(".profile_item input,textarea").val();
+                }
+                $.ajax({
+                    url: '/_update_profile',
+                    dataType: 'json',
+                    data: {'item': item,
+                        'value': value,
+                        'a': Math.random()},
+                    success: function (data) {
+                        if(data.status==0){
+                            flash_finish_toast();
+                            window.location = '{{ url_for('main.user_info') }}'
+                        }else{
+                            $('#ajax_dialog').show().find('.weui-dialog__bd').text(data.msg)
                         }
-                    })
+                    }
                 })
             }
         </script>
