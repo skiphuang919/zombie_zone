@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block page_content %}
     <div class="profile_item">
-        {% if item in ('name', 'email', 'city') %}
+        {% if item in ('name', 'city') %}
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
@@ -63,17 +63,21 @@
         <script>
             $(function () {
                 update_bind();
-                radio
             });
             function update_bind() {
                 $('.update_act').bind('click', function () {
-                    var $this = $(this);
-                    var action_type = $this.data('type');
+                    var item = '{{ item }}';
+                    var value;
+                    if(item=='gender'){
+                        value = $(".profile_item input[name='gender']:checked").val();
+                    }else{
+                        value = $(".profile_item input,textarea").val();
+                    }
                     $.ajax({
                         url: '/_update_profile',
                         dataType: 'json',
-                        data: {'item': '{{ item }}',
-                            'value': $(".profile_item input[type='radio'][name='gender']:checked,input,textarea").val(),
+                        data: {'item': item,
+                            'value': value,
                             'a': Math.random()},
                         success: function (data) {
                             if(data.status==0){

@@ -139,7 +139,7 @@ def user_info():
 @login_required
 @confirmed_required
 def edit_profile(item):
-    if item not in ('name', 'email', 'gender', 'city', 'slogan'):
+    if item not in ('name', 'gender', 'city', 'slogan'):
         flash('invalid item', category='message')
         return redirect(url_for('main.user_info'))
     return render_template('edit_profile.html', item=item, value=getattr(current_user, item))
@@ -153,7 +153,7 @@ def ajax_update_profile():
     item = request.args.get('item')
     value = request.args.get('value')
     current_app.logger.error(request.args)
-    if item in ('name', 'email', 'gender', 'city', 'slogan') and value:
+    if item in ('name', 'gender', 'city', 'slogan') and value:
         try:
             users.update_user_profile(user_id=current_user.user_id,
                                       profile_dic={item: value})
