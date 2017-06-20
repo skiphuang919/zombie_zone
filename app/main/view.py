@@ -132,6 +132,36 @@ def my_zone():
 @login_required
 @confirmed_required
 def user_info():
-    return render_template('user_info.html', user=current_user)
+    return render_template('user_info.html')
+
+
+@main.route('/edit_profile/<item>')
+@login_required
+@confirmed_required
+def edit_profile(item):
+    if item not in ('name', 'email', 'gender', 'city', 'slogan'):
+        flash('invalid item', category='message')
+        return redirect(url_for('main.user_info'))
+    return render_template('edit_profile.html', item=item, value=getattr(current_user, item))
+
+
+@main.route('/_update_profile')
+@login_required
+@confirmed_required
+def ajax_update_profile():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    item = request.args.get('item')
+    value = request.args.get('value')
+    current_app.logger.error(request.args)
+    if item in ('name', 'email', 'gender', 'city', 'slogan') and value:
+        try:
+            users.update_user_profile(user_id=current_user.user_id,
+                                      profile_dic={item: value})
+            result['status'] = 0
+            result['msg'] = 'success'
+        except:
+            current_app.logger.error(traceback.format_exc())
+    return jsonify(result)
+
 
 

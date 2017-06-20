@@ -49,11 +49,11 @@ def wc_oauth2():
                 access_token = we_chat.get_access_token()
                 user_info = we_chat.get_wc_user_info(openid, access_token)
 
-                user = users.update_user(open_id=openid,
-                                         name=user_info.get('nickname', 'Curry'),
-                                         gender=user_info.get('sex', 1),
-                                         city=user_info.get('city', 'Shanghai'),
-                                         head_img_url=user_info.get('headimgurl', '/static/img/head_test.jpeg'))
+                user = users.register_user(open_id=openid,
+                                           reg_info=dict(name=user_info.get('nickname', 'Curry'),
+                                                         gender=user_info.get('sex', 1),
+                                                         city=user_info.get('city', 'Shanghai'),
+                                                         head_img_url=user_info.get('headimgurl', '/static/img/head_test.jpeg')))
                 session['openid'] = openid
 
                 # login the user only if the user has registered, even got the openid
@@ -81,10 +81,10 @@ def register():
             else:
                 try:
                     open_id = session.get('openid')
-                    new_user = users.update_user(open_id=open_id,
-                                                 email=form.email.data,
-                                                 cellphone=form.cellphone.data,
-                                                 slogan=form.slogan.data)
+                    new_user = users.register_user(open_id=open_id,
+                                                   reg_info=dict(email=form.email.data,
+                                                                 cellphone=form.cellphone.data,
+                                                                 slogan=form.slogan.data))
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(recipient=new_user.email,
                                       mail_info=dict(name=new_user.name,

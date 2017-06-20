@@ -6,30 +6,43 @@ from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
-def update_user(open_id=None, name=None, email=None, cellphone=None,
-                gender=None, city=None, slogan=None, head_img_url=None):
+def register_user(open_id=None, reg_info=None):
+    """
+    :param open_id: user openid; str
+    :param reg_info: user info; dict
+    :return:
+    """
+    _commit = False
     user = get_user(open_id=open_id)
     if not user:
         user = Users(user_id=get_db_unique_id(),
                      open_id=open_id)
-    if cellphone is not None:
-        user.cellphone = cellphone
-    if name is not None:
-        user.name = name
-    if email is not None:
-        user.email = email
-    if gender is not None:
-        user.gender = gender
-    if city is not None:
-        user.city = city
-    if slogan is not None:
-        user.slogan = slogan
-    if head_img_url is not None:
-        user.head_img_url = head_img_url
-    user.update_time = datetime.utcnow()
-    db.session.add(user)
-    db.session.commit()
+        _commit = True
+    if reg_info:
+        for k, v in reg_info.items():
+            if hasattr(Users, k):
+                setattr(user, k, v)
+                _commit = True
+    if _commit:
+        user.update_time = datetime.utcnow()
+        db.session.add(user)
+        db.session.commit()
     return user
+
+
+def update_user_profile(user_id, profile_dic):
+    if user_id and profile_dic:
+        user = get_user(user_id=user_id)
+        if user:
+            _commit = False
+            for k, v in profile_dic.items():
+                if hasattr(Users, k):
+                    setattr(user, k, v)
+                    _commit = True
+            if _commit:
+                user.update_time = datetime.utcnow()
+                db.session.add(user)
+                db.session.commit()
 
 
 def get_user(user_id=None, open_id=None, cellphone=None, email=None):
