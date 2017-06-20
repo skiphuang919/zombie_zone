@@ -59,8 +59,7 @@ def wc_oauth2():
                 # login the user only if the user has registered, even got the openid
                 if user.cellphone and user.email:
                     login_user(user)
-
-                url_endpoint = session.get('redirect_url_endpoint', 'main.index')
+                url_endpoint = session.get('redirect_url_endpoint') or 'main.index'
                 return redirect(url_for(url_endpoint))
         except:
             current_app.logger.error(traceback.format_exc())
