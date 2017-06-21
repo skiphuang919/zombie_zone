@@ -17,11 +17,15 @@
             </div>
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">Party Host</h4>
-                <p class="weui-media-box__desc">{{ party.host.name }}</p>
+                <p class="weui-media-box__desc">{{ party.host }}</p>
             </div>
             <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Participators &nbsp;[&nbsp;<span id="joined_count">{{ joined_count }}</span>/<span id="required_count">{{ party.required_count }}</span>&nbsp;]</h4>
-                <p class="weui-media-box__desc"><span id="participators">{{ participators }}</span></p>
+                <h4 class="weui-media-box__title">Create time</h4>
+                <p class="weui-media-box__desc">{{ party.create_time }}</p>
+            </div>
+            <div class="weui-media-box weui-media-box_text">
+                <h4 class="weui-media-box__title">Participators &nbsp;[&nbsp;<span id="joined_count">{{ party.joined_count }}</span>/<span id="required_count">{{ party.required_count }}</span>&nbsp;]</h4>
+                <p class="weui-media-box__desc"><span id="participators">{{ party.participators }}</span></p>
             </div>
             <div class="weui-media-box weui-media-box_text">
                 <h4 class="weui-media-box__title">Extra Note</h4>

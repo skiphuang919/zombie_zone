@@ -5,25 +5,25 @@
             <div class="weui-form-preview__hd">
                 <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">Subject</label>
-                    <em class="weui-form-preview__value">{{ party_info.party.subject }}</em>
+                    <em class="weui-form-preview__value">{{ party_info.subject }}</em>
                 </div>
             </div>
             <div class="weui-form-preview__bd">
                 <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">Date</label>
-                    <span class="weui-form-preview__value">{{ party_info.party.party_time }}</span>
+                    <span class="weui-form-preview__value">{{ party_info.party_time }}</span>
                 </div>
                 <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">Address</label>
-                    <span class="weui-form-preview__value">{{ party_info.party.address }}</span>
+                    <span class="weui-form-preview__value">{{ party_info.address }}</span>
                 </div>
                 <div class="weui-form-preview__item">
                     <label class="weui-form-preview__label">Guys In</label>
-                    <span class="weui-form-preview__value">{{ party_info.joined_count }}/{{ party_info.party.required_count }}</span>
+                    <span class="weui-form-preview__value">{{ party_info.joined_count }}/{{ party_info.required_count }}</span>
                 </div>
             </div>
             <div class="weui-form-preview__ft">
-                <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.party_detail', party_id=party_info.party.party_id) }}">Detail</a>
+                <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.party_detail', party_id=party_info.party_id) }}">Detail</a>
             </div>
         </div>
     {% endfor %}
