@@ -3,6 +3,7 @@ from . import db, login_manager
 from flask_login import UserMixin
 from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Participate(db.Model):
@@ -16,6 +17,7 @@ class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     user_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
     open_id = db.Column(db.String(64), index=True, unique=True, nullable=False)
+    password_hash = db.Column(db.String(128))
     name = db.Column(db.String(64))
     email = db.Column(db.String(128), unique=True, index=True)
     cellphone = db.Column(db.String(16), unique=True, index=True)
@@ -26,6 +28,7 @@ class Users(db.Model, UserMixin):
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.utcnow())
     update_time = db.Column(db.DateTime)
+
     created_parties = db.relationship('Parties',
                                       backref='host',
                                       lazy='dynamic')
@@ -39,6 +42,17 @@ class Users(db.Model, UserMixin):
     def __init__(self, *args, **kwargs):
         super(Users, self).__init__(*args, **kwargs)
         pass
+
+    @property
+    def password(self):
+        raise AttributeError('Unreadable attribute')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def get_id(self):
         """
@@ -83,6 +97,7 @@ class Parties(db.Model):
     note = db.Column(db.String(512))
     status = db.Column(db.Integer, default=0)
     create_time = db.Column(db.DateTime, default=datetime.utcnow())
+
     participators = db.relationship('Participate',
                                     foreign_keys=[Participate.joined_party_id],
                                     backref=db.backref('joined_party', lazy='joined'),
