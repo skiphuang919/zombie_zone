@@ -12,7 +12,7 @@ def index():
     party_list = party.get_parties(limit=10)
     party_info_list = []
     for party_obj in party_list:
-        p_info = vars(party_obj)
+        p_info = tools.obj2dic(party_obj)
         p_info.update({'joined_count': party_obj.participant_count})
         party_info_list.append(p_info)
     return render_template('index.html', party_info_list=party_info_list)
@@ -54,12 +54,12 @@ def party_detail(party_id):
         flash('Party not exist.', category='warn')
         return redirect(url_for('main.index'))
     participators = [p.name for p in party.get_participators(party_obj.party_id)]
-    party_detail_info = vars(party_obj)
+    party_detail_info = tools.obj2dic(party_obj)
     party_detail_info.update(dict(host=party_obj.host.name,
+                                  create_time=tools.utc2local(party_obj.create_time),
                                   joined_count=len(participators),
                                   joined=current_user.has_joined(party_obj),
-                                  participators=', '.join(participators),
-                                  create_time=str(party_obj.create_time)))
+                                  participators=', '.join(participators)))
     return render_template('party_detail.html', party=party_detail_info)
 
 
