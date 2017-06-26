@@ -57,9 +57,8 @@ def party_detail(party_id):
     party_detail_info = tools.obj2dic(party_obj)
     party_detail_info.update(dict(host=party_obj.host.name,
                                   create_time=tools.utc2local(party_obj.create_time),
-                                  joined_count=len(participators),
                                   joined=current_user.has_joined(party_obj),
-                                  participators=', '.join(participators)))
+                                  participators=participators))
     return render_template('party_detail.html', party=party_detail_info)
 
 

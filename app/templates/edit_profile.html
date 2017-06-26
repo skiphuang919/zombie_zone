@@ -42,8 +42,8 @@
             <div class="weui-cells">
                 <div class="weui-cell">
                     <div class="weui-cell__bd">
-                        <textarea class="weui-textarea" rows="3">{{ value }}</textarea>
-                        <div class="weui-textarea-counter"><span>0</span>/200</div>
+                        <textarea class="weui-textarea" rows="3" maxlength="100" >{{ value }}</textarea>
+                        <div class="weui-textarea-counter"><span id="c_count">{{ value|length }}</span>/100</div>
                     </div>
                 </div>
             </div>
@@ -64,6 +64,9 @@
             $(function () {
                 $('.update_act').bind('click', function () {
                     ajax_update_profile()
+                });
+                $('.weui-textarea').bind('input propertychange', function () {
+                    $('#c_count').text($(this).val().length)
                 })
             });
             function ajax_update_profile() {

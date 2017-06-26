@@ -9,7 +9,7 @@ class RegisterForm(FlaskForm):
                                                       Regexp('^\d{11}$', message=u'invalid cellphone')])
     email = StringField(u'E-mail', validators=[DataRequired(message=u'E-mail is required'),
                                                Email(message=u'Invalid E-mail.')])
-    slogan = TextAreaField(u'Slogan', validators=[Length(max=128, message=u'slogan out of limitation 128')])
+    slogan = TextAreaField(u'Slogan', validators=[Length(max=100, message=u'slogan out of limitation 100')])
     submit = SubmitField(u'Submit')
 
 
