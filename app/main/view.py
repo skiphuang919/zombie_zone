@@ -10,12 +10,7 @@ from ..wrap import confirmed_required
 @main.route('/')
 def index():
     party_list = party.get_parties(limit=10)
-    party_info_list = []
-    for party_obj in party_list:
-        p_info = tools.obj2dic(party_obj)
-        p_info.update({'joined_count': party_obj.participant_count})
-        party_info_list.append(p_info)
-    return render_template('index.html', party_info_list=party_info_list)
+    return render_template('index.html', party_info_list=party_list)
 
 
 @main.route('/add_party', methods=['GET', 'POST'])
@@ -169,6 +164,21 @@ def ajax_update_profile():
         except:
             current_app.logger.error(traceback.format_exc())
     return jsonify(result)
+
+
+@main.route('/get_parties/<_type>')
+@login_required
+@confirmed_required
+def get_parties(_type):
+    if _type == 'created':
+        party_list = users.get_created_parties(current_user.user_id)
+        render_temp = 'party_created.html'
+    elif _type == 'joined':
+        party_list = users.get_joined_parties(current_user.user_id)
+        render_temp = 'party_joined.html'
+    else:
+        return redirect(url_for('main.index'))
+    return render_template(render_temp, party_list=party_list)
 
 
 
