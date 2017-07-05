@@ -44,6 +44,7 @@ def add_party():
 @login_required
 @confirmed_required
 def party_detail(party_id):
+    from_url = request.args.get('from_url')
     party_obj = party.get_party_by_id(party_id=party_id)
     if not party_obj:
         flash('Party not exist.', category='warn')
@@ -54,7 +55,15 @@ def party_detail(party_id):
                                   create_time=tools.utc2local(party_obj.create_time),
                                   joined=current_user.has_joined(party_obj),
                                   participators=participators))
-    return render_template('party_detail.html', party=party_detail_info)
+
+    if from_url == 'created_party':
+        back_url = url_for('main.get_parties', _type='created')
+    elif from_url == 'joined_party':
+        back_url = url_for('main.get_parties', _type='joined')
+    else:
+        back_url = url_for('main.index')
+
+    return render_template('party_detail.html', party=party_detail_info, back_url=back_url)
 
 
 @main.route('/_join_or_quit')
@@ -85,28 +94,6 @@ def ajax_join_or_quit():
                                   'participators': ', '.join(participators)}
             except:
                 current_app.logger.error(traceback.format_exc())
-    return jsonify(result)
-
-
-@main.route('/_get_parties')
-@login_required
-def ajax_get_parties():
-    result = {'status': -1, 'msg': 'failed', 'data': ''}
-    _type = request.args.get('_type')
-    if _type in ('all', 'created', 'joined'):
-        try:
-            if _type == 'all':
-                party_list = party.get_parties()
-            elif _type == 'joined':
-                party_list = users.get_joined_parties(current_user.user_id)
-            else:
-                party_list = users.get_created_parties(current_user.user_id)
-            if party_list:
-                result['data'] = [tools.obj2dic(p) for p in party_list]
-            result['status'] = 0
-            result['msg'] = 'success'
-        except:
-            current_app.logger.error(traceback.format_exc())
     return jsonify(result)
 
 
