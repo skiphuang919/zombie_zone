@@ -23,12 +23,38 @@
     z-index: 1001;
     top: 50px;
     right: 5px;
-    width: 120px;
+    width: 140px;
 }
 
 .menu_div{
     background-color: black;
     color: white;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.menu_ul{
+    text-decoration: none;
+    list-style: none;
+    font-size: 14px;
+    color: white;
+}
+
+.menu_ul a{
+    color: white;
+}
+
+.divider{
+    height: 1px;
+    margin: 9px 0;
+    overflow: hidden;
+    background-color: #8e8e8e;
+}
+
+.menu_icon{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
 }
 
 .triangle{

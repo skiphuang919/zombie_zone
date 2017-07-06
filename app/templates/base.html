@@ -13,7 +13,23 @@
             <div class="my_mask"></div>
             <div class="top_menu">
                 <div class="triangle"></div>
-                <div class="menu_div">menu</div>
+                <div class="menu_div">
+                    <ul class="menu_ul">
+                        <li>
+                            <a href="{{ url_for('main.add_party') }}">
+                                <span><img class="menu_icon" src="{{ url_for('static', filename='img/infinity.png') }}"></span>
+                                <span style="float: right">Create Party</span>
+                            </a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <a href="#">
+                                <span><img class="menu_icon" src="{{ url_for('static', filename='img/pen.png') }}"></span>
+                                <span style="float: right">Write Blog</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div id="loadingToast" class="weui-loading_toast" style="display:none;">
                 <div class="weui-mask_transparent"></div>
