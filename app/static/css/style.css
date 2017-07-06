@@ -6,6 +6,39 @@
     right: 0;
 }
 
+.my_mask{
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0);
+}
+
+.top_menu{
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    top: 50px;
+    right: 5px;
+    width: 120px;
+}
+
+.menu_div{
+    background-color: black;
+    color: white;
+}
+
+.triangle{
+    margin-left: 80px;
+    width:0;
+    border-width: 8px 8px 8px 8px;
+    border-color: transparent transparent black transparent;
+    border-style: solid;
+}
+
 .page-hd{
     position: fixed;
     z-index: 99 !important;
@@ -36,6 +69,11 @@
     height: 50px;
     width: 50px;
     padding-left: 20px;
+}
+
+#add_img{
+    padding-right: 20px;
+    padding-top: 12px;
 }
 
 .page_title{
