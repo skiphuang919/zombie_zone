@@ -10,6 +10,11 @@
     </head>
     <body>
         <div id="container">
+            <div class="my_mask"></div>
+            <div class="top_menu">
+                <div class="triangle"></div>
+                <div class="menu_div">menu</div>
+            </div>
             <div id="loadingToast" class="weui-loading_toast" style="display:none;">
                 <div class="weui-mask_transparent"></div>
                 <div class="weui-toast">
@@ -24,11 +29,18 @@
                     <p class="weui-toast__content">ok</p>
                 </div>
             </div>
-            <div class="page-hd">
-                <a href="{{ url_for('main.index') }}">
-                    <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
-                </a>
-
+            <div class="page-hd weui-flex">
+                <div>
+                    <a href="{{ url_for('main.index') }}">
+                        <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
+                    </a>
+                </div>
+                <div class="weui-flex__item"></div>
+                <div>
+                    <a href="javascript:show_add_menu()">
+                        <img id="add_img" src="{{ url_for('static', filename='img/add.png') }}" class="weui-tabbar__icon">
+                    </a>
+                </div>
             </div>
             <div class="page-bd">
                 {% for categry, message in get_flashed_messages(with_categories=True) %}
@@ -64,19 +76,15 @@
             </div>
             <div class="weui-tabbar" style="position: fixed">
                 <a href="{{ url_for('main.index') }}" class="weui-tabbar__item">
-                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
+                    <img src="{{ url_for('static', filename='img/church.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">All</p>
                 </a>
-                <a href="{{ url_for('main.add_party') }}" class="weui-tabbar__item">
-                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
-                    <p class="weui-tabbar__label">Create Pa</p>
-                </a>
                 <a href="#" class="weui-tabbar__item">
-                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
+                    <img src="{{ url_for('static', filename='img/tomb.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">Tomb</p>
                 </a>
                 <a href="{{ url_for('main.my_zone') }}" class="weui-tabbar__item">
-                    <img src="{{ url_for('static', filename='img/zombie_zone.png') }}" alt="" class="weui-tabbar__icon">
+                    <img src="{{ url_for('static', filename='img/mine.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">Me</p>
                 </a>
             </div>
@@ -104,6 +112,13 @@
                     $(this).parents('#ajax_dialog').fadeOut(200);
                 });
             });
+            // mask hide
+            $(function () {
+               $('.my_mask').on('click', function () {
+                   $(this).hide();
+                   $('.top_menu').hide()
+               })
+            });
             // flash toast
             function flash_finish_toast() {
                 var $finishToast = $('#finishToast');
@@ -111,6 +126,11 @@
                 setTimeout(function () {
                     $finishToast.fadeOut(500);
                 }, 500);
+            }
+            // show top memu
+            function show_add_menu() {
+                $('.my_mask').show();
+                $('.top_menu').show()
             }
         </script>
     </body>
