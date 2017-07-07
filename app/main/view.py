@@ -100,7 +100,7 @@ def ajax_join_or_quit():
 @main.route('/_get_party_guys')
 @login_required
 @confirmed_required
-def ajax_party_guys():
+def ajax_get_party_guys():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id')
     if party_id:
