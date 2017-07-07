@@ -225,6 +225,6 @@
     color: #9b9b9b;
 }
 .modal_content{
-    height: 350px;
+    max-height: 350px;
     overflow: scroll;
 }

@@ -43,10 +43,10 @@
         </div>
         <div class="weui-panel__ft">
             <div class="weui-btn-area">
-                {% if not joined %}
-                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary act_btn" data-type="join">Join</a>
-                {% else %}
+                {% if party.joined %}
                     <a href="javascript:void (0)" class="weui-btn weui-btn_warn act_btn" data-type="quit">Quit</a>
+                {% else %}
+                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary act_btn" data-type="join">Join</a>
                 {% endif %}
                 <a href="{{ back_url }}" class="weui-btn weui-btn_default">Back</a>
             </div>
