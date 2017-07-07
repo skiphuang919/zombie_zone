@@ -10,7 +10,7 @@
     </head>
     <body>
         <div id="container">
-            <div class="my_mask"></div>
+            <div class="my_transparent_mask"></div>
             <div class="top_menu">
                 <div class="triangle"></div>
                 <div class="menu_div">
@@ -30,6 +30,14 @@
                         </li>
                     </ul>
                 </div>
+            </div>
+            <div class="my_mask"></div>
+            <div class="my_modal">
+                <div class="modal_h">
+                    <h4>Participators Info.</h4>
+                    <span class="modal_close">×</span>
+                </div>
+                <div class="modal_content">modal content</div>
             </div>
             <div id="loadingToast" class="weui-loading_toast" style="display:none;">
                 <div class="weui-mask_transparent"></div>
@@ -128,12 +136,19 @@
                     $(this).parents('#ajax_dialog').fadeOut(200);
                 });
             });
-            // mask hide
+            // click mask hide
             $(function () {
-               $('.my_mask').on('click', function () {
+               $('.my_transparent_mask').on('click', function () {
                    $(this).hide();
                    $('.top_menu').hide()
                })
+            });
+
+            $(function () {
+                $('.modal_close').on('click', function () {
+                    $('.my_modal').hide();
+                    $('.my_mask').hide()
+                })
             });
             // flash toast
             function flash_finish_toast() {
@@ -145,8 +160,13 @@
             }
             // show top memu
             function show_add_menu() {
-                $('.my_mask').show();
+                $('.my_transparent_mask').show();
                 $('.top_menu').show()
+            }
+            // show modal
+            function show_my_modal() {
+                $('.my_mask').show();
+                $('.my_modal').show()
             }
         </script>
     </body>

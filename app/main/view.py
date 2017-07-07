@@ -70,7 +70,7 @@ def party_detail(party_id):
 @login_required
 @confirmed_required
 def ajax_join_or_quit():
-    result = {'status': -1, 'msg': 'internal error', 'data': ''}
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id')
     action_type = request.args.get('action_type')
     if party_id and (action_type in ('join', 'quit')):
@@ -97,15 +97,30 @@ def ajax_join_or_quit():
     return jsonify(result)
 
 
-@main.route('/party_guys/<party_id>')
+@main.route('/_get_party_guys')
 @login_required
 @confirmed_required
-def party_guys(party_id):
-    party_obj = party.get_party_by_id(party_id=party_id)
-    if not current_user.has_joined(party_obj) and party_obj.host_id != current_user.user_id:
-        flash('Access failed for passerby.', category='message')
-        return redirect(url_for('main.party_detail', party_id=party_id))
-    return render_template('participators.html', participators=party.get_participators(party_id), party_id=party_id)
+def ajax_party_guys():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    party_id = request.args.get('party_id')
+    if party_id:
+        try:
+            party_obj = party.get_party_by_id(party_id=party_id)
+            if party_obj:
+                if not current_user.has_joined(party_obj) and party_obj.host_id != current_user.user_id:
+                    result['status'] = 1
+                    result['msg'] = 'Access failed for passerby'
+                else:
+                    participators = party.get_participators(party_id)
+                    result['status'] = 0
+                    result['msg'] = 'success'
+                    result['data'] = [tools.obj2dic(p) for p in participators]
+            else:
+                current_app.logger.debug('party not exist.')
+        except:
+            current_app.logger.error(traceback.format_exc())
+    current_app.logger.debug(result)
+    return jsonify(result)
 
 
 @main.route('/my_zone')

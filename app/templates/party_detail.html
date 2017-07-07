@@ -32,7 +32,7 @@
                 <p class="weui-media-box__desc">{{ party.note }}</p>
             </div>
             <div class="weui-media-box weui-media-box_text">
-                <a class="weui-cell weui-cell_access participators_access" href="{{ url_for('main.party_guys', party_id=party.party_id) }}">
+                <a class="weui-cell weui-cell_access participators_access" href="javascript:ajax_get_party_guys()">
                     <div class="weui-cell__bd">
                         <p>Participators Info</p>
                     </div>
@@ -97,6 +97,42 @@
             }else{
                 $('.act_btn[data-type="join"]').removeClass('weui-btn_disabled');
             }
+        }
+        function ajax_get_party_guys() {
+            $.ajax({
+                type: 'GET',
+                url: '/_get_party_guys',
+                dataType: 'json',
+                data: {'party_id': '{{ party.party_id }}'},
+                success: function (data) {
+                    if(data.status != 0){
+                        $('#ajax_dialog').show().find('.weui-dialog__bd').text(data.msg)
+                    }else{
+                        show_guys(data.data)
+                    }
+                }
+            })
+        }
+
+        function show_guys(data) {
+            var $modal = $('.modal_content');
+            $modal.empty();
+            if(data.length==0){
+                var empty_msg = $('<div/>').text('Sorry, no one has joined.').css({padding: '20px'});
+                $modal.append(empty_msg);
+            }else{
+                for(var i in data){
+                    var name = $('<div/>', {'class': 'guy_info'}).text(data[i].name);
+                    var gender = $('<div/>', {'class': 'guy_info'}).text(parseInt(data[i].gender)==1 ? 'Male': 'Female');
+                    var city = $('<div/>', {'class': 'guy_info'}).text(data[i].city);
+                    var head_img = $('<img/>', {src: data[i].head_img_url, 'class': 'participators_head'});
+                    var div1 = $('<div/>', {'class': 'weui-flex__item'}).append(head_img);
+                    var div2 = $('<div/>', {'class': 'weui-flex__item'}).append(name).append(gender).append(city);
+                    var preview_card = $('<div/>', {'class': 'weui-form-preview participator_card weui-flex'}).append(div1).append(div2);
+                    $modal.append(preview_card);
+                }
+            }
+            show_my_modal();
         }
 
     </script>

@@ -6,7 +6,7 @@
     right: 0;
 }
 
-.my_mask{
+.my_transparent_mask{
     display: none;
     position: fixed;
     z-index: 1000;
@@ -15,6 +15,17 @@
     left: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0);
+}
+
+.my_mask {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .top_menu{
@@ -185,4 +196,35 @@
 
 .float_right{
     text-align: right;
+}
+
+.my_modal{
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    top: 180px;
+    left: 40px;
+    right: 40px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+}
+
+.modal_h{
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+    text-align: left;
+}
+
+.modal_close{
+    float: right;
+    font-size: 25px;
+    position: absolute;
+    top:10px;
+    right: 20px;
+    color: #9b9b9b;
+}
+.modal_content{
+    height: 280px;
+    overflow: scroll;
 }
