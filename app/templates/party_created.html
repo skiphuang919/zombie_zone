@@ -2,7 +2,7 @@
 {% block page_content %}
     {% if party_list %}
         {% for party_info in party_list %}
-            <div class="weui-form-preview preview_card">
+            <div class="weui-form-preview preview_card" id="{{ party_info.party_id }}">
                 <div class="weui-form-preview__hd">
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">Subject</label>
@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="weui-form-preview__ft">
-                    <a class="weui-form-preview__btn weui-form-preview__btn_default" href="javascript:">Del</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_action('{{ party_info.party_id }}')">Del</a>
                     <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.party_detail', party_id=party_info.party_id, from_url='created_party') }}">Detail</a>
                 </div>
             </div>
@@ -46,4 +46,27 @@
             </div>
         </div>
     {% endif %}
+    <script>
+        function confirm_action(party_id) {
+            var $dialog = $('#ajax_dialog2');
+            var msg = 'Are you sure about the delete?';
+            $dialog.find('.weui-dialog__bd').text(msg);
+            $dialog.find('.weui-dialog__btn_primary').bind('onclick', ajax_del_party(party_id));
+            $dialog.show()
+        }
+        function ajax_del_party(party_id) {
+            $.ajax({
+                type: 'POST',
+                url: '/_del_party',
+                dataType: 'json',
+                data: {'party_id': party_id,
+                    'a': Math.random()},
+                success: function (data) {
+                    if(data.status==0){
+                        $("#"+party_id).remove()
+                    }
+                }
+            })
+        }
+    </script>
 {% endblock %}

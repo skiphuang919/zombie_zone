@@ -183,4 +183,9 @@ def get_parties(_type):
     return render_template(render_temp, party_list=party_list)
 
 
-
+@main.route('/_del_party', methods=['POST'])
+def ajax_delete_party():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    party_id = request.form.get('party_id')
+    if party_id:
+        pass

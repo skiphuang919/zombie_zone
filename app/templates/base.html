@@ -39,14 +39,14 @@
                 </div>
                 <div class="modal_content">modal content</div>
             </div>
-            <div id="loadingToast" class="weui-loading_toast" style="display:none;">
+            <div id="loadingToast" class="weui-loading_toast hide_this">
                 <div class="weui-mask_transparent"></div>
                 <div class="weui-toast">
                     <div class="weui-loading weui-icon_toast"></div>
                     <p class="weui-toast__content">loading</p>
                 </div>
             </div>
-            <div id="finishToast" class="weui-loading_toast" style="display:none;">
+            <div id="finishToast" class="weui-loading_toast hide_this">
                 <div class="weui-mask_transparent"></div>
                 <div class="weui-toast">
                     <i class="weui-icon-success-no-circle weui-icon_toast"></i>
@@ -73,7 +73,7 @@
                     {% elif categry == 'info' %}
                         <div class="weui-toptips weui-toptips_info flash_tip" style="display: block">{{ message }}</div>
                     {% elif categry == 'message' %}
-                        <div class="dialog flash_dialog">
+                        <div id="flash_dialog">
                             <div class="weui-mask"></div>
                             <div class="weui-dialog">
                                 <div class="weui-dialog__bd">{{ message }}</div>
@@ -84,12 +84,23 @@
                         </div>
                     {% endif %}
                 {% endfor %}
-                <div class="dialog" id="ajax_dialog">
+                <div class="dialog hide_this" id="ajax_dialog">
                     <div class="weui-mask"></div>
                     <div class="weui-dialog">
-                        <div class="weui-dialog__bd">{{ message }}</div>
+                        <div class="weui-dialog__bd"></div>
                         <div class="weui-dialog__ft">
                             <a href="#" class="weui-dialog__btn weui-dialog__btn_primary">OK</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dialog hide_this" id="ajax_dialog2">
+                    <div class="weui-mask"></div>
+                    <div class="weui-dialog">
+                        <div class="weui-dialog__bd"></div>
+                        <div class="weui-dialog__ft">
+                            <a href="javascript:void (0);" class="weui-dialog__btn weui-dialog__btn_default">No</a>
+                            <a href="javascript:void (0);" class="weui-dialog__btn weui-dialog__btn_primary">Yes</a>
                         </div>
                     </div>
                 </div>
@@ -126,16 +137,17 @@
             });
             // dialog for flash
             $(function () {
-                $('.flash_dialog .weui-dialog__btn').on('click', function(){
-                    $(this).parents('.flash_dialog').fadeOut(200).remove();
+                $('#flash_dialog').find('.weui-dialog__btn').on('click', function(){
+                    $(this).parents('#flash_dialog').hide().remove();
                 });
             });
             // dialog for ajax
             $(function () {
-                $('#ajax_dialog').find('.weui-dialog__btn').on('click', function(){
-                    $(this).parents('#ajax_dialog').fadeOut(200);
+                $('.dialog').find('.weui-dialog__btn').on('click', function(){
+                    $(this).parents('.dialog').hide();
                 });
             });
+
             // click mask hide
             $(function () {
                $('.my_transparent_mask').on('click', function () {

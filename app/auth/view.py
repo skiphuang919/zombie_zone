@@ -116,7 +116,7 @@ def confirm(token):
 
 @auth.route('/resend_confirm')
 @login_required
-def resend_confirmation():
+def resend_confirm():
     try:
         token = current_user.generate_confirm_token()
         send_confirm_mail(recipient=current_user.email,
