@@ -51,7 +51,9 @@
             var $dialog = $('#ajax_dialog2');
             var msg = 'Are you sure about the delete?';
             $dialog.find('.weui-dialog__bd').text(msg);
-            $dialog.find('.weui-dialog__btn_primary').bind('onclick', ajax_del_party(party_id));
+            $dialog.find('.weui-dialog__btn_primary').on('click', function(){
+                ajax_del_party(party_id);
+            });
             $dialog.show()
         }
         function ajax_del_party(party_id) {

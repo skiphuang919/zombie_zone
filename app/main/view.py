@@ -188,4 +188,11 @@ def ajax_delete_party():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.form.get('party_id')
     if party_id:
-        pass
+        try:
+            party.delete_party(party_id)
+        except:
+            current_app.logger.error(traceback.format_exc())
+        else:
+            result['status'] = 0
+            result['msg'] = 'success'
+    return jsonify(result)

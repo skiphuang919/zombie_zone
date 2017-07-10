@@ -6,6 +6,7 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from .lib import tools
 
+
 class Participate(db.Model):
     __tablename__ = 'participate'
     participator_id = db.Column(db.String(64), db.ForeignKey('users.user_id'), primary_key=True)

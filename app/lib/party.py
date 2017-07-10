@@ -1,7 +1,6 @@
 from .. import db
 from ..model import Parties, Participate
 from tools import get_db_unique_id, get_calculated_datetime, current_utc_time
-from flask_login import current_user
 
 
 def add_party(subject=None, party_time=None, address=None, host_id=None,
@@ -39,3 +38,10 @@ def get_parties(available=False, limit=None, offset=None):
         sql = sql.offset(offset)
 
     return sql.all()
+
+
+def delete_party(party_id):
+    party = Parties.query.filter_by(party_id=party_id).first()
+    if party:
+        db.session.delete(party)
+        db.session.commit()
