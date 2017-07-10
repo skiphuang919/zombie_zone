@@ -65,7 +65,10 @@
                     'a': Math.random()},
                 success: function (data) {
                     if(data.status==0){
-                        $("#"+party_id).remove()
+                        $("#"+party_id).remove();
+                        if($('.preview_card').length==0){
+                            window.location="{{ url_for('main.my_zone') }}"
+                        }
                     }
                 }
             })
