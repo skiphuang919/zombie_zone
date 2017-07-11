@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block page_content %}
     {% if party_list %}
-        {% for party_info in party_list %}
+        {% for party_info, join_time in party_list %}
             <div class="weui-form-preview preview_card">
                 <div class="weui-form-preview__hd">
                     <div class="weui-form-preview__item">
@@ -11,7 +11,7 @@
                 </div>
                 <div class="weui-form-preview__bd">
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">Date</label>
+                        <label class="weui-form-preview__label">Party time</label>
                         <span class="weui-form-preview__value">{{ party_info.party_time }}</span>
                     </div>
                     <div class="weui-form-preview__item">
@@ -19,8 +19,8 @@
                         <span class="weui-form-preview__value">{{ party_info.address }}</span>
                     </div>
                     <div class="weui-form-preview__item">
-                        <label class="weui-form-preview__label">Guys In</label>
-                        <span class="weui-form-preview__value">{{ party_info.participant_count }}/{{ party_info.required_count }}</span>
+                        <label class="weui-form-preview__label">Join time</label>
+                        <span class="weui-form-preview__value">{{ join_time }}</span>
                     </div>
                 </div>
                 <div class="weui-form-preview__ft">

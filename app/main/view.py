@@ -37,7 +37,7 @@ def add_party():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
             flash(warn_msg, category='warn')
-    return render_template('party.html', form=form)
+    return render_template('party.html', form=form, top_title='Create Party')
 
 
 @main.route('/party_detail/<party_id>')
@@ -63,7 +63,7 @@ def party_detail(party_id):
     else:
         back_url = url_for('main.index')
 
-    return render_template('party_detail.html', party=party_detail_info, back_url=back_url)
+    return render_template('party_detail.html', party=party_detail_info, back_url=back_url, top_title='Party Detail')
 
 
 @main.route('/_join_or_quit')
@@ -119,7 +119,6 @@ def ajax_get_party_guys():
                 current_app.logger.debug('party not exist.')
         except:
             current_app.logger.error(traceback.format_exc())
-    current_app.logger.debug(result)
     return jsonify(result)
 
 
@@ -129,14 +128,15 @@ def ajax_get_party_guys():
 def my_zone():
     return render_template('my_zone.html',
                            joined_c=users.get_joined_parties(current_user.user_id, get_count=True),
-                           created_c=users.get_created_parties(current_user.user_id, get_count=True))
+                           created_c=users.get_created_parties(current_user.user_id, get_count=True),
+                           top_title='My Zone')
 
 
 @main.route('/user_info')
 @login_required
 @confirmed_required
 def user_info():
-    return render_template('user_info.html')
+    return render_template('user_info.html', top_title='Profile')
 
 
 @main.route('/edit_profile/<item>')
@@ -146,7 +146,8 @@ def edit_profile(item):
     if item not in ('name', 'gender', 'city', 'slogan'):
         flash('invalid item', category='message')
         return redirect(url_for('main.user_info'))
-    return render_template('edit_profile.html', item=item, value=getattr(current_user, item))
+    return render_template('edit_profile.html', item=item,
+                           value=getattr(current_user, item), top_title=item.capitalize())
 
 
 @main.route('/_update_profile')
@@ -175,12 +176,14 @@ def get_parties(_type):
     if _type == 'created':
         party_list = users.get_created_parties(current_user.user_id)
         render_temp = 'party_created.html'
+        top_title = 'Created Parties'
     elif _type == 'joined':
         party_list = users.get_joined_parties(current_user.user_id)
         render_temp = 'party_joined.html'
+        top_title = 'Joined Parties'
     else:
         return redirect(url_for('main.index'))
-    return render_template(render_temp, party_list=party_list)
+    return render_template(render_temp, party_list=party_list, top_title=top_title)
 
 
 @main.route('/_del_party', methods=['POST'])

@@ -103,7 +103,7 @@ def get_joined_parties(user_id, limit=None, offset=None, get_count=False):
         if offset is not None:
             sql = sql.offset(offset)
 
-        return [p.joined_party for p in sql.all()]
+        return [(p.joined_party, p.local_join_time) for p in sql.all()]
 
 
 def get_created_parties(user_id, limit=None, offset=None, get_count=False):

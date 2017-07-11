@@ -84,6 +84,7 @@
     right: 0;
     height: 50px;
     background: black;
+    color: white;
 }
 
 .page-bd{
@@ -102,6 +103,11 @@
     font-size: 14px;
 }
 
+.top_title{
+    text-align: center;
+    line-height: 50px;
+}
+
 #logo_img{
     height: 50px;
     width: 50px;
@@ -111,14 +117,6 @@
 #add_img{
     padding-right: 20px;
     padding-top: 12px;
-}
-
-.page_title{
-    font-size: 20px;
-    font-weight: 200;
-    text-align: center;
-    padding-top: 20px;
-
 }
 
 .weui-toptips_info{

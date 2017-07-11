@@ -54,14 +54,14 @@
                 </div>
             </div>
             <div class="page-hd weui-flex">
-                <div>
+                <div class="weui-flex__item">
                     <a href="{{ url_for('main.index') }}">
                         <img id="logo_img" src="{{ url_for('static', filename='img/zombie_zone.png') }}">
                     </a>
                 </div>
-                <div class="weui-flex__item"></div>
-                <div>
-                    <a href="javascript:show_add_menu()">
+                <div class="weui-flex__item top_title" >{{ top_title }}</div>
+                <div class="weui-flex__item">
+                    <a href="javascript:show_add_menu()" style="float: right">
                         <img id="add_img" src="{{ url_for('static', filename='img/add.png') }}" class="weui-tabbar__icon">
                     </a>
                 </div>
