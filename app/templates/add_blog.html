@@ -6,13 +6,12 @@
 {% block page_content %}
     <form method="post">
         {{ form.hidden_tag()  }}
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    {{ form.body(class="weui-textarea" ,placeholder="say you what u wanna say", row="3") }}
-                </div>
-            </div>
+        <div class="weui-cells__title">Write blog by markdown</div>
+
+        <div class="type_post_div">
+            {{ form.body(class="weui-textarea post_textarea") }}
         </div>
+
         <div class="weui-btn-area showToast">
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
         </div>

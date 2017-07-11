@@ -226,3 +226,13 @@
     max-height: 350px;
     overflow: scroll;
 }
+
+.post_textarea{
+    height: 150px;
+    margin-bottom: 10px;
+}
+
+.type_post_div{
+    padding: 10px;
+    font-size: 14px;
+}
