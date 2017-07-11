@@ -42,15 +42,15 @@ class Users(db.Model, UserMixin):
                                       backref='host',
                                       lazy='dynamic')
 
+    # more that one foreign key between two table, use `foreign_keys` to
+    # qualify each relationship by instructing which foreign key column should be considered
     joined_parties = db.relationship('Participate',
                                      foreign_keys=[Participate.participator_id],
                                      backref=db.backref('participator', lazy='joined'),
                                      lazy='dynamic',
                                      cascade='all, delete-orphan')
 
-    def __init__(self, *args, **kwargs):
-        super(Users, self).__init__(*args, **kwargs)
-        pass
+    posts = db.relationship('Posts', backref='author', lazy='dynamic')
 
     @property
     def password(self):
@@ -113,10 +113,6 @@ class Parties(db.Model):
                                     lazy='dynamic',
                                     cascade='all, delete-orphan')
 
-    def __init__(self, *args, **kwargs):
-        super(Parties, self).__init__(*args, **kwargs)
-        pass
-
     @property
     def participant_count(self):
         return self.participators.count()
@@ -141,4 +137,12 @@ class Parties(db.Model):
     def local_create_time(self, v):
         raise AttributeError('Read only attribute')
 
+
+class Posts(db.Model):
+    __tablename__ = 'posts'
+    post_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    author_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
 
