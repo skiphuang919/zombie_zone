@@ -2,6 +2,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Length, Regexp
+from flask_pagedown.fields import PageDownField
 
 
 class PartyForm(FlaskForm):
@@ -16,4 +17,9 @@ class PartyForm(FlaskForm):
     note = TextAreaField(u'Note',
                          validators=[Length(max=128, message=u'Accident desc out of limitation 128')])
     submit = SubmitField(u'Submit')
+
+
+class PostForm(FlaskForm):
+    body = PageDownField(u'Settle down, and write it down.')
+    submit = SubmitField('Submit')
 

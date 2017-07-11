@@ -1,7 +1,7 @@
 import traceback
 from flask import render_template, flash, redirect, url_for, request, jsonify, current_app
 from . import main
-from .form import PartyForm
+from .form import PartyForm, PostForm
 from ..lib import party, tools, users
 from flask_login import current_user, login_required
 from ..wrap import confirmed_required
@@ -187,6 +187,8 @@ def get_parties(_type):
 
 
 @main.route('/_del_party', methods=['POST'])
+@login_required
+@confirmed_required
 def ajax_delete_party():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.form.get('party_id')
@@ -199,3 +201,11 @@ def ajax_delete_party():
             result['status'] = 0
             result['msg'] = 'success'
     return jsonify(result)
+
+
+@main.route('/edit_blog', methods=['GET', 'POST'])
+@login_required
+@confirmed_required
+def edit_blog():
+    form = PostForm()
+    return render_template('add_blog.html', form=form, top_title='Write Blog')

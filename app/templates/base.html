@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        {% block head %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
         <title>Zombie Zone</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/weui.css') }}"/>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
+        {% endblock %}
     </head>
     <body>
         <div id="container">
@@ -23,7 +25,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#">
+                            <a href="{{ url_for('main.edit_blog') }}">
                                 <span><img class="menu_icon" src="{{ url_for('static', filename='img/pen.png') }}"></span>
                                 <span style="float: right">Write Blog</span>
                             </a>
