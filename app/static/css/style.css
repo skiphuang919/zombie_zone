@@ -6,6 +6,10 @@
     right: 0;
 }
 
+#container a{
+    text-decoration: none;
+}
+
 .my_transparent_mask{
     display: none;
     position: fixed;
@@ -69,7 +73,7 @@
 }
 
 .triangle{
-    margin-left: 80px;
+    margin-left: 100px;
     width:0;
     border-width: 8px 8px 8px 8px;
     border-color: transparent transparent black transparent;
@@ -110,13 +114,12 @@
 
 #logo_img{
     height: 50px;
-    width: 50px;
     padding-left: 20px;
 }
 
 #add_img{
-    padding-right: 20px;
-    padding-top: 12px;
+    margin-right: 20px;
+    margin-top: 12px;
 }
 
 .weui-toptips_info{
@@ -130,12 +133,10 @@
 }
 
 .participators_access{
-    padding-left: 0px;
-}
-
-.party_info_title{
-    font-weight: bold;
-    color: black;
+    font-size: 17px;
+    padding-top: 15px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #E5E5E5;
 }
 
 .participator_card{
@@ -172,7 +173,6 @@
     width:60px;
     height: 60px;
     border-radius: 5px;
-    margin-top: 7px;
 }
 
 .u_info{
@@ -184,7 +184,6 @@
 .party_icon{
     width: 30px;
     height: 30px;
-    margin-top: 7px;
 }
 
 .p_count{
@@ -221,10 +220,11 @@
     top:10px;
     right: 20px;
     color: #9b9b9b;
+    cursor: pointer;
 }
 .modal_content{
     max-height: 350px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .post_textarea{

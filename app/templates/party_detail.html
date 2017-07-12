@@ -1,57 +1,55 @@
 {% extends "base.html" %}
 {% block page_content %}
-    <div class="weui-panel weui-panel_access">
-        <div class="weui-panel__hd party_info_title">Party Detail Info</div>
-        <div class="weui-panel__bd">
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Subject</h4>
-                <p class="weui-media-box__desc">{{ party.subject }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Party Time</h4>
-                <p class="weui-media-box__desc">{{ party.party_time }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Party Address</h4>
-                <p class="weui-media-box__desc">{{ party.address }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Party Host</h4>
-                <p class="weui-media-box__desc">{{ party.host }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Create time</h4>
-                <p class="weui-media-box__desc">{{ party.create_time }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Participators &nbsp;[&nbsp;<span id="joined_count">{{ party.participators|length }}</span>/<span id="required_count">{{ party.required_count }}</span>&nbsp;]</h4>
-                <p class="weui-media-box__desc"><span id="participators">{{ party.participators|join(',') }}</span></p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <h4 class="weui-media-box__title">Extra Note</h4>
-                <p class="weui-media-box__desc">{{ party.note }}</p>
-            </div>
-            <div class="weui-media-box weui-media-box_text">
-                <a class="weui-cell weui-cell_access participators_access" href="javascript:ajax_get_party_guys()">
-                    <div class="weui-cell__bd">
-                        <p>Participators Info</p>
-                    </div>
-                    <div class="weui-cell__ft">
-                    </div>
-                </a>
-            </div>
+    <div class="weui-panel__hd">Party Detail Info</div>
+    <div class="weui-panel__bd">
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Subject</h4>
+            <p class="weui-media-box__desc">{{ party.subject }}</p>
         </div>
-        <div class="weui-panel__ft">
-            <div class="weui-btn-area">
-                {% if party.joined %}
-                    <a href="javascript:void (0)" class="weui-btn weui-btn_warn act_btn" data-type="quit">Quit</a>
-                {% else %}
-                    <a href="javascript:void (0)" class="weui-btn weui-btn_primary act_btn" data-type="join">Join</a>
-                {% endif %}
-                <a href="{{ back_url }}" class="weui-btn weui-btn_default">Back</a>
-            </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Party Time</h4>
+            <p class="weui-media-box__desc">{{ party.party_time }}</p>
+        </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Party Address</h4>
+            <p class="weui-media-box__desc">{{ party.address }}</p>
+        </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Party Host</h4>
+            <p class="weui-media-box__desc">{{ party.host }}</p>
+        </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Create time</h4>
+            <p class="weui-media-box__desc">{{ party.create_time }}</p>
+        </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Participators &nbsp;[&nbsp;<span id="joined_count">{{ party.participators|length }}</span>/<span id="required_count">{{ party.required_count }}</span>&nbsp;]</h4>
+            <p class="weui-media-box__desc"><span id="participators">{{ party.participators|join(',') }}</span></p>
+        </div>
+        <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">Extra Note</h4>
+            <p class="weui-media-box__desc">{{ party.note }}</p>
         </div>
     </div>
+
+    <div class="weui-panel__ft">
+        <a href="javascript:ajax_get_party_guys();" class="weui-cell weui-cell_access weui-cell_link participators_access">
+            <div class="weui-cell__bd">Participators Info</div>
+            <span class="weui-cell__ft"></span>
+        </a>
+    </div>
+
+
+    <div class="weui-btn-area">
+        {% if party.joined %}
+            <a href="javascript:void (0)" class="weui-btn weui-btn_warn act_btn" data-type="quit">Quit</a>
+        {% else %}
+            <a href="javascript:void (0)" class="weui-btn weui-btn_primary act_btn" data-type="join">Join</a>
+        {% endif %}
+        <a href="{{ back_url }}" class="weui-btn weui-btn_default">Back</a>
+    </div>
+
+
     <script>
         $(function () {
             bind_btn_act();
