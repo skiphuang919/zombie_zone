@@ -1,6 +1,8 @@
 import uuid
 import traceback
 import pytz
+import bleach
+from markdown import markdown
 from flask import current_app
 from datetime import date, datetime, timedelta
 
@@ -74,5 +76,29 @@ def obj2dic(obj):
     except:
         current_app.logger.warning(traceback.format_exc())
     return res
+
+
+def markdown_to_safe_html(md):
+    """
+    convert the markdown to the safe html
+    :param md: str markdown txt
+    :return: str html
+    """
+    allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
+                    'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
+                    'h1', 'h2', 'h3', 'p']
+
+    # convert markdown to html
+    origin_html = markdown(md, output_format='html')
+
+    # remove the tag not in allowed_tags list
+    filtered_html = bleach.clean(origin_html, tags=allowed_tags, strip=True)
+
+    # convert URL-like strings in an HTML fragment to links
+    res = bleach.linkify(filtered_html)
+
+    return res
+
+
 
 

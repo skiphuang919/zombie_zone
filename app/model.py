@@ -146,3 +146,19 @@ class Posts(db.Model):
     create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow())
     author_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
 
+    @staticmethod
+    def on_changed_body(target, value, old_value, initiator):
+        """
+        the call back func if event listening
+        :param target: the object instance receiving the event
+        :param value: the value being set
+        :param old_value: the previous value being replaced.
+        :param initiator: An instance of attributes.Event representing the initiation of the event.
+        :return:
+        """
+        target.body_html = tools.markdown_to_safe_html(md=value)
+
+# register set event listening
+db.event.listen(Posts.body, 'set', Posts.on_changed_body)
+
+

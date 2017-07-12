@@ -208,4 +208,6 @@ def ajax_delete_party():
 @confirmed_required
 def edit_blog():
     form = PostForm()
+    if request.method == 'POST':
+        pass
     return render_template('add_blog.html', form=form, top_title='Write Blog')
