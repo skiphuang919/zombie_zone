@@ -41,7 +41,8 @@
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__bd">
-                    {{ form.note(class="weui-textarea" ,placeholder="Additional party info...", row="3") }}
+                    {{ form.note(class="weui-textarea" ,placeholder="Additional party info...", row="3", maxlength="100") }}
+                    <div class="weui-textarea-counter"><span id="info_c_count">0</span>/100</div>
                 </div>
             </div>
         </div>
@@ -49,5 +50,12 @@
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
         </div>
     </form>
+    <script>
+        $(function () {
+            $('.weui-textarea').bind('input propertychange', function () {
+                $('#info_c_count').text($(this).val().length)
+            })
+        });
+    </script>
 {% endblock %}
 

@@ -41,6 +41,10 @@
     width: 140px;
 }
 
+.no_margin {
+    margin: 0px;
+}
+
 .menu_div{
     background-color: black;
     color: white;
