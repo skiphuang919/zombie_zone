@@ -206,6 +206,7 @@ def ajax_delete_party():
 @confirmed_required
 def edit_blog(post_id):
     form = PostForm()
+    top_title = ''
     if request.method == 'POST':
         try:
             post.write_blog(content=form.body.data,
@@ -218,5 +219,22 @@ def edit_blog(post_id):
             flash(success_tips, category='info')
             return redirect(url_for('main.index'))
     else:
-        pass
-    return render_template('add_blog.html', form=form, top_title='Write Blog')
+        if post_id and post_id != 'new_post':
+            top_title = 'Edit Blog'
+            my_post = post.get_post_by_id(post_id)
+            if my_post:
+                form.body.data = my_post.body
+            else:
+                abort(404)
+        else:
+            top_title = 'Write Blog'
+
+    return render_template('add_blog.html', form=form, top_title=top_title)
+
+
+@main.route('/my_blog')
+@login_required
+@confirmed_required
+def my_blog():
+    current_user.posts.all()
+    pass
