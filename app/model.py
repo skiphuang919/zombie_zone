@@ -52,6 +52,9 @@ class Users(db.Model, UserMixin):
 
     posts = db.relationship('Posts', backref='author', lazy='dynamic')
 
+    def __init__(self, **kwargs):
+        super(Users, self).__init__(**kwargs)
+
     @property
     def password(self):
         raise AttributeError('Unreadable attribute')

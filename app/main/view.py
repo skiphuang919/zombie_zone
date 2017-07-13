@@ -1,8 +1,8 @@
 import traceback
-from flask import render_template, flash, redirect, url_for, request, jsonify, current_app
+from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort
 from . import main
 from .form import PartyForm, PostForm
-from ..lib import party, tools, users
+from ..lib import party, tools, users, post
 from flask_login import current_user, login_required
 from ..wrap import confirmed_required
 
@@ -31,7 +31,7 @@ def add_party():
                 current_app.logger.error(traceback.format_exc())
                 flash('Create party failed.', category='warn')
             else:
-                flash('Create party success', category='info')
+                flash('Create party successfully', category='info')
                 return redirect(url_for('main.index'))
         else:
             form_error = form.errors.items()[0]
@@ -47,8 +47,7 @@ def party_detail(party_id):
     from_url = request.args.get('from_url')
     party_obj = party.get_party_by_id(party_id=party_id)
     if not party_obj:
-        flash('Party not exist.', category='warn')
-        return redirect(url_for('main.index'))
+        abort(404)
     participators = [p.name for p in party.get_participators(party_obj.party_id)]
     party_detail_info = tools.obj2dic(party_obj)
     party_detail_info.update(dict(host=party_obj.host.name,
@@ -144,8 +143,7 @@ def user_info():
 @confirmed_required
 def edit_profile(item):
     if item not in ('name', 'gender', 'city', 'slogan'):
-        flash('invalid item', category='message')
-        return redirect(url_for('main.user_info'))
+        abort(404)
     return render_template('edit_profile.html', item=item,
                            value=getattr(current_user, item), top_title=item.capitalize())
 
@@ -203,11 +201,22 @@ def ajax_delete_party():
     return jsonify(result)
 
 
-@main.route('/edit_blog', methods=['GET', 'POST'])
+@main.route('/edit_blog/<post_id>', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
-def edit_blog():
+def edit_blog(post_id):
     form = PostForm()
     if request.method == 'POST':
+        try:
+            post.write_blog(content=form.body.data,
+                            author=current_user._get_current_object())
+        except:
+            flash('Save blog failed.', category='warn')
+            current_app.logger.error(traceback.format_exc())
+        else:
+            success_tips = 'Save blog successfully' if post_id == 'new_post' else 'Save blog successfully'
+            flash(success_tips, category='info')
+            return redirect(url_for('main.index'))
+    else:
         pass
     return render_template('add_blog.html', form=form, top_title='Write Blog')
