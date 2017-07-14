@@ -13,3 +13,15 @@ def write_blog(content, author):
 
 def get_post_by_id(post_id):
     return Posts.query.get(post_id)
+
+
+def get_posts(limit=None, offset=None):
+    sql = Posts.query
+
+    if limit is not None:
+        sql = sql.limit(limit)
+
+    if offset is not None:
+        sql = sql.offset(offset)
+
+    return sql.all()

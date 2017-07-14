@@ -128,6 +128,7 @@ def my_zone():
     return render_template('my_zone.html',
                            joined_c=users.get_joined_parties(current_user.user_id, get_count=True),
                            created_c=users.get_created_parties(current_user.user_id, get_count=True),
+                           blog_c=users.get_current_user_post(get_count=True),
                            top_title='My Zone')
 
 
@@ -201,10 +202,10 @@ def ajax_delete_party():
     return jsonify(result)
 
 
-@main.route('/edit_blog/<post_id>', methods=['GET', 'POST'])
+@main.route('/edit_post/<post_id>', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
-def edit_blog(post_id):
+def edit_post(post_id):
     form = PostForm()
     top_title = ''
     if request.method == 'POST':
@@ -220,21 +221,29 @@ def edit_blog(post_id):
             return redirect(url_for('main.index'))
     else:
         if post_id and post_id != 'new_post':
-            top_title = 'Edit Blog'
+            top_title = 'Edit Post'
             my_post = post.get_post_by_id(post_id)
             if my_post:
                 form.body.data = my_post.body
             else:
                 abort(404)
         else:
-            top_title = 'Write Blog'
+            top_title = 'Write Post'
 
-    return render_template('add_blog.html', form=form, top_title=top_title)
+    return render_template('add_post.html', form=form, top_title=top_title)
+
+
+@main.route('/all_posts')
+@login_required
+@confirmed_required
+def all_posts():
+    posts = post.get_posts()
+    return render_template('all_posts.html', posts=posts)
 
 
 @main.route('/my_blog')
 @login_required
 @confirmed_required
 def my_blog():
-    current_user.posts.all()
-    pass
+    posts = users.get_current_user_post()
+    return render_template('my_posts.html', posts=posts)

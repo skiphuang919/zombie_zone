@@ -134,6 +134,7 @@
     margin: 20px;
     border: 1px solid #D9D9D9;
     border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
 }
 
 .participators_access{

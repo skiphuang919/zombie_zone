@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <ul>
+    {% for post in posts %}
+        <li>
+            {{ post.body_html | safe }}
+        </li>
+    {% endfor %}
+    </ul>
+{% endblock %}

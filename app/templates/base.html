@@ -26,9 +26,9 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ url_for('main.edit_blog', post_id='new_post') }}">
+                            <a href="{{ url_for('main.edit_post', post_id='new_post') }}">
                                 <span><img class="menu_icon" src="{{ url_for('static', filename='img/pen.png') }}"></span>
-                                <span style="float: right">Write Blog</span>
+                                <span style="float: right">Write Post</span>
                             </a>
                         </li>
                     </ul>
@@ -117,7 +117,7 @@
                     <img src="{{ url_for('static', filename='img/church.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">All</p>
                 </a>
-                <a href="#" class="weui-tabbar__item">
+                <a href="{{ url_for('main.all_posts') }}" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/tomb.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label">Tomb</p>
                 </a>

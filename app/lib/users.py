@@ -1,6 +1,7 @@
 from datetime import datetime
 from .. import db
 from flask import current_app
+from flask_login import current_user
 from ..model import Users, Participate, Parties
 from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
@@ -121,3 +122,9 @@ def get_created_parties(user_id, limit=None, offset=None, get_count=False):
             sql = sql.offset(offset)
 
         return sql.all()
+
+
+def get_current_user_post(get_count=False):
+    if get_count:
+        return current_user.posts.count()
+    return current_user.posts.all()
