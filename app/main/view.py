@@ -238,7 +238,7 @@ def edit_post(post_id):
 @confirmed_required
 def all_posts():
     posts = post.get_posts()
-    return render_template('all_posts.html', posts=posts)
+    return render_template('all_posts.html', posts=posts, top_title='All Posts')
 
 
 @main.route('/my_blog')

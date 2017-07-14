@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 {% block page_content %}
-    <ul>
+    <ul class="post_ul">
     {% for post in posts %}
-        <li>
-            {{ post.body_html | safe }}
+        <li class="post_li">
+            <div class="post_thumb">
+                <img class="post_head_img" src="{{ post.author.head_img_url }}">
+            </div>
+            <div class="post_content">
+                <div style="float: right"> {{ post.create_time }}</div>
+                <div> {{ post.author.name }}</div>
+                <div>{{ post.body_html|safe}}</div>
+            </div>
+
         </li>
     {% endfor %}
     </ul>

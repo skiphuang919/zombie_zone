@@ -241,3 +241,28 @@
     padding: 10px;
     font-size: 14px;
 }
+
+.post_ul{
+    margin: 10px;
+}
+
+.post_head_img{
+    height: 30px;
+    width: 30px;
+    border-radius: 2px;
+}
+
+.post_li{
+    height: 100px;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px;
+    overflow: hidden;
+}
+
+.post_thumb{
+    position: absolute;
+}
+
+.post_content{
+    margin-left: 40px;
+}
