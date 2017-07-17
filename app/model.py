@@ -146,7 +146,7 @@ class Posts(db.Model):
     post_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
-    create_time = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
     author_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
 
     @staticmethod

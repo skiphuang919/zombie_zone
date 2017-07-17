@@ -7,7 +7,7 @@
                 <img class="post_head_img" src="{{ post.author.head_img_url }}">
             </div>
             <div class="post_content">
-                <div style="float: right"> {{ post.create_time }}</div>
+                <div style="float: right"> {{ post.timestamp }}</div>
                 <div> {{ post.author.name }}</div>
                 <div>{{ post.body_html|safe}}</div>
             </div>
