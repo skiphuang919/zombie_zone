@@ -1,18 +1,17 @@
 {% extends "base.html" %}
 {% block page_content %}
-    <ul class="post_ul">
-    {% for post in posts %}
-        <li class="post_li">
-            <div class="post_thumb">
-                <img class="post_head_img" src="{{ post.author.head_img_url }}">
-            </div>
-            <div class="post_content">
-                <div style="float: right"> {{ post.timestamp }}</div>
-                <div> {{ post.author.name }}</div>
-                <div>{{ post.body_html|safe}}</div>
-            </div>
 
-        </li>
+    {% for post in posts %}
+        <div class="weui-form-preview preview_card">
+            <div class="card_body">
+                <h3 class="post_title">{{ post.title }}</h3>
+                <div class="post_data"><span>{{ post.author.name }}</span><span style="float: right">{{ post.timestamp }}</span></div>
+                <div class="post_content">
+                    {{ post.body_html|safe}}
+                </div>
+                <div class="post_foot">Detail</div>
+            </div>
+        </div>
     {% endfor %}
-    </ul>
+
 {% endblock %}

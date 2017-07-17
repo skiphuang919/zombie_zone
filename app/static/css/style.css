@@ -250,28 +250,26 @@
     padding: 10px;
 }
 
-
-.post_ul{
-    margin: 10px;
+.card_body{
+    padding: 15px;
 }
 
-.post_head_img{
-    height: 30px;
-    width: 30px;
-    border-radius: 2px;
+.post_title{
+    margin-top: 0px;
 }
 
-.post_li{
-    height: 100px;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 8px;
-    overflow: hidden;
-}
-
-.post_thumb{
-    position: absolute;
+.post_data{
+    font-size: 10px;
+    border-bottom: 1px solid #d9d9d9;
 }
 
 .post_content{
-    margin-left: 40px;
+    padding-top: 10px;
+    font-size: 12px;
+    height: 220px;
+    overflow-y: hidden;
+}
+
+.post_foot{
+    padding-top: 15px;
 }
