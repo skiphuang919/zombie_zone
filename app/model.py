@@ -144,6 +144,7 @@ class Parties(db.Model):
 class Posts(db.Model):
     __tablename__ = 'posts'
     post_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
+    title = db.Column(db.String(512))
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())

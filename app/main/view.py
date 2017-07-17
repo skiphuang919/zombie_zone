@@ -209,21 +209,28 @@ def edit_post(post_id):
     form = PostForm()
     top_title = ''
     if request.method == 'POST':
-        try:
-            post.write_blog(content=form.body.data,
-                            author=current_user._get_current_object())
-        except:
-            flash('Save blog failed.', category='warn')
-            current_app.logger.error(traceback.format_exc())
+        if form.validate_on_submit():
+            try:
+                post.write_blog(title=form.title.data,
+                                content=form.body.data,
+                                author=current_user._get_current_object())
+            except:
+                flash('Save post failed.', category='warn')
+                current_app.logger.error(traceback.format_exc())
+            else:
+                success_tips = 'Save post successfully' if post_id == 'new_post' else 'Update post successfully'
+                flash(success_tips, category='info')
+                return redirect(url_for('main.all_posts'))
         else:
-            success_tips = 'Save blog successfully' if post_id == 'new_post' else 'Save blog successfully'
-            flash(success_tips, category='info')
-            return redirect(url_for('main.index'))
+            form_error = form.errors.items()[0]
+            warn_msg = form_error[1][0]
+            flash(warn_msg, category='warn')
     else:
         if post_id and post_id != 'new_post':
             top_title = 'Edit Post'
             my_post = post.get_post_by_id(post_id)
             if my_post:
+                form.title.data = my_post.title
                 form.body.data = my_post.body
             else:
                 abort(404)
@@ -241,9 +248,9 @@ def all_posts():
     return render_template('all_posts.html', posts=posts, top_title='All Posts')
 
 
-@main.route('/my_blog')
+@main.route('/my_posts')
 @login_required
 @confirmed_required
-def my_blog():
+def my_posts():
     posts = users.get_current_user_post()
     return render_template('my_posts.html', posts=posts)

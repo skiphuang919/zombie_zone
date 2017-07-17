@@ -3,8 +3,9 @@ from tools import get_db_unique_id
 from ..model import Posts
 
 
-def write_blog(content, author):
+def write_blog(title, content, author):
     new_post = Posts(post_id=get_db_unique_id(),
+                     title=title,
                      body=content,
                      author=author)
     db.session.add(new_post)

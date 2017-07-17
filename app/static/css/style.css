@@ -234,13 +234,22 @@
 
 .post_textarea{
     height: 150px;
-    margin-bottom: 10px;
+    padding: 10px;
 }
 
 .type_post_div{
-    padding: 10px;
     font-size: 14px;
 }
+
+.flask-pagedown{
+    border-top: 1px solid #d9d9d9;
+    border-bottom: 1px solid #d9d9d9;
+}
+
+.flask-pagedown-preview{
+    padding: 10px;
+}
+
 
 .post_ul{
     margin: 10px;
