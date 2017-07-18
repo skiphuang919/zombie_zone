@@ -1,5 +1,8 @@
-#container{
+body{
     background-color: #f8f8f8;
+}
+
+#container{
     position: absolute;
     top: 0;
     left: 0;

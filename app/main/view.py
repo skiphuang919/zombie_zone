@@ -254,3 +254,13 @@ def all_posts():
 def my_posts():
     posts = users.get_current_user_post()
     return render_template('my_posts.html', posts=posts)
+
+
+@main.route('/post_detail/<post_id>')
+@login_required
+@confirmed_required
+def post_detail(post_id):
+    post_obj = post.get_post_by_id(post_id)
+    if not post_obj:
+        abort(404)
+    return render_template('post_detail.html', post=post_obj)
