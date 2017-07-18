@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_pagedown import PageDown
 from config import Config
 from celery import Celery
+from lib.tools import prettify
 
 
 cache = Cache()
@@ -27,16 +28,14 @@ def create_app(config_name):
     app.config.from_object(config_name)
     config_name.init_app(app)
 
+    # register custom filter `prettify` in app
+    app.jinja_env.filters['prettify'] = prettify
+
     cache.init_app(app)
-
     mail.init_app(app)
-
     db.init_app(app)
-
     login_manager.init_app(app)
-
     pagedown.init_app(app)
-
     celery.conf.update(app.config)
 
     from .main import main as main_blueprint

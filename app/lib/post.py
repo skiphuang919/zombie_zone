@@ -17,7 +17,7 @@ def get_post_by_id(post_id):
 
 
 def get_posts(limit=None, offset=None):
-    sql = Posts.query
+    sql = Posts.query.order_by(Posts.timestamp.desc())
 
     if limit is not None:
         sql = sql.limit(limit)

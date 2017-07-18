@@ -5,6 +5,7 @@ import bleach
 from markdown import markdown
 from flask import current_app
 from datetime import date, datetime, timedelta
+from bs4 import BeautifulSoup as Bs
 
 
 def get_db_unique_id():
@@ -100,5 +101,6 @@ def markdown_to_safe_html(md):
     return res
 
 
-
-
+def prettify(html):
+    soup = Bs(html, 'html.parser')
+    return soup.prettify()

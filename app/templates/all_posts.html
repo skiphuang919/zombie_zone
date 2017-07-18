@@ -7,9 +7,8 @@
                 <h3 class="post_title">{{ post.title }}</h3>
                 <div class="post_data"><span>{{ post.author.name }}</span><span style="float: right">{{ post.timestamp }}</span></div>
                 <div class="post_content">
-                    {{ post.body_html|safe}}
+                    {{ post.body_html|truncate(180, True)|prettify|safe}}
                 </div>
-                <div class="post_foot">Detail</div>
             </div>
         </div>
     {% endfor %}
