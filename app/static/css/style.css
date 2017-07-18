@@ -110,8 +110,8 @@ body{
     padding-top: 40px;
     padding-bottom: 10px;
     text-align: center;
-    color: #acacac;
-    font-size: 14px;
+    color: #d9d9d9;
+    font-size: 10px;
 }
 
 .top_title{
@@ -275,4 +275,27 @@ body{
 
 .post_foot{
     padding-top: 15px;
+}
+
+.post_detail{
+    padding: 20px 15px;
+}
+
+.post_d_title{
+    font-size: 20px;
+    padding: 15px;
+}
+
+
+.post_d_meta{
+    color: #9b9b9b;
+    border-bottom: 1px solid #d9d9d9;
+    margin: 5px 15px 0px 15px;
+    font-size: 12px;
+    padding-bottom: 5px;
+}
+
+
+.post_d_author{
+    float: right;
 }
