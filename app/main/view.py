@@ -263,4 +263,4 @@ def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     if not post_obj:
         abort(404)
-    return render_template('post_detail.html', post=post_obj)
+    return render_template('post_detail.html', post=post_obj, top_title='Post Detail')
