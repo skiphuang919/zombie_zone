@@ -253,7 +253,7 @@ def all_posts():
 @confirmed_required
 def my_posts():
     posts = users.get_current_user_post()
-    return render_template('my_posts.html', posts=posts)
+    return render_template('my_posts.html', posts=posts, top_title='My posts')
 
 
 @main.route('/post_detail/<post_id>')

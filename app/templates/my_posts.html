@@ -9,6 +9,7 @@
                     {{ post.body_html|truncate(180, True)|prettify|safe}}
                 </div>
             </div>
+            <a href="{{ url_for('main.edit_post', post_id=post.post_id) }}"><div class="edit_d">Edit</div></a>
         </div>
     {% endfor %}
 {% endblock %}

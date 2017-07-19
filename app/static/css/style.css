@@ -299,3 +299,11 @@ body{
 .post_d_author{
     float: right;
 }
+
+.edit_d{
+    height: 40px;
+    border-top: 1px solid #d9d9d9;
+    text-align: center;
+    line-height: 40px;
+    color: #0BB20C;
+}
