@@ -6,4 +6,7 @@
         <div class="post_d_time">{{ post.timestamp }}</div>
     </div>
     <div class="post_detail">{{ post.body_html|safe }}</div>
+    <div class="weui-btn-area">
+        <a href="{{ url_for(back_endpoint) }}" class="weui-btn weui-btn_plain-primary">Back</a>
+    </div>
 {% endblock %}

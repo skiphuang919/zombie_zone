@@ -1,5 +1,5 @@
 import traceback
-from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort
+from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort, session
 from . import main
 from .form import PartyForm, PostForm
 from ..lib import party, tools, users, post
@@ -10,6 +10,7 @@ from ..wrap import confirmed_required
 @main.route('/')
 def index():
     party_list = party.get_parties(limit=10)
+    session['from_endpoint'] = 'index'
     return render_template('index.html', party_info_list=party_list)
 
 
@@ -44,7 +45,6 @@ def add_party():
 @login_required
 @confirmed_required
 def party_detail(party_id):
-    from_url = request.args.get('from_url')
     party_obj = party.get_party_by_id(party_id=party_id)
     if not party_obj:
         abort(404)
@@ -54,10 +54,11 @@ def party_detail(party_id):
                                   create_time=party_obj.local_create_time,
                                   joined=current_user.has_joined(party_obj),
                                   participators=participators))
+    from_endpoint = session.get('from_endpoint', 'index')
 
-    if from_url == 'created_party':
+    if from_endpoint == 'created_party':
         back_url = url_for('main.get_parties', _type='created')
-    elif from_url == 'joined_party':
+    elif from_endpoint == 'joined_party':
         back_url = url_for('main.get_parties', _type='joined')
     else:
         back_url = url_for('main.index')
@@ -176,10 +177,12 @@ def get_parties(_type):
         party_list = users.get_created_parties(current_user.user_id)
         render_temp = 'party_created.html'
         top_title = 'Created Parties'
+        session['from_endpoint'] = 'created_party'
     elif _type == 'joined':
         party_list = users.get_joined_parties(current_user.user_id)
         render_temp = 'party_joined.html'
         top_title = 'Joined Parties'
+        session['from_endpoint'] = 'created_party'
     else:
         return redirect(url_for('main.index'))
     return render_template(render_temp, party_list=party_list, top_title=top_title)
@@ -202,12 +205,11 @@ def ajax_delete_party():
     return jsonify(result)
 
 
-@main.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+@main.route('/write_post', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
-def edit_post(post_id):
+def write_post():
     form = PostForm()
-    top_title = ''
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
@@ -215,29 +217,47 @@ def edit_post(post_id):
                                 content=form.body.data,
                                 author=current_user._get_current_object())
             except:
-                flash('Save post failed.', category='warn')
+                flash('Create post failed.', category='warn')
                 current_app.logger.error(traceback.format_exc())
             else:
-                success_tips = 'Save post successfully' if post_id == 'new_post' else 'Update post successfully'
-                flash(success_tips, category='info')
+                flash('Create post successfully', category='info')
+                return redirect(url_for('main.all_posts'))
+        else:
+            form_error = form.errors.items()[0]
+            warn_msg = form_error[1][0]
+            flash(warn_msg, category='warn')
+    return render_template('add_post.html', form=form, top_title='Write post')
+
+
+@main.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+@login_required
+@confirmed_required
+def edit_post(post_id):
+    my_post = post.get_post_by_id(post_id)
+    if not my_post:
+        abort(404)
+
+    form = PostForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            try:
+                post.update_post(post_id=post_id,
+                                 title=form.title.data,
+                                 body=form.body.data)
+            except:
+                flash('update post failed', category='warn')
+                current_app.logger.error(traceback.format_exc())
+            else:
+                flash('update post successfully', category='info')
                 return redirect(url_for('main.all_posts'))
         else:
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
             flash(warn_msg, category='warn')
     else:
-        if post_id and post_id != 'new_post':
-            top_title = 'Edit Post'
-            my_post = post.get_post_by_id(post_id)
-            if my_post:
-                form.title.data = my_post.title
-                form.body.data = my_post.body
-            else:
-                abort(404)
-        else:
-            top_title = 'Write Post'
-
-    return render_template('add_post.html', form=form, top_title=top_title)
+        form.title.data = my_post.title
+        form.body.data = my_post.body
+    return render_template('add_post.html', form=form, top_title='Edit post')
 
 
 @main.route('/all_posts')
@@ -245,6 +265,7 @@ def edit_post(post_id):
 @confirmed_required
 def all_posts():
     posts = post.get_posts()
+    session['from_endpoint'] = 'main.all_posts'
     return render_template('all_posts.html', posts=posts, top_title='All Posts')
 
 
@@ -253,6 +274,7 @@ def all_posts():
 @confirmed_required
 def my_posts():
     posts = users.get_current_user_post()
+    session['from_endpoint'] = 'main.my_posts'
     return render_template('my_posts.html', posts=posts, top_title='My posts')
 
 
@@ -263,4 +285,8 @@ def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     if not post_obj:
         abort(404)
-    return render_template('post_detail.html', post=post_obj, top_title='Post Detail')
+    back_endpoint = session.get('from_endpoint', 'main.all_posts')
+    return render_template('post_detail.html',
+                           post=post_obj,
+                           top_title='Post Detail',
+                           back_endpoint=back_endpoint)

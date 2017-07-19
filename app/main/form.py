@@ -21,7 +21,7 @@ class PartyForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField(u'Title', validators=[DataRequired(message=u'Subject is required.'),
-                                              Length(max=512, message=u'Subject out of limitation 512')])
+                                              Length(max=32, message=u'Subject out of limitation 32')])
     body = PageDownField(u'Settle down, and write it down.')
     submit = SubmitField('Submit')
 
