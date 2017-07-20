@@ -11,7 +11,7 @@ from ..wrap import confirmed_required
 def index():
     party_list = party.get_parties(limit=10)
     session['from_endpoint'] = 'index'
-    return render_template('index.html', party_info_list=party_list)
+    return render_template('index.html', party_info_list=party_list, top_title='All Parties')
 
 
 @main.route('/add_party', methods=['GET', 'POST'])
@@ -261,8 +261,6 @@ def edit_post(post_id):
 
 
 @main.route('/all_posts')
-@login_required
-@confirmed_required
 def all_posts():
     posts = post.get_posts()
     session['from_endpoint'] = 'main.all_posts'
