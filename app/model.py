@@ -11,7 +11,7 @@ class Participate(db.Model):
     __tablename__ = 'participate'
     participator_id = db.Column(db.String(64), db.ForeignKey('users.user_id'), primary_key=True)
     joined_party_id = db.Column(db.String(64), db.ForeignKey('parties.party_id'), primary_key=True)
-    join_time = db.Column(db.DateTime, default=datetime.utcnow())
+    join_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     @property
     def local_join_time(self):
@@ -35,7 +35,7 @@ class Users(db.Model, UserMixin):
     slogan = db.Column(db.String(512))
     head_img_url = db.Column(db.String(512))
     confirmed = db.Column(db.Boolean, default=False)
-    add_time = db.Column(db.DateTime, default=datetime.utcnow())
+    add_time = db.Column(db.DateTime, default=datetime.utcnow)
     update_time = db.Column(db.DateTime)
 
     created_parties = db.relationship('Parties',
@@ -108,7 +108,7 @@ class Parties(db.Model):
     required_count = db.Column(db.Integer, nullable=False)
     note = db.Column(db.String(512))
     status = db.Column(db.Integer, default=0)
-    create_time = db.Column(db.DateTime, default=datetime.utcnow())
+    create_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     participators = db.relationship('Participate',
                                     foreign_keys=[Participate.joined_party_id],
@@ -147,7 +147,7 @@ class Posts(db.Model):
     title = db.Column(db.String(512))
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow())
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
 
     @staticmethod

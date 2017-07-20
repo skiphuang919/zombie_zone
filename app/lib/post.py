@@ -10,6 +10,7 @@ def write_blog(title, content, author):
                      author=author)
     db.session.add(new_post)
     db.session.commit()
+    return new_post
 
 
 def get_post_by_id(post_id):

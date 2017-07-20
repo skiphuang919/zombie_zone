@@ -38,7 +38,7 @@ def add_party():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
             flash(warn_msg, category='warn')
-    return render_template('party.html', form=form, top_title='Create Party')
+    return render_template('party.html', form=form, top_title='Create Party', back_url=url_for('main.index'))
 
 
 @main.route('/party_detail/<party_id>')
@@ -213,9 +213,9 @@ def write_post():
     if request.method == 'POST':
         if form.validate_on_submit():
             try:
-                post.write_blog(title=form.title.data,
-                                content=form.body.data,
-                                author=current_user._get_current_object())
+                p_obj = post.write_blog(title=form.title.data,
+                                        content=form.body.data,
+                                        author=current_user._get_current_object())
             except:
                 flash('Create post failed.', category='warn')
                 current_app.logger.error(traceback.format_exc())
@@ -226,7 +226,7 @@ def write_post():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
             flash(warn_msg, category='warn')
-    return render_template('add_post.html', form=form, top_title='Write post')
+    return render_template('add_post.html', form=form, top_title='Write post', back_url=url_for('main.all_posts'))
 
 
 @main.route('/edit_post/<post_id>', methods=['GET', 'POST'])
@@ -257,7 +257,7 @@ def edit_post(post_id):
     else:
         form.title.data = my_post.title
         form.body.data = my_post.body
-    return render_template('add_post.html', form=form, top_title='Edit post')
+    return render_template('add_post.html', form=form, top_title='Edit post', back_url=url_for('main.my_posts'))
 
 
 @main.route('/all_posts')
