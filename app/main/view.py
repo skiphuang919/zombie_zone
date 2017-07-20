@@ -249,7 +249,7 @@ def edit_post(post_id):
                 current_app.logger.error(traceback.format_exc())
             else:
                 flash('update post successfully', category='info')
-                return redirect(url_for('main.all_posts'))
+                return redirect(url_for('main.my_posts'))
         else:
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
@@ -290,3 +290,20 @@ def post_detail(post_id):
                            post=post_obj,
                            top_title='Post Detail',
                            back_endpoint=back_endpoint)
+
+
+@main.route('/_del_post', methods=['POST'])
+@login_required
+@confirmed_required
+def ajax_delete_post():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    post_id = request.form.get('post_id')
+    if post_id:
+        try:
+            post.del_post(post_id)
+        except:
+            current_app.logger.error(traceback.format_exc())
+        else:
+            result['status'] = 0
+            result['msg'] = 'success'
+    return jsonify(result)

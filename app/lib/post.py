@@ -43,3 +43,10 @@ def update_post(post_id, title=None, body=None):
             db.session.add(post_obj)
             db.session.commit()
     return post_obj
+
+
+def del_post(post_id):
+    post = get_post_by_id(post_id)
+    if post:
+        db.session.delete(post)
+        db.session.commit()

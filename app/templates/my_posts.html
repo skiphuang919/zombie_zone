@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block page_content %}
     {% for post in posts %}
-        <div class="weui-form-preview preview_card">
+        <div class="weui-form-preview preview_card" id="{{ post.post_id }}">
             <div class="card_body">
                 <a href="{{ url_for('main.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
                 <div class="post_data"><span>{{ post.author.name }}</span><span style="float: right">{{ post.timestamp }}</span></div>
@@ -9,7 +9,38 @@
                     {{ post.body_html|truncate(180, True)|prettify|safe}}
                 </div>
             </div>
-            <a href="{{ url_for('main.edit_post', post_id=post.post_id) }}"><div class="edit_d">Edit</div></a>
+            <div class="weui-form-preview__ft">
+                <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_del('{{ post.post_id }}')">Del</a>
+                <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.edit_post', post_id=post.post_id) }}">Edit</a>
+            </div>
         </div>
     {% endfor %}
+    <script>
+        function confirm_del(post_id) {
+            var $dialog = $('#ajax_dialog2');
+            var msg = 'Are you sure about the delete?';
+            $dialog.find('.weui-dialog__bd').text(msg);
+            $dialog.find('.weui-dialog__btn_primary').on('click', function(){
+                ajax_del_post(post_id);
+            });
+            $dialog.show()
+        }
+        function ajax_del_post(post_id) {
+            $.ajax({
+                type: 'POST',
+                url: '/_del_post',
+                dataType: 'json',
+                data: {'post_id': post_id,
+                    'a': Math.random()},
+                success: function (data) {
+                    if(data.status==0){
+                        $("#"+post_id).remove();
+                        if($('.preview_card').length==0){
+                            window.location="{{ url_for('main.my_zone') }}"
+                        }
+                    }
+                }
+            })
+        }
+    </script>
 {% endblock %}
