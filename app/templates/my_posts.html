@@ -1,20 +1,34 @@
 {% extends "base.html" %}
 {% block page_content %}
-    {% for post in posts %}
-        <div class="weui-form-preview preview_card" id="{{ post.post_id }}">
-            <div class="card_body">
-                <a href="{{ url_for('main.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
-                <div class="post_data"><span>{{ post.author.name }}</span><span style="float: right">{{ post.timestamp }}</span></div>
-                <div class="post_content">
-                    {{ post.body_html|truncate(180, True)|prettify|safe}}
+    {% if posts %}
+        {% for post in posts %}
+            <div class="weui-form-preview preview_card" id="{{ post.post_id }}">
+                <div class="card_body">
+                    <a href="{{ url_for('main.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
+                    <div class="post_data"><span>{{ post.author.name }}</span><span style="float: right">{{ post.timestamp }}</span></div>
+                    <div class="post_content">
+                        {{ post.body_html|truncate(180, True)|prettify|safe}}
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_del('{{ post.post_id }}')">Del</a>
+                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.edit_post', post_id=post.post_id) }}">Edit</a>
                 </div>
             </div>
-            <div class="weui-form-preview__ft">
-                <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_del('{{ post.post_id }}')">Del</a>
-                <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.edit_post', post_id=post.post_id) }}">Edit</a>
+        {% endfor %}
+    {% else %}
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <p class="weui-msg__desc">You have not write any post.</p>
+            </div>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="{{ url_for('main.my_zone') }}" class="weui-btn weui-btn_primary">Back</a>
+                </p>
             </div>
         </div>
-    {% endfor %}
+    {% endif %}
     <script>
         function confirm_del(post_id) {
             var $dialog = $('#ajax_dialog2');
