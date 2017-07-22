@@ -25,7 +25,7 @@ def register_user(open_id=None, reg_info=None):
                 setattr(user, k, v)
                 _commit = True
     if _commit:
-        user.update_time = datetime.utcnow()
+        user.timestamp = datetime.utcnow()
         db.session.add(user)
         db.session.commit()
     return user
@@ -41,7 +41,7 @@ def update_user_profile(user_id, profile_dic):
                     setattr(user, k, v)
                     _commit = True
             if _commit:
-                user.update_time = datetime.utcnow()
+                user.timestamp = datetime.utcnow()
                 db.session.add(user)
                 db.session.commit()
 

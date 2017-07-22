@@ -36,7 +36,7 @@ class Users(db.Model, UserMixin):
     head_img_url = db.Column(db.String(512))
     confirmed = db.Column(db.Boolean, default=False)
     add_time = db.Column(db.DateTime, default=datetime.utcnow)
-    update_time = db.Column(db.DateTime)
+    timestamp = db.Column(db.DateTime)
 
     created_parties = db.relationship('Parties',
                                       backref='host',
