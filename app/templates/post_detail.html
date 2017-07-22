@@ -2,8 +2,8 @@
 {% block page_content %}
     <div class="post_d_title">{{ post.title }}</div>
     <div class="post_d_meta">
-        <div class="post_d_author">{{  post.author.name}}</div>
-        <div class="post_d_time">{{ post.timestamp }}</div>
+        <span class="float_right">{{ moment(post.timestamp).fromNow() }}</span>
+        <span>{{  post.author.name}}</span>
     </div>
     <div class="post_detail">{{ post.body_html|safe }}</div>
     <div class="weui-btn-area">

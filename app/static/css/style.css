@@ -199,7 +199,7 @@ body{
     padding-right: 20px;
 }
 
-.float_right{
+.text_right{
     text-align: right;
 }
 
@@ -296,6 +296,6 @@ body{
 }
 
 
-.post_d_author{
+.float_right{
     float: right;
 }

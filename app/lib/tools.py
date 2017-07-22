@@ -71,8 +71,6 @@ def obj2dic(obj):
         for k, v in vars(obj).items():
             if k.startswith('_'):
                 continue
-            if isinstance(v, date):
-                v = v.strftime("%Y-%m-%d %H:%M:%S")
             res[k] = v
     except:
         current_app.logger.warning(traceback.format_exc())

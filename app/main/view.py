@@ -51,7 +51,6 @@ def party_detail(party_id):
     participators = [p.name for p in party.get_participators(party_obj.party_id)]
     party_detail_info = tools.obj2dic(party_obj)
     party_detail_info.update(dict(host=party_obj.host.name,
-                                  create_time=party_obj.local_create_time,
                                   joined=current_user.has_joined(party_obj),
                                   participators=participators))
     from_endpoint = session.get('from_endpoint', 'index')

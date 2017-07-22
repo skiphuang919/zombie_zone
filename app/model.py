@@ -13,14 +13,6 @@ class Participate(db.Model):
     joined_party_id = db.Column(db.String(64), db.ForeignKey('parties.party_id'), primary_key=True)
     join_time = db.Column(db.DateTime, default=datetime.utcnow)
 
-    @property
-    def local_join_time(self):
-        return tools.utc2local(self.join_time)
-
-    @local_join_time.setter
-    def local_join_time(self, v):
-        raise AttributeError('Read only attribute')
-
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -130,14 +122,6 @@ class Parties(db.Model):
 
     @is_full.setter
     def is_full(self, v):
-        raise AttributeError('Read only attribute')
-
-    @property
-    def local_create_time(self):
-        return tools.utc2local(self.create_time)
-
-    @local_create_time.setter
-    def local_create_time(self, v):
         raise AttributeError('Read only attribute')
 
 
