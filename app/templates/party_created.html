@@ -24,7 +24,7 @@
                     </div>
                     <div class="weui-form-preview__item">
                         <label class="weui-form-preview__label">Create Time</label>
-                        <span class="weui-form-preview__value">{{ party_info.local_create_time }}</span>
+                        <span class="weui-form-preview__value">{{ moment(party_info.create_time).format('YYYY-MM-DD HH:mm:ss') }}</span>
                     </div>
                 </div>
                 <div class="weui-form-preview__ft">
