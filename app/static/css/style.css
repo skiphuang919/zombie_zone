@@ -273,12 +273,20 @@ body{
     overflow-y: hidden;
 }
 
+.post_content ul{
+    padding-left: 15px;
+}
+
 .post_foot{
     padding-top: 15px;
 }
 
 .post_detail{
     padding: 20px 15px;
+}
+
+.post_detail ul{
+    padding-left: 15px;
 }
 
 .post_d_title{
