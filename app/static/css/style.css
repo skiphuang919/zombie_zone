@@ -253,6 +253,10 @@ body{
     padding: 10px;
 }
 
+.flask-pagedown-preview ul{
+    padding-left: 15px;
+}
+
 .card_body{
     padding: 15px;
 }
