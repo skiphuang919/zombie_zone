@@ -46,4 +46,16 @@
             </div>
         </a>
     </div>
+
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('main.my_posts') }}">
+            <div class="weui-cell__hd">
+                <img class='party_icon' src="{{ url_for('static', filename='img/padlock.png') }}">
+            </div>
+            <div class="weui-cell__bd">
+                <div class="u_info">Security</div>
+            </div>
+            <div class="weui-cell__ft"></div>
+        </a>
+    </div>
 {% endblock %}
