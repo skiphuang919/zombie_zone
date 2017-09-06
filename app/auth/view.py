@@ -1,33 +1,10 @@
 import traceback
-from flask import redirect, url_for, session, jsonify, \
-    current_app, render_template, flash, request
-from ..lib.wc_lib import WeChat
+from flask import redirect, url_for, current_app, render_template, flash, request
 from . import auth
 from .form import RegisterForm, LoginForm
 from ..lib import users
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
-
-
-def before_request():
-    """
-    login the user by open id if it exist
-    otherwise redirect to wechat oauth url
-    """
-    if current_user.is_anonymous and request.endpoint not in \
-            ['auth.wc_oauth2', 'auth.confirm', 'static', 'auth.logout']:
-        openid = session.get('openid')
-        if openid is None:
-            # get the openid process
-            session['redirect_url_endpoint'] = request.endpoint
-            we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
-            oauth2_url = we_chat.get_oauth2_url(redirect_url=url_for('auth.wc_oauth2', _external=True))
-            return redirect(oauth2_url)
-        else:
-            # login the user only if it has registered before
-            user = users.get_user(open_id=openid)
-            if user and user.cellphone and user.email:
-                login_user(user)
 
 
 @auth.route('/register', methods=['GET', 'POST'])
