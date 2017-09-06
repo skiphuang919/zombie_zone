@@ -9,7 +9,6 @@ from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
 
 
-@auth.before_app_request
 def before_request():
     """
     login the user by open id if it exist
@@ -46,6 +45,7 @@ def register():
                                                    name=form.name.data,
                                                    password=form.password.data)
                     token = new_user.generate_confirm_token()
+                    print token
                     send_confirm_mail(recipient=new_user.email,
                                       mail_info=dict(name=new_user.name,
                                                      confirm_url=url_for('auth.confirm', token=token, _external=True)))
@@ -54,7 +54,7 @@ def register():
                     current_app.logger.error(traceback.format_exc())
                 else:
                     flash('A confirmation email has been sent to your mailbox.', category='message')
-                    return redirect(url_for('main.index'))
+                    return redirect(url_for('auth.login'))
         else:
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
@@ -80,14 +80,30 @@ def login():
     return render_template('auth/login.html', form=form, top_title='Login')
 
 
+@auth.route('/logout')
+@login_required
+def logout():
+    try:
+        logout_user()
+    except:
+        current_app.logger.error(traceback.format_exc())
+    else:
+        flash('You have been logged out.', category='info')
+        return redirect(url_for('main.index'))
+
+
 @auth.route('/confirm/<token>')
+@login_required
 def confirm(token):
-    if users.confirm(token):
-        return render_template('success.html',
+    if current_user.confirmed:
+        return redirect(url_for('main.index'))
+
+    if current_user.confirm_token(token):
+        return render_template('auth/success.html',
                                success_title='Success',
                                success_detail='Your email address has been confirmed successfully.')
     else:
-        return render_template('warn.html',
+        return render_template('auth/warn.html',
                                warn_title='Failed',
                                warn_detail='The confirmation link is invalid or has expired.')
 
@@ -102,21 +118,7 @@ def resend_confirm():
                                          confirm_url=url_for('auth.confirm', token=token, _external=True)))
     except:
         current_app.logger.error(traceback.format_exc())
-        return jsonify({'msg': 'resend confirmation email failed.'})
+        flash('resend confirmation email failed.', category='warn')
     else:
         flash('A new confirmation email has been sent to you by email.', category='message')
-        return redirect(url_for('main.index'))
-
-
-@auth.route('/logout')
-@login_required
-def logout():
-    try:
-        if 'openid' in session:
-            session.pop('openid')
-        logout_user()
-    except:
-        current_app.logger.error(traceback.format_exc())
-        return jsonify({'msg': 'logout failed'})
-    else:
-        return jsonify({'msg': 'logout success'})
+    return redirect(url_for('main.index'))

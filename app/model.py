@@ -69,6 +69,21 @@ class Users(db.Model, UserMixin):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.user_id})
 
+    def confirm_token(self, token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+
+        if data.get('confirm') != self.user_id:
+            return False
+
+        self.confirmed = True
+        db.session.add(self)
+        db.session.commit()
+        return True
+
     def has_joined(self, party):
         return self.joined_parties.filter_by(joined_party_id=party.party_id).first() is not None
 
