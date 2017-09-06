@@ -146,7 +146,7 @@ def edit_profile(item):
     if item not in ('name', 'gender', 'city', 'slogan'):
         abort(404)
     return render_template('edit_profile.html', item=item,
-                           value=getattr(current_user, item), top_title=item.capitalize())
+                           value=getattr(current_user, item) or '', top_title=item.capitalize())
 
 
 @main.route('/_update_profile')
@@ -156,7 +156,6 @@ def ajax_update_profile():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     item = request.args.get('item')
     value = request.args.get('value')
-    current_app.logger.error(request.args)
     if item in ('name', 'gender', 'city', 'slogan') and value:
         try:
             users.update_user_profile(user_id=current_user.user_id,
