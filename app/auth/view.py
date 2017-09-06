@@ -31,60 +31,19 @@ def before_request():
                 login_user(user)
 
 
-@auth.route('/wc_oauth2', methods=['GET', 'POST'])
-def wc_oauth2():
-    """
-    to be call back by wechat oauth with code
-    then get open id by the code
-    """
-    code = request.args.get('code')
-    if code is not None:
-        try:
-            we_chat = WeChat(current_app.config.get('APP_ID'), current_app.config.get('APP_SECRET'))
-            token_info = we_chat.get_web_access_token_by_code(code)
-            openid = token_info.get('openid')
-            current_app.logger.debug('openid: {}'.format(openid))
-            if openid:
-                # get user info by openid
-                access_token = we_chat.get_access_token()
-                user_info = we_chat.get_wc_user_info(openid, access_token)
-
-                user = users.register_user(open_id=openid,
-                                           reg_info=dict(name=user_info.get('nickname', 'Curry'),
-                                                         gender=user_info.get('sex', 1),
-                                                         city=user_info.get('city', 'Shanghai'),
-                                                         head_img_url=user_info.get('headimgurl', '/static/img/head_test.jpeg')))
-                session['openid'] = openid
-
-                # login the user only if the user has registered, even got the openid
-                if user.cellphone and user.email:
-                    login_user(user)
-                url_endpoint = session.get('redirect_url_endpoint') or 'main.index'
-                return redirect(url_for(url_endpoint))
-        except:
-            current_app.logger.error(traceback.format_exc())
-    return jsonify({'msg': 'Authorization failed, please try again.'})
-
-
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    if not current_user.is_anonymous:
-        flash('You have registered before.', category='message')
-        return redirect(url_for('main.index'))
     form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
             if users.is_email_exist(form.email.data):
                 warn_msg = 'Email already exist.'
-            elif users.is_cellphone_exist(form.cellphone.data):
-                warn_msg = 'Cellphone already exist.'
+            elif users.is_name_exist(form.name.data):
+                warn_msg = 'Name already exist.'
             else:
                 try:
-                    open_id = session.get('openid')
-                    new_user = users.register_user(open_id=open_id,
-                                                   reg_info=dict(email=form.email.data,
-                                                                 cellphone=form.cellphone.data,
-                                                                 slogan=form.slogan.data))
+                    new_user = users.register_user(email=form.email.data,
+                                                   name=form.name.data)
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(recipient=new_user.email,
                                       mail_info=dict(name=new_user.name,

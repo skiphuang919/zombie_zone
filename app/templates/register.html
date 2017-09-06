@@ -6,10 +6,10 @@
         <div class="weui-cells weui-cells_form">
             <div class="weui-cell">
                 <div class="weui-cell__hd">
-                    {{ form.cellphone.label(class="weui-label") }}
+                    {{ form.name.label(class="weui-label") }}
                 </div>
                 <div class="weui-cell__bd">
-                    {{ form.cellphone(class="weui-input" ,placeholder="Cellphone number") }}
+                    {{ form.name(class="weui-input" ,placeholder="Nick name") }}
                 </div>
             </div>
             <div class="weui-cell">
@@ -18,14 +18,6 @@
                 </div>
                 <div class="weui-cell__bd">
                     {{ form.email(class="weui-input" ,placeholder="E-mail address") }}
-                </div>
-            </div>
-        </div>
-        <div class="weui-cells__title">Slogan</div>
-        <div class="weui-cells weui-cells_form">
-            <div class="weui-cell">
-                <div class="weui-cell__bd">
-                    {{ form.slogan(class="weui-textarea" ,placeholder="say something here...", row="3") }}
                 </div>
             </div>
         </div>

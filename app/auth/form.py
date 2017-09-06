@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, Length, Email, Regexp
+from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms.validators import DataRequired, Length, Email
 
 
 class RegisterForm(FlaskForm):
-    cellphone = StringField(u'Cellphone', validators=[DataRequired(message=u'cellphone is required.'),
-                                                      Regexp('^\d{11}$', message=u'invalid cellphone')])
+    name = StringField(u'Name', validators=[DataRequired(message=u'Name is required.'),
+                                            Length(max=16, message=u'Subject out of limitation 16')])
     email = StringField(u'E-mail', validators=[DataRequired(message=u'E-mail is required'),
                                                Email(message=u'Invalid E-mail.')])
-    slogan = TextAreaField(u'Slogan', validators=[Length(max=100, message=u'slogan out of limitation 100')])
     submit = SubmitField(u'Submit')
 
+
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(message=u'Missing email'), Length(1, 64),
+                                             Email()])
+    password = PasswordField('Password', validators=[DataRequired(message=u'Missing password')])
+    remember_me = BooleanField('Keep me logged in')
+    submit = SubmitField('Log In')
 
 
 

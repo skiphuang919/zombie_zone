@@ -7,27 +7,14 @@ from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
-def register_user(open_id=None, reg_info=None):
-    """
-    :param open_id: user openid; str
-    :param reg_info: user info; dict
-    :return:
-    """
-    _commit = False
-    user = get_user(open_id=open_id)
-    if not user:
-        user = Users(user_id=get_db_unique_id(),
-                     open_id=open_id)
-        _commit = True
-    if reg_info:
-        for k, v in reg_info.items():
-            if hasattr(Users, k):
-                setattr(user, k, v)
-                _commit = True
-    if _commit:
-        user.timestamp = datetime.utcnow()
-        db.session.add(user)
-        db.session.commit()
+def register_user(email, name):
+
+    user = Users(user_id=get_db_unique_id(),
+                 email=email,
+                 name=name,
+                 timestamp=datetime.utcnow())
+    db.session.add(user)
+    db.session.commit()
     return user
 
 
@@ -46,7 +33,7 @@ def update_user_profile(user_id, profile_dic):
                 db.session.commit()
 
 
-def get_user(user_id=None, open_id=None, cellphone=None, email=None):
+def get_user(user_id=None, open_id=None, cellphone=None, email=None, name=None):
     if user_id is not None:
         return Users.query.filter_by(user_id=user_id).first()
     elif open_id is not None:
@@ -55,6 +42,8 @@ def get_user(user_id=None, open_id=None, cellphone=None, email=None):
         return Users.query.filter_by(cellphone=cellphone).first()
     elif email is not None:
         return Users.query.filter_by(email=email).first()
+    elif name is not None:
+        return Users.query.filter_by(name=name).first()
     else:
         return None
 
@@ -64,8 +53,8 @@ def is_email_exist(email):
     return True if user else False
 
 
-def is_cellphone_exist(cellphone):
-    user = get_user(cellphone=cellphone)
+def is_name_exist(name):
+    user = get_user(name=name)
     return True if user else False
 
 
