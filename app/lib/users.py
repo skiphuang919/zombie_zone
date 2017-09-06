@@ -7,11 +7,12 @@ from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
-def register_user(email, name):
+def register_user(email, name, password):
 
     user = Users(user_id=get_db_unique_id(),
                  email=email,
                  name=name,
+                 password=password,
                  timestamp=datetime.utcnow())
     db.session.add(user)
     db.session.commit()

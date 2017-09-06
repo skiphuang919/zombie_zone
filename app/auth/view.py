@@ -3,7 +3,7 @@ from flask import redirect, url_for, session, jsonify, \
     current_app, render_template, flash, request
 from ..lib.wc_lib import WeChat
 from . import auth
-from .form import RegisterForm
+from .form import RegisterForm, LoginForm
 from ..lib import users
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
@@ -43,7 +43,8 @@ def register():
             else:
                 try:
                     new_user = users.register_user(email=form.email.data,
-                                                   name=form.name.data)
+                                                   name=form.name.data,
+                                                   password=form.password.data)
                     token = new_user.generate_confirm_token()
                     send_confirm_mail(recipient=new_user.email,
                                       mail_info=dict(name=new_user.name,
@@ -58,7 +59,25 @@ def register():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
-    return render_template('register.html', form=form)
+    return render_template('auth/register.html', form=form, top_title='Register')
+
+
+@auth.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user = users.get_user(email=form.email.data)
+            if user is not None and user.verify_password(form.password.data):
+                login_user(user, form.remember_me.data)
+                return redirect(request.args.get('next') or url_for('main.index'))
+            else:
+                warn_msg = 'invalid email or password'
+        else:
+            form_error = form.errors.items()[0]
+            warn_msg = form_error[1][0]
+        flash(warn_msg, category='warn')
+    return render_template('auth/login.html', form=form, top_title='Login')
 
 
 @auth.route('/confirm/<token>')
