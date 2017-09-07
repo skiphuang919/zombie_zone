@@ -13,6 +13,7 @@ class RegisterForm(FlaskForm):
                                                      EqualTo('password2', message='Password mismatch.'),
                                                      Length(min=6, message='password too short')])
     password2 = PasswordField('Confirm', validators=[DataRequired(message='confirm password is required')])
+    captcha = StringField('Captcha', validators=[DataRequired(message='Invalid captcha.')])
     submit = SubmitField('Submit')
 
 
@@ -20,6 +21,7 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(message='Missing email'),
                                              Email(message='Invalid E-mail.')])
     password = PasswordField('Password', validators=[DataRequired(message='Missing password')])
+    captcha = StringField('Captcha', validators=[DataRequired(message='Invalid captcha.')])
     remember_me = BooleanField('Keep me logged in')
     submit = SubmitField('Log In')
 

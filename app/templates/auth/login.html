@@ -20,6 +20,17 @@
                     {{ form.password(class="weui-input" ,placeholder="password") }}
                 </div>
             </div>
+            <div class="weui-cell weui-cell_vcode">
+                <div class="weui-cell__hd">
+                    {{ form.captcha.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                     {{ form.captcha(class="weui-input" ,placeholder="enter captcha" ,maxlength="4") }}
+                </div>
+                <div class="weui-cell__ft">
+                    <img class="weui-vcode-img" src="{{ url_for('static', filename='img/out.png') }}">
+                </div>
+            </div>
 
             <div class="weui-cell weui-cell_switch">
                 <div class="weui-cell__bd">{{ form.remember_me.label }}</div>

@@ -2,9 +2,11 @@ import uuid
 import traceback
 import pytz
 import bleach
+import random
+from captcha.image import ImageCaptcha
 from markdown import markdown
 from flask import current_app
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as Bs
 
 
@@ -102,3 +104,27 @@ def markdown_to_safe_html(md):
 def prettify(html):
     soup = Bs(html, 'html.parser')
     return soup.prettify()
+
+
+def generate_captcha():
+    """
+    generate captcha
+    :return: (code, data)
+    """
+    _letter_cases = 'abcdefghjkmnpqrstuvwxy"'
+    _upper_cases = 'ABCDEFGHJKLMNPQRSTUVWXY'
+    _numbers = '1234567890'
+
+    try:
+        char_pool = ''.join((_letter_cases, _upper_cases, _numbers))
+        captcha_code = ''.join(random.sample(char_pool, 4))
+        image = ImageCaptcha()
+        data = image.generate(captcha_code)
+        image.write(captcha_code, 'out.png')
+        return captcha_code, data
+    except Exception as ex:
+        current_app.logger.error('generate_captcha: {}'.format(ex))
+
+
+if __name__ == '__main__':
+    generate_captcha()
