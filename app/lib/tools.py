@@ -120,7 +120,6 @@ def generate_captcha():
         captcha_code = ''.join(random.sample(char_pool, 4))
         image = ImageCaptcha()
         data = image.generate(captcha_code)
-        image.write(captcha_code, 'out.png')
         return captcha_code, data
     except Exception as ex:
         current_app.logger.error('generate_captcha: {}'.format(ex))
