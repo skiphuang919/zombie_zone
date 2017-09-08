@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from ..lib import users
-from ..lib.tools import Captcha
+from ..lib.utils import Captcha
 
 
 class RegisterForm(FlaskForm):

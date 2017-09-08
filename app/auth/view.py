@@ -3,7 +3,7 @@ from flask import redirect, url_for, current_app, render_template, flash, reques
 from . import auth
 from .form import RegisterForm, LoginForm
 from ..lib import users
-from ..lib.tools import Captcha
+from ..lib.utils import Captcha
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
 

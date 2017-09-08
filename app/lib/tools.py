@@ -2,17 +2,10 @@ import uuid
 import traceback
 import pytz
 import bleach
-import random
-from captcha.image import ImageCaptcha
 from markdown import markdown
 from flask import current_app
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup as Bs
-from flask import session
-
-LOW_LETTERS = 'abcdefghjkmnpqrstuvwxyz'
-UPPER_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-NUMBERS = '1234567890'
 
 
 def get_db_unique_id():
@@ -109,32 +102,6 @@ def markdown_to_safe_html(md):
 def prettify(html):
     soup = Bs(html, 'html.parser')
     return soup.prettify()
-
-
-class Captcha(object):
-    def __init__(self):
-        self.char_pool = ''.join((LOW_LETTERS, NUMBERS, UPPER_LETTERS))
-
-    def generate_captcha_stream(self):
-        try:
-            captcha_code = ''.join(random.sample(self.char_pool, 4))
-            image = ImageCaptcha()
-            data = image.generate(captcha_code)
-            captcha = data.getvalue().encode('base64')
-        except Exception as ex:
-            captcha = None
-            current_app.logger.error('generate_captcha exception: {}'.format(ex))
-        else:
-            session['captcha_code'] = captcha_code
-            current_app.logger.info('captcha code: {}'.format(captcha_code))
-        return captcha
-
-    @staticmethod
-    def validate(code):
-        if code:
-            return True if session.get('captcha_code', '').lower() == str(code).lower() else False
-        else:
-            return False
 
 
 if __name__ == '__main__':
