@@ -72,7 +72,7 @@ def logout():
         current_app.logger.error(traceback.format_exc())
     else:
         flash('You have been logged out.', category='info')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
 
 
 @auth.route('/confirm/<token>')

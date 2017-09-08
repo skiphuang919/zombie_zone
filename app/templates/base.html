@@ -32,6 +32,15 @@
                                 <span style="float: right">Write Post</span>
                             </a>
                         </li>
+                        {% if current_user.is_authenticated %}
+                            <li class="divider"></li>
+                            <li>
+                                <a href="{{ url_for('auth.logout') }}">
+                                    <span><img class="menu_icon" src="{{ url_for('static', filename='img/logout.png') }}"></span>
+                                    <span style="float: right">Log out</span>
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
