@@ -28,7 +28,7 @@
                      {{ form.captcha(class="weui-input" ,placeholder="enter captcha" ,maxlength="4") }}
                 </div>
                 <div class="weui-cell__ft">
-                    <img class="weui-vcode-img" src="data:image/gif;base64,{{ captcha_stm}}">
+                    <img class="weui-vcode-img captcha_img" src="data:image/gif;base64,{{ captcha_stm}}">
                 </div>
             </div>
 
@@ -42,7 +42,7 @@
         </div>
         <div class="weui-btn-area">
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
-            <a href="{{ url_for('auth.register') }}" class="weui-btn weui-btn_default">Register</a>
+            <a href="{{ url_for('auth.register') }}" class="weui-btn weui-btn_default">To register</a>
         </div>
     </form>
 {% endblock %}

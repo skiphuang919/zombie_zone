@@ -1,5 +1,5 @@
 import traceback
-from flask import redirect, url_for, current_app, render_template, flash, request
+from flask import redirect, url_for, current_app, render_template, flash, request, jsonify
 from . import auth
 from .form import RegisterForm, LoginForm
 from ..lib import users
@@ -31,6 +31,7 @@ def register():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
+    form.captcha.data = ''
 
     # generate captcha img stream
     captcha = Captcha()
@@ -54,6 +55,7 @@ def login():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
+    form.captcha.data = ''
 
     # generate captcha img stream
     captcha = Captcha()
@@ -103,6 +105,20 @@ def resend_confirm():
     else:
         flash('A new confirmation email has been sent to you by email.', category='message')
     return redirect(url_for('main.index'))
+
+
+@auth.route('/_change_captcha')
+def change_captcha():
+    result = {'status': -1,
+              'data': ''}
+    try:
+        new_captcha = Captcha()
+        captcha_stm = new_captcha.generate_captcha_stream()
+        result['data'] = captcha_stm
+        result['status'] = 0
+    except Exception as ex:
+        current_app.logger.error('change_captcha exception: {}'.format(ex))
+    return jsonify(result)
 
 
 

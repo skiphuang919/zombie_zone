@@ -43,7 +43,7 @@ class LoginForm(FlaskForm):
     def validate_captcha(self, field):
         cap = Captcha()
         if not cap.validate(field.data):
-            raise ValidationError('Invalid captcha xxx.')
+            raise ValidationError('Invalid captcha.')
 
 
 

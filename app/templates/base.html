@@ -164,6 +164,21 @@
                     $('.my_mask').hide()
                 })
             });
+
+            $(function () {
+                $('.captcha_img').on('click', function () {
+                    var $this = $(this);
+                    $.ajax({
+                         type: 'GET',
+                         url: '/auth/_change_captcha',
+                         dataType: 'json',
+                         success: function (data) {
+                             $this.attr("src", "data:image/gif;base64,"+data['data']);
+                         }
+                    })
+                })
+            });
+
             // flash toast
             function flash_finish_toast() {
                 var $finishToast = $('#finishToast');
