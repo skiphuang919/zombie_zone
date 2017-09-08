@@ -40,6 +40,15 @@
                                     <span style="float: right">Log out</span>
                                 </a>
                             </li>
+                            {% if not current_user.confirmed %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{{ url_for('auth.resend_confirm') }}">
+                                        <span><img class="menu_icon" src="{{ url_for('static', filename='img/re-confirm.png') }}"></span>
+                                        <span style="float: right">Re-Confirm</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                         {% endif %}
                     </ul>
                 </div>
