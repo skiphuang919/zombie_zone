@@ -43,12 +43,13 @@
                      {{ form.captcha(class="weui-input" ,placeholder="enter captcha" ,maxlength="4") }}
                 </div>
                 <div class="weui-cell__ft">
-                    <img class="weui-vcode-img" src="{{ url_for('static', filename='img/out.png') }}">
+                    <img class="weui-vcode-img" src="data:image/gif;base64,{{ captcha_stm}}">
                 </div>
             </div>
         </div>
         <div class="weui-btn-area showToast">
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
+            <a href="{{ url_for('auth.login') }}" class="weui-btn weui-btn_default">To login</a>
         </div>
     </form>
 {% endblock %}

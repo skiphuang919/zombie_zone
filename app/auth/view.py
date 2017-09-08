@@ -3,6 +3,7 @@ from flask import redirect, url_for, current_app, render_template, flash, reques
 from . import auth
 from .form import RegisterForm, LoginForm
 from ..lib import users
+from ..lib.tools import Captcha
 from ..email import send_confirm_mail
 from flask_login import login_user, current_user, login_required, logout_user
 
@@ -12,30 +13,30 @@ def register():
     form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
-            if users.is_email_exist(form.email.data):
-                warn_msg = 'Email already exist.'
-            elif users.is_name_exist(form.name.data):
-                warn_msg = 'Name already exist.'
+            try:
+                new_user = users.register_user(email=form.email.data,
+                                               name=form.name.data,
+                                               password=form.password.data)
+                token = new_user.generate_confirm_token()
+                send_confirm_mail(recipient=new_user.email,
+                                  mail_info=dict(name=new_user.name,
+                                                 confirm_url=url_for('auth.confirm', token=token, _external=True)))
+            except:
+                warn_msg = 'Register failed.'
+                current_app.logger.error(traceback.format_exc())
             else:
-                try:
-                    new_user = users.register_user(email=form.email.data,
-                                                   name=form.name.data,
-                                                   password=form.password.data)
-                    token = new_user.generate_confirm_token()
-                    send_confirm_mail(recipient=new_user.email,
-                                      mail_info=dict(name=new_user.name,
-                                                     confirm_url=url_for('auth.confirm', token=token, _external=True)))
-                except:
-                    warn_msg = 'Register failed.'
-                    current_app.logger.error(traceback.format_exc())
-                else:
-                    flash('A confirmation email has been sent to your mailbox.', category='message')
-                    return redirect(url_for('auth.login'))
+                flash('A confirmation email has been sent to your mailbox.', category='message')
+                return redirect(url_for('auth.login'))
         else:
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
-    return render_template('auth/register.html', form=form, top_title='Register')
+
+    # generate captcha img stream
+    captcha = Captcha()
+    captcha_stm = captcha.generate_captcha_stream()
+    return render_template('auth/register.html', form=form, top_title='Register',
+                           captcha_stm=captcha_stm)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -53,7 +54,11 @@ def login():
             form_error = form.errors.items()[0]
             warn_msg = form_error[1][0]
         flash(warn_msg, category='warn')
-    return render_template('auth/login.html', form=form, top_title='Login')
+
+    # generate captcha img stream
+    captcha = Captcha()
+    captcha_stm = captcha.generate_captcha_stream()
+    return render_template('auth/login.html', form=form, top_title='Login', captcha_stm=captcha_stm)
 
 
 @auth.route('/logout')
@@ -98,3 +103,7 @@ def resend_confirm():
     else:
         flash('A new confirmation email has been sent to you by email.', category='message')
     return redirect(url_for('main.index'))
+
+
+
+
