@@ -35,8 +35,7 @@ def add_party():
                 flash('Create party successfully', category='info')
                 return redirect(url_for('main.index'))
         else:
-            form_error = form.errors.items()[0]
-            warn_msg = form_error[1][0]
+            warn_msg = form.get_one_err_msg()
             flash(warn_msg, category='warn')
     return render_template('party.html', form=form, top_title='Create Party', back_url=url_for('main.index'))
 
@@ -221,8 +220,7 @@ def write_post():
                 flash('Create post successfully', category='info')
                 return redirect(url_for('main.all_posts'))
         else:
-            form_error = form.errors.items()[0]
-            warn_msg = form_error[1][0]
+            warn_msg = form.get_one_err_msg()
             flash(warn_msg, category='warn')
     return render_template('add_post.html', form=form, top_title='Write post', back_url=url_for('main.all_posts'))
 
@@ -249,8 +247,7 @@ def edit_post(post_id):
                 flash('update post successfully', category='info')
                 return redirect(url_for('main.my_posts'))
         else:
-            form_error = form.errors.items()[0]
-            warn_msg = form_error[1][0]
+            warn_msg = form.get_one_err_msg()
             flash(warn_msg, category='warn')
     else:
         form.title.data = my_post.title

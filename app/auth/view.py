@@ -28,8 +28,7 @@ def register():
                 flash('A confirmation email has been sent to your mailbox.', category='message')
                 return redirect(url_for('auth.login'))
         else:
-            form_error = form.errors.items()[0]
-            warn_msg = form_error[1][0]
+            warn_msg = form.get_one_err_msg()
         flash(warn_msg, category='warn')
     form.captcha.data = ''
 
@@ -52,8 +51,7 @@ def login():
             else:
                 warn_msg = 'invalid email or password'
         else:
-            form_error = form.errors.items()[0]
-            warn_msg = form_error[1][0]
+            warn_msg = form.get_one_err_msg()
         flash(warn_msg, category='warn')
     form.captcha.data = ''
 

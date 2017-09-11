@@ -3,9 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Length, Regexp
 from flask_pagedown.fields import PageDownField
+from ..lib.utils import ZombieForm
 
 
-class PartyForm(FlaskForm):
+class PartyForm(ZombieForm):
     subject = StringField(u'Subject', validators=[DataRequired(message=u'Subject is required.'),
                                                   Length(max=32, message=u'Subject out of limitation 32')])
     party_time = DateField(u'Party time', validators=[DataRequired(message=u'Party time is required')])
@@ -19,7 +20,7 @@ class PartyForm(FlaskForm):
     submit = SubmitField(u'Submit')
 
 
-class PostForm(FlaskForm):
+class PostForm(ZombieForm):
     title = StringField(u'Title', validators=[DataRequired(message=u'Subject is required.'),
                                               Length(max=32, message=u'Subject out of limitation 32')])
     body = PageDownField(u'Settle down, and write it down.')

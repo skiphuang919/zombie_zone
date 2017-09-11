@@ -3,10 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from ..lib import users
-from ..lib.utils import Captcha
+from ..lib.utils import Captcha, ZombieForm
 
 
-class RegisterForm(FlaskForm):
+class RegisterForm(ZombieForm):
     name = StringField('Name', validators=[DataRequired(message='Name is required.'),
                                            Length(max=16, message='Subject out of limitation 16')])
     email = StringField('E-mail', validators=[DataRequired(message='E-mail is required'),
@@ -32,7 +32,7 @@ class RegisterForm(FlaskForm):
             raise ValidationError('Invalid captcha.')
 
 
-class LoginForm(FlaskForm):
+class LoginForm(ZombieForm):
     email = StringField('Email', validators=[DataRequired(message='Missing email'),
                                              Email(message='Invalid E-mail.')])
     password = PasswordField('Password', validators=[DataRequired(message='Missing password')])

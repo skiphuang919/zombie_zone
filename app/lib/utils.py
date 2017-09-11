@@ -1,6 +1,7 @@
 import random
 from flask import session, current_app
 from captcha.image import ImageCaptcha
+from flask_wtf import FlaskForm
 
 LOW_LETTERS = 'abcdefghjkmnpqrstuvwxyz'
 UPPER_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
@@ -22,7 +23,6 @@ class Captcha(object):
             current_app.logger.error('generate_captcha exception: {}'.format(ex))
         else:
             session['captcha_code'] = captcha_code
-            current_app.logger.info('captcha code: {}'.format(captcha_code))
         return captcha
 
     @staticmethod
@@ -33,4 +33,17 @@ class Captcha(object):
             return False
 
 
+class ZombieForm(FlaskForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ZombieForm, self).__init__(*args, **kwargs)
+
+    def get_one_err_msg(self):
+        error_msg = ''
+        if self.errors:
+            try:
+                error_msg = self.errors.values()[0][0]
+            except Exception as ex:
+                current_app.logger.error('get_one_err_msg exception: {}'.format(ex))
+        return error_msg
 
