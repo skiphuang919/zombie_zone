@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block page_content %}
+    <form method="post">
+        {{ form.hidden_tag()  }}
+        <div class="weui-cells weui-cells_form">
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.old_password.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.old_password(class="weui-input" ,placeholder="old pwd") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.new_password.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.new_password(class="weui-input" ,placeholder="new pwd") }}
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__hd">
+                    {{ form.password2.label(class="weui-label") }}
+                </div>
+                <div class="weui-cell__bd">
+                    {{ form.password2(class="weui-input" ,placeholder="confirm pwd") }}
+                </div>
+            </div>
+
+        </div>
+        <div class="weui-btn-area">
+            {{ form.submit(class="weui-btn weui-btn_primary" ) }}
+            <a href="{{ url_for('auth.register') }}" class="weui-btn weui-btn_default">To register</a>
+        </div>
+    </form>
+{% endblock %}

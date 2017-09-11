@@ -1,7 +1,7 @@
 import traceback
 from flask import redirect, url_for, current_app, render_template, flash, request, jsonify
 from . import auth
-from .form import RegisterForm, LoginForm
+from .form import RegisterForm, LoginForm, ChangePwdForm
 from ..lib import users
 from ..lib.utils import Captcha
 from ..email import send_confirm_mail
@@ -119,5 +119,9 @@ def change_captcha():
     return jsonify(result)
 
 
+@auth.route('/change_password')
+def change_password():
+    form = ChangePwdForm()
+    return render_template('auth/change_pwd.html', form=form)
 
 
