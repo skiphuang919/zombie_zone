@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block page_content %}
+    <div class="top_title">
+        <h3 class="page__title">Update Password</h3>
+    </div>
     <form method="post">
         {{ form.hidden_tag()  }}
         <div class="weui-cells weui-cells_form">
@@ -31,7 +34,7 @@
         </div>
         <div class="weui-btn-area">
             {{ form.submit(class="weui-btn weui-btn_primary" ) }}
-            <a href="{{ url_for('auth.register') }}" class="weui-btn weui-btn_default">To register</a>
+            <a href="{{ url_for('main.index') }}" class="weui-btn weui-btn_default">Back</a>
         </div>
     </form>
 {% endblock %}

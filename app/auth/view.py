@@ -18,7 +18,6 @@ def register():
                                                name=form.name.data,
                                                password=form.password.data)
                 token = new_user.generate_confirm_token()
-                print token
                 send_confirm_mail(recipient=new_user.email,
                                   mail_info=dict(name=new_user.name,
                                                  confirm_url=url_for('auth.confirm', token=token, _external=True)))
@@ -119,9 +118,23 @@ def change_captcha():
     return jsonify(result)
 
 
-@auth.route('/change_password')
-def change_password():
+@auth.route('/update_password', methods=['GET', 'POST'])
+@login_required
+def update_password():
     form = ChangePwdForm()
-    return render_template('auth/change_pwd.html', form=form)
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            try:
+                users.change_pwd(form.new_password.data)
+            except Exception as ex:
+                current_app.logger.error('change_password failed: {}'.format(ex))
+                warn_msg = 'update password failed.'
+            else:
+                flash('update password successfully.', category='info')
+                return redirect(url_for('main.index'))
+        else:
+            warn_msg = form.get_one_err_msg()
+        flash(warn_msg, category='warn')
+    return render_template('auth/update_pwd.html', form=form)
 
 

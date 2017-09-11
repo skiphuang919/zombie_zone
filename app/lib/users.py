@@ -19,6 +19,12 @@ def register_user(email, name, password):
     return user
 
 
+def change_pwd(new_pwd):
+    current_user.password = new_pwd
+    db.session.add(current_user)
+    db.session.commit()
+
+
 def update_user_profile(user_id, profile_dic):
     if user_id and profile_dic:
         user = get_user(user_id=user_id)
