@@ -18,6 +18,7 @@ def register():
                                                name=form.name.data,
                                                password=form.password.data)
                 token = new_user.generate_confirm_token()
+                print token
                 send_confirm_mail(recipient=new_user.email,
                                   mail_info=dict(name=new_user.name,
                                                  confirm_url=url_for('auth.confirm', token=token, _external=True)))
@@ -35,8 +36,7 @@ def register():
     # generate captcha img stream
     captcha = Captcha()
     captcha_stm = captcha.generate_captcha_stream()
-    return render_template('auth/register.html', form=form, top_title='Register',
-                           captcha_stm=captcha_stm)
+    return render_template('auth/register.html', form=form, captcha_stm=captcha_stm)
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -58,7 +58,7 @@ def login():
     # generate captcha img stream
     captcha = Captcha()
     captcha_stm = captcha.generate_captcha_stream()
-    return render_template('auth/login.html', form=form, top_title='Login', captcha_stm=captcha_stm)
+    return render_template('auth/login.html', form=form, captcha_stm=captcha_stm)
 
 
 @auth.route('/logout')
