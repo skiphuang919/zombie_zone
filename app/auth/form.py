@@ -59,5 +59,19 @@ class ChangePwdForm(ZombieForm):
             raise ValidationError('Password incorrect.')
 
 
+class PasswordResetRequestForm(ZombieForm):
+    email = StringField('Email', validators=[DataRequired(message='Missing email'),
+                                             Email(message='Invalid E-mail.')])
+    submit = SubmitField('Submit')
+
+
+class PasswordResetForm(ZombieForm):
+    email = StringField('E-mail', validators=[DataRequired(message='E-mail is required'),
+                                              Email(message='Invalid E-mail.')])
+    password = PasswordField('Password', validators=[DataRequired(message='password is required'),
+                                                     EqualTo('password2', message='Password mismatch.'),
+                                                     Length(min=6, message='password too short')])
+    password2 = PasswordField('Confirm', validators=[DataRequired(message='confirm password is required')])
+    submit = SubmitField('Register')
 
 

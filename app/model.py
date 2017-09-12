@@ -65,7 +65,7 @@ class Users(db.Model, UserMixin):
         """
         return self.user_id
 
-    def generate_confirm_token(self, expiration=3600):
+    def generate_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.user_id})
 
