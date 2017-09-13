@@ -77,11 +77,11 @@ def confirm(token):
         return redirect(url_for('main.index'))
 
     if current_user.confirm_token(token):
-        return render_template('auth/success.html',
+        return render_template('success.html',
                                success_title='Success',
                                success_detail='Your email address has been confirmed successfully.')
     else:
-        return render_template('auth/warn.html',
+        return render_template('warn.html',
                                warn_title='Failed',
                                warn_detail='The confirmation link is invalid or has expired.')
 
