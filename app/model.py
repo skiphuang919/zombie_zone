@@ -65,11 +65,11 @@ class Users(db.Model, UserMixin):
         """
         return self.user_id
 
-    def generate_token(self, expiration=3600):
+    def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'confirm': self.user_id})
 
-    def confirm_token(self, token):
+    def verify_confirm_token(self, token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
@@ -80,6 +80,25 @@ class Users(db.Model, UserMixin):
             return False
 
         self.confirmed = True
+        db.session.add(self)
+        db.session.commit()
+        return True
+
+    def generate_reset_pwd_token(self, expiration=300):
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'reset_pwd': self.user_id})
+
+    def reset_pwd(self, token, new_pwd):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return False
+
+        if data.get('reset_pwd') != self.user_id:
+            return False
+
+        self.password = new_pwd
         db.session.add(self)
         db.session.commit()
         return True

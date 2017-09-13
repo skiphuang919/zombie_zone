@@ -19,7 +19,7 @@ class RegisterForm(ZombieForm):
     submit = SubmitField('Register')
 
     def validate_name(self, field):
-        if users.is_email_exist(field.data):
+        if users.is_name_exist(field.data):
             raise ValidationError('Name already exist.')
 
     def validate_email(self, field):
@@ -72,6 +72,6 @@ class PasswordResetForm(ZombieForm):
                                                      EqualTo('password2', message='Password mismatch.'),
                                                      Length(min=6, message='password too short')])
     password2 = PasswordField('Confirm', validators=[DataRequired(message='confirm password is required')])
-    submit = SubmitField('Register')
+    submit = SubmitField('Update')
 
 
