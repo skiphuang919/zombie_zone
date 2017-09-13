@@ -1,12 +1,11 @@
 import traceback
 from flask import redirect, url_for, current_app, render_template, flash, request, jsonify
 from . import auth
-from .form import RegisterForm, LoginForm, ChangePwdForm, PasswordResetRequestForm, PasswordResetForm
+from .form import RegisterForm, LoginForm, PasswordResetRequestForm, PasswordResetForm
 from ..lib import users
 from ..lib.utils import Captcha
 from ..email import send_confirm_mail, send_reset_pwd_mail
 from flask_login import login_user, current_user, login_required, logout_user
-from ..wrap import confirmed_required
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -116,27 +115,6 @@ def change_captcha():
     return jsonify(result)
 
 
-@auth.route('/update_password', methods=['GET', 'POST'])
-@login_required
-@confirmed_required
-def update_password():
-    form = ChangePwdForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            try:
-                users.change_pwd(form.new_password.data)
-            except Exception as ex:
-                current_app.logger.error('change_password failed: {}'.format(ex))
-                warn_msg = 'update password failed.'
-            else:
-                flash('update password successfully.', category='info')
-                return redirect(url_for('main.index'))
-        else:
-            warn_msg = form.get_one_err_msg()
-        flash(warn_msg, category='warn')
-    return render_template('auth/update_pwd.html', form=form)
-
-
 @auth.route('/password_reset_request', methods=['GET', 'POST'])
 def password_reset_request():
     form = PasswordResetRequestForm()
@@ -145,6 +123,7 @@ def password_reset_request():
             user = users.get_user(email=form.email.data)
             if user:
                 token = user.generate_reset_pwd_token()
+                print token
                 send_reset_pwd_mail(recipient=user.email,
                                     mail_info={'name': user.name,
                                                'reset_pwd_url': url_for('auth.reset_password',

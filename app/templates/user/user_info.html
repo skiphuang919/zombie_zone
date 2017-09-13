@@ -9,7 +9,7 @@
                 <img class="my_head_img" src="{{ current_user.head_img_url }}">
             </div>
         </a>
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.edit_profile', item='name') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.edit_profile', item='name') }}">
             <div class="weui-cell__bd">
                 <div>Name</div>
             </div>
@@ -27,7 +27,7 @@
         </a>
     </div>
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.edit_profile', item='gender') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.edit_profile', item='gender') }}">
             <div class="weui-cell__bd">
                 <div >Gender</div>
             </div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </a>
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.edit_profile', item='city') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.edit_profile', item='city') }}">
 
             <div class="weui-cell__bd">
                 <div>City</div>
@@ -50,7 +50,7 @@
                 <div>{{ current_user.city }}</div>
             </div>
         </a>
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.edit_profile', item='slogan') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.edit_profile', item='slogan') }}">
             <div class="weui-cell__bd">
                 <div>Slogan</div>
             </div>
@@ -60,6 +60,6 @@
         </a>
     </div>
     <div class="weui-btn-area button-sp-area">
-        <a href="{{ url_for('main.my_zone') }}" class="weui-btn weui-btn_primary">Back</a>
+        <a href="{{ url_for('user.my_zone') }}" class="weui-btn weui-btn_primary">Back</a>
     </div>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block page_content %}
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.user_info') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.user_info') }}">
             <div class="weui-cell__hd"><img class="my_head_img" src="{{ current_user.head_img_url }}"></div>
             <div class="weui-cell__bd">
                 <div class="u_info">{{ current_user.name }}</div>
@@ -48,7 +48,7 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.user_settings') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('user.user_settings') }}">
             <div class="weui-cell__hd">
                 <img class='party_icon' src="{{ url_for('static', filename='img/settings.png') }}">
             </div>

@@ -41,7 +41,7 @@
             </div>
             <div class="weui-msg__opr-area">
                 <p class="weui-btn-area">
-                    <a href="{{ url_for('main.my_zone') }}" class="weui-btn weui-btn_primary">Back</a>
+                    <a href="{{ url_for('user.my_zone') }}" class="weui-btn weui-btn_primary">Back</a>
                 </p>
             </div>
         </div>
@@ -67,7 +67,7 @@
                     if(data.status==0){
                         $("#"+party_id).remove();
                         if($('.preview_card').length==0){
-                            window.location="{{ url_for('main.my_zone') }}"
+                            window.location="{{ url_for('user.my_zone') }}"
                         }
                     }
                 }
