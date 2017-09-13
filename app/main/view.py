@@ -138,6 +138,13 @@ def user_info():
     return render_template('user_info.html', top_title='Profile')
 
 
+@main.route('/user_settings')
+@login_required
+@confirmed_required
+def user_settings():
+    return render_template('user_settings.html', top_title='Settings')
+
+
 @main.route('/edit_profile/<item>')
 @login_required
 @confirmed_required

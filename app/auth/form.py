@@ -62,7 +62,7 @@ class ChangePwdForm(ZombieForm):
 class PasswordResetRequestForm(ZombieForm):
     email = StringField('Email', validators=[DataRequired(message='Missing email'),
                                              Email(message='Invalid E-mail.')])
-    submit = SubmitField('Submit')
+    submit = SubmitField('send')
 
 
 class PasswordResetForm(ZombieForm):

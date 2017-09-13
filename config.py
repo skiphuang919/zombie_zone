@@ -28,7 +28,7 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
-    CONFIRM_MAIL_SUBJECT = '[Zombie Zone] Confirm Your Email'
+    CONFIRM_MAIL_SUBJECT = '[Zombie Zone]'
 
     @staticmethod
     def init_app(app):

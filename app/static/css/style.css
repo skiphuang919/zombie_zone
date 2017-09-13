@@ -311,3 +311,8 @@ body{
 .float_right{
     float: right;
 }
+
+.forget_pwd{
+    float: right;
+    padding-top: 10px;
+}
