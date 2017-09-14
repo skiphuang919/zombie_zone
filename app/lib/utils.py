@@ -1,11 +1,15 @@
 import random
-from flask import session, current_app
+import hashlib
+from flask import session, current_app, request
 from captcha.image import ImageCaptcha
 from flask_wtf import FlaskForm
 
 LOW_LETTERS = 'abcdefghjkmnpqrstuvwxyz'
 UPPER_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
 NUMBERS = '1234567890'
+
+HTTP_GRAVATAR_URL = 'http://www.gravatar.com/avatar'
+HTTPS_GRAVATAR_URL = 'https://secure.gravatar.com/avatar'
 
 
 class Captcha(object):
@@ -46,4 +50,18 @@ class ZombieForm(FlaskForm):
             except Exception as ex:
                 current_app.logger.error('get_one_err_msg exception: {}'.format(ex))
         return error_msg
+
+
+class Gravatar(object):
+    def __init__(self, email, size=100):
+        self.email = email.lower()
+        self.size = size
+        self.email_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
+
+    def avatar_url(self):
+        url = HTTPS_GRAVATAR_URL if request.is_secure else HTTP_GRAVATAR_URL
+        return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
+            url=url, hash=self.email_hash, size=self.size, default='identicon', rating='g')
+
+
 

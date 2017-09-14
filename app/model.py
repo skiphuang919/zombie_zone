@@ -5,6 +5,7 @@ from flask import current_app
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from .lib import tools
+from .lib.utils import Gravatar
 
 
 class Participate(db.Model):
@@ -46,6 +47,12 @@ class Users(db.Model, UserMixin):
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
+
+        if self.email is not None and self.head_img_url is None:
+            gravatar = Gravatar(self.email)
+            self.head_img_url = gravatar.avatar_url()
+            db.session.add(self)
+            db.session.commit()
 
     @property
     def password(self):
