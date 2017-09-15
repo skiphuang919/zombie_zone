@@ -27,7 +27,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="{{ url_for('main.write_post') }}">
+                            <a href="{{ url_for('posts.write_post') }}">
                                 <span><img class="menu_icon" src="{{ url_for('static', filename='img/pen.png') }}"></span>
                                 <span style="float: right">Write Post</span>
                             </a>
@@ -134,7 +134,7 @@
                     <img src="{{ url_for('static', filename='img/church.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label no_margin">Parade</p>
                 </a>
-                <a href="{{ url_for('main.all_posts') }}" class="weui-tabbar__item">
+                <a href="{{ url_for('posts.all_posts') }}" class="weui-tabbar__item">
                     <img src="{{ url_for('static', filename='img/tomb.png') }}" alt="" class="weui-tabbar__icon">
                     <p class="weui-tabbar__label no_margin">Tomb</p>
                 </a>

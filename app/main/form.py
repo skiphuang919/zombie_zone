@@ -19,10 +19,3 @@ class PartyForm(ZombieForm):
                          validators=[Length(max=128, message=u'Accident desc out of limitation 128')])
     submit = SubmitField(u'Submit')
 
-
-class PostForm(ZombieForm):
-    title = StringField(u'Title', validators=[DataRequired(message=u'Subject is required.'),
-                                              Length(max=32, message=u'Subject out of limitation 32')])
-    body = PageDownField(u'Settle down, and write it down.')
-    submit = SubmitField('Submit')
-

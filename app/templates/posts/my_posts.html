@@ -4,7 +4,7 @@
         {% for post in posts %}
             <div class="weui-form-preview preview_card" id="{{ post.post_id }}">
                 <div class="card_body">
-                    <a href="{{ url_for('main.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
+                    <a href="{{ url_for('posts.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
                     <div class="post_data"><span>{{ post.author.name }}</span><span class="float_right">{{ moment(post.timestamp).fromNow() }}</span></div>
                     <div class="post_content">
                         {{ post.body_html|truncate(180, True)|prettify|safe}}
@@ -12,7 +12,7 @@
                 </div>
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_del('{{ post.post_id }}')">Del</a>
-                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.edit_post', post_id=post.post_id) }}">Edit</a>
+                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('posts.edit_post', post_id=post.post_id) }}">Edit</a>
                 </div>
             </div>
         {% endfor %}
@@ -42,7 +42,7 @@
         function ajax_del_post(post_id) {
             $.ajax({
                 type: 'POST',
-                url: '/_del_post',
+                url: '/posts/_del_post',
                 dataType: 'json',
                 data: {'post_id': post_id,
                     'a': Math.random()},

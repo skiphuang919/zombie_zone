@@ -1,8 +1,8 @@
 import traceback
 from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort, session
 from . import main
-from .form import PartyForm, PostForm
-from ..lib import party, tools, users, post
+from .form import PartyForm
+from ..lib import party, tools, users
 from flask_login import current_user, login_required
 from ..wrap import confirmed_required
 
@@ -120,9 +120,6 @@ def ajax_get_party_guys():
     return jsonify(result)
 
 
-
-
-
 @main.route('/get_parties/<_type>')
 @login_required
 @confirmed_required
@@ -151,106 +148,6 @@ def ajax_delete_party():
     if party_id:
         try:
             party.delete_party(party_id)
-        except:
-            current_app.logger.error(traceback.format_exc())
-        else:
-            result['status'] = 0
-            result['msg'] = 'success'
-    return jsonify(result)
-
-
-@main.route('/write_post', methods=['GET', 'POST'])
-@login_required
-@confirmed_required
-def write_post():
-    form = PostForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            try:
-                p_obj = post.write_blog(title=form.title.data,
-                                        content=form.body.data,
-                                        author=current_user._get_current_object())
-            except:
-                flash('Create post failed.', category='warn')
-                current_app.logger.error(traceback.format_exc())
-            else:
-                flash('Create post successfully', category='info')
-                return redirect(url_for('main.all_posts'))
-        else:
-            warn_msg = form.get_one_err_msg()
-            flash(warn_msg, category='warn')
-    return render_template('add_post.html', form=form, top_title='Write post', back_url=url_for('main.all_posts'))
-
-
-@main.route('/edit_post/<post_id>', methods=['GET', 'POST'])
-@login_required
-@confirmed_required
-def edit_post(post_id):
-    my_post = post.get_post_by_id(post_id)
-    if not my_post:
-        abort(404)
-
-    form = PostForm()
-    if request.method == 'POST':
-        if form.validate_on_submit():
-            try:
-                post.update_post(post_id=post_id,
-                                 title=form.title.data,
-                                 body=form.body.data)
-            except:
-                flash('update post failed', category='warn')
-                current_app.logger.error(traceback.format_exc())
-            else:
-                flash('update post successfully', category='info')
-                return redirect(url_for('main.my_posts'))
-        else:
-            warn_msg = form.get_one_err_msg()
-            flash(warn_msg, category='warn')
-    else:
-        form.title.data = my_post.title
-        form.body.data = my_post.body
-    return render_template('add_post.html', form=form, top_title='Edit post', back_url=url_for('main.my_posts'))
-
-
-@main.route('/all_posts')
-def all_posts():
-    posts = post.get_posts()
-    session['from_endpoint'] = 'main.all_posts'
-    return render_template('all_posts.html', posts=posts, top_title='All Posts')
-
-
-@main.route('/my_posts')
-@login_required
-@confirmed_required
-def my_posts():
-    posts = users.get_current_user_post()
-    session['from_endpoint'] = 'main.my_posts'
-    return render_template('my_posts.html', posts=posts, top_title='My posts')
-
-
-@main.route('/post_detail/<post_id>')
-@login_required
-@confirmed_required
-def post_detail(post_id):
-    post_obj = post.get_post_by_id(post_id)
-    if not post_obj:
-        abort(404)
-    back_endpoint = session.get('from_endpoint', 'main.all_posts')
-    return render_template('post_detail.html',
-                           post=post_obj,
-                           top_title='Post Detail',
-                           back_endpoint=back_endpoint)
-
-
-@main.route('/_del_post', methods=['POST'])
-@login_required
-@confirmed_required
-def ajax_delete_post():
-    result = {'status': -1, 'msg': 'failed', 'data': ''}
-    post_id = request.form.get('post_id')
-    if post_id:
-        try:
-            post.del_post(post_id)
         except:
             current_app.logger.error(traceback.format_exc())
         else:
