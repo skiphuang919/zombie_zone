@@ -19,14 +19,14 @@ def write_post():
                                 content=form.body.data,
                                 author=current_user._get_current_object())
             except:
-                flash('Create post failed.', category='warn')
                 current_app.logger.error(traceback.format_exc())
             else:
                 flash('Create post successfully', category='info')
                 return redirect(url_for('posts.all_posts'))
-        else:
-            warn_msg = form.get_one_err_msg()
-            flash(warn_msg, category='warn')
+
+        warn_msg = form.get_one_err_msg() or 'Create post failed.'
+        flash(warn_msg, category='warn')
+
     return render_template('posts/add_post.html', form=form,
                            top_title='Write post', back_url=url_for('posts.all_posts'))
 
@@ -47,14 +47,13 @@ def edit_post(post_id):
                                  title=form.title.data,
                                  body=form.body.data)
             except:
-                flash('update post failed', category='warn')
                 current_app.logger.error(traceback.format_exc())
             else:
                 flash('update post successfully', category='info')
                 return redirect(url_for('posts.my_posts'))
-        else:
-            warn_msg = form.get_one_err_msg()
-            flash(warn_msg, category='warn')
+
+        warn_msg = form.get_one_err_msg() or 'update post failed'
+        flash(warn_msg, category='warn')
     else:
         form.title.data = my_post.title
         form.body.data = my_post.body
