@@ -7,6 +7,15 @@ from flask_login import current_user, login_required
 from ..wrap import confirmed_required
 
 
+@party_blueprint.route('/')
+@login_required
+@confirmed_required
+def party_list():
+    all_party_list = party.get_parties()
+    session['from_endpoint'] = 'party_list'
+    return render_template('party/party_list.html', party_info_list=all_party_list, top_title='All Parties')
+
+
 @party_blueprint.route('/add_party', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
@@ -26,11 +35,12 @@ def add_party():
                 flash('Create party failed.', category='warn')
             else:
                 flash('Create party successfully', category='info')
-                return redirect(url_for('main.index'))
+                return redirect(url_for('party.party_list'))
         else:
             warn_msg = form.get_one_err_msg()
             flash(warn_msg, category='warn')
-    return render_template('party.html', form=form, top_title='Create Party', back_url=url_for('main.index'))
+    return render_template('party/party.html', form=form,
+                           top_title='Create Party', back_url=url_for('party.party_list'))
 
 
 @party_blueprint.route('/party_detail/<party_id>')
@@ -45,16 +55,17 @@ def party_detail(party_id):
     party_detail_info.update(dict(host=party_obj.host.name,
                                   joined=current_user.has_joined(party_obj),
                                   participators=participators))
-    from_endpoint = session.get('from_endpoint', 'index')
+    from_endpoint = session.get('from_endpoint', 'party_list')
 
     if from_endpoint == 'created_party':
         back_url = url_for('party.get_parties', _type='created')
     elif from_endpoint == 'joined_party':
         back_url = url_for('party.get_parties', _type='joined')
     else:
-        back_url = url_for('main.index')
+        back_url = url_for('party.party_list')
 
-    return render_template('party_detail.html', party=party_detail_info, back_url=back_url, top_title='Party Detail')
+    return render_template('party/party_detail.html', party=party_detail_info,
+                           back_url=back_url, top_title='Party Detail')
 
 
 @party_blueprint.route('/_join_or_quit')
@@ -118,18 +129,15 @@ def ajax_get_party_guys():
 @confirmed_required
 def get_parties(_type):
     if _type == 'created':
-        party_list = users.get_created_parties(current_user.user_id)
-        render_temp = 'party_created.html'
-        top_title = 'Created Parties'
+        c_party_list = users.get_created_parties(current_user.user_id)
         session['from_endpoint'] = 'created_party'
+        return render_template('party/party_created.html', party_list=c_party_list, top_title='Created Parties')
     elif _type == 'joined':
-        party_list = users.get_joined_parties(current_user.user_id)
-        render_temp = 'party_joined.html'
-        top_title = 'Joined Parties'
+        j_party_list = users.get_joined_parties(current_user.user_id)
         session['from_endpoint'] = 'created_party'
+        return render_template('party/party_joined.html', party_list=j_party_list, top_title='Joined Parties')
     else:
-        return redirect(url_for('main.index'))
-    return render_template(render_temp, party_list=party_list, top_title=top_title)
+        return redirect(url_for('party.party_list'))
 
 
 @party_blueprint.route('/_del_party', methods=['POST'])

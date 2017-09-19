@@ -22,13 +22,13 @@ def write_post():
                 current_app.logger.error(traceback.format_exc())
             else:
                 flash('Create post successfully', category='info')
-                return redirect(url_for('posts.all_posts'))
+                return redirect(url_for('posts.my_posts'))
 
         warn_msg = form.get_one_err_msg() or 'Create post failed.'
         flash(warn_msg, category='warn')
 
     return render_template('posts/add_post.html', form=form,
-                           top_title='Write post', back_url=url_for('posts.all_posts'))
+                           top_title='Write post', back_url=url_for('main.index'))
 
 
 @posts_blueprint.route('/edit_post/<post_id>', methods=['GET', 'POST'])
@@ -60,13 +60,6 @@ def edit_post(post_id):
     return render_template('posts/add_post.html', form=form, top_title='Edit post', back_url=url_for('posts.my_posts'))
 
 
-@posts_blueprint.route('/all_posts')
-def all_posts():
-    a_posts = post.get_posts()
-    session['from_endpoint'] = 'posts.all_posts'
-    return render_template('posts/all_posts.html', posts=a_posts, top_title='All Posts')
-
-
 @posts_blueprint.route('/my_posts')
 @login_required
 @confirmed_required
@@ -83,7 +76,7 @@ def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     if not post_obj:
         abort(404)
-    back_endpoint = session.get('from_endpoint', 'posts.all_posts')
+    back_endpoint = session.get('from_endpoint', 'main.index')
     return render_template('posts/post_detail.html',
                            post=post_obj,
                            top_title='Post Detail',

@@ -1,10 +1,10 @@
 from flask import render_template, session
 from . import main
-from ..lib import party
+from ..lib import post
 
 
 @main.route('/')
 def index():
-    party_list = party.get_parties(limit=10)
-    session['from_endpoint'] = 'index'
-    return render_template('index.html', party_info_list=party_list, top_title='All Parties')
+    a_posts = post.get_posts()
+    session['from_endpoint'] = 'main.index'
+    return render_template('posts/all_posts.html', posts=a_posts, top_title='All Posts')
