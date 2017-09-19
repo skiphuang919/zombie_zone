@@ -15,6 +15,6 @@
         <p class="tip_p">Sorry, no one joined the party...</p>
     {% endif %}
     <div class="weui-btn-area button-sp-area">
-        <a href="{{ url_for('main.party_detail', party_id=party_id) }}" class="weui-btn weui-btn_primary">Back</a>
+        <a href="{{ url_for('party.party_detail', party_id=party_id) }}" class="weui-btn weui-btn_primary">Back</a>
     </div>
 {% endblock %}

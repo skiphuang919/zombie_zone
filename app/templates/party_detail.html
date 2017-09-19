@@ -62,7 +62,7 @@
                 var action_type = $this.data('type');
                 $.ajax({
                     type: 'GET',
-                    url: '/_join_or_quit',
+                    url: '/party/_join_or_quit',
                     dataType: 'json',
                     data: {'action_type': action_type,
                         'party_id': '{{ party.party_id }}',
@@ -99,7 +99,7 @@
         function ajax_get_party_guys() {
             $.ajax({
                 type: 'GET',
-                url: '/_get_party_guys',
+                url: '/party/_get_party_guys',
                 dataType: 'json',
                 data: {'party_id': '{{ party.party_id }}'},
                 success: function (data) {

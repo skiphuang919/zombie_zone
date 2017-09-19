@@ -12,7 +12,7 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.get_parties', _type='created') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('party.get_parties', _type='created') }}">
             <div class="weui-cell__hd">
                 <img class='party_icon' src="{{ url_for('static', filename='img/party_host.png') }}">
             </div>
@@ -23,7 +23,7 @@
                 <div class="p_count">{{ created_c }}</div>
             </div>
         </a>
-        <a class="weui-cell weui-cell_access" href="{{ url_for('main.get_parties', _type='joined') }}">
+        <a class="weui-cell weui-cell_access" href="{{ url_for('party.get_parties', _type='joined') }}">
             <div class="weui-cell__hd">
                 <img class='party_icon' src="{{ url_for('static', filename='img/party_join.png') }}">
             </div>

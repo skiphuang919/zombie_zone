@@ -1,5 +1,5 @@
 import traceback
-from . import user
+from . import user_blueprint
 from flask import render_template, abort, request, current_app, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
 from ..wrap import confirmed_required
@@ -7,7 +7,7 @@ from ..lib import users
 from .form import ChangePwdForm
 
 
-@user.route('/my_zone')
+@user_blueprint.route('/my_zone')
 @login_required
 @confirmed_required
 def my_zone():
@@ -18,21 +18,21 @@ def my_zone():
                            top_title='My Zone')
 
 
-@user.route('/user_info')
+@user_blueprint.route('/user_info')
 @login_required
 @confirmed_required
 def user_info():
     return render_template('user/user_info.html', top_title='Profile')
 
 
-@user.route('/user_settings')
+@user_blueprint.route('/user_settings')
 @login_required
 @confirmed_required
 def user_settings():
     return render_template('user/user_settings.html', top_title='Settings')
 
 
-@user.route('/edit_profile/<item>')
+@user_blueprint.route('/edit_profile/<item>')
 @login_required
 @confirmed_required
 def edit_profile(item):
@@ -42,7 +42,7 @@ def edit_profile(item):
                            value=getattr(current_user, item) or '', top_title=item.capitalize())
 
 
-@user.route('/_update_profile')
+@user_blueprint.route('/_update_profile')
 @login_required
 @confirmed_required
 def ajax_update_profile():
@@ -60,7 +60,7 @@ def ajax_update_profile():
     return jsonify(result)
 
 
-@user.route('/update_password', methods=['GET', 'POST'])
+@user_blueprint.route('/update_password', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
 def update_password():

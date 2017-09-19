@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, DateField
 from wtforms.validators import DataRequired, Length, Regexp
-from flask_pagedown.fields import PageDownField
 from ..lib.utils import ZombieForm
 
 
@@ -18,4 +16,3 @@ class PartyForm(ZombieForm):
     note = TextAreaField(u'Note',
                          validators=[Length(max=128, message=u'Accident desc out of limitation 128')])
     submit = SubmitField(u'Submit')
-

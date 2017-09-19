@@ -44,13 +44,16 @@ def create_app(config_name):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .auth import auth as auth_blueprint
+    from .auth import auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-    from .user import user as user_blueprint
+    from .user import user_blueprint
     app.register_blueprint(user_blueprint, url_prefix='/user')
 
-    from .posts import posts as posts_blueprint
+    from .posts import posts_blueprint
     app.register_blueprint(posts_blueprint, url_prefix='/posts')
+
+    from .party import party_blueprint
+    app.register_blueprint(party_blueprint, url_prefix='/party')
 
     return app

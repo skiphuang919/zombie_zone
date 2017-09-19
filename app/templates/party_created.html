@@ -29,7 +29,7 @@
                 </div>
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_action('{{ party_info.party_id }}')">Del</a>
-                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('main.party_detail', party_id=party_info.party_id, from_url='created_party') }}">Detail</a>
+                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('party.party_detail', party_id=party_info.party_id, from_url='created_party') }}">Detail</a>
                 </div>
             </div>
         {% endfor %}
@@ -59,7 +59,7 @@
         function ajax_del_party(party_id) {
             $.ajax({
                 type: 'POST',
-                url: '/_del_party',
+                url: '/party/_del_party',
                 dataType: 'json',
                 data: {'party_id': party_id,
                     'a': Math.random()},

@@ -1,13 +1,13 @@
 import traceback
 from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort, session
-from . import posts
+from . import posts_blueprint
 from .form import PostForm
 from ..lib import users, post
 from flask_login import current_user, login_required
 from ..wrap import confirmed_required
 
 
-@posts.route('/write_post', methods=['GET', 'POST'])
+@posts_blueprint.route('/write_post', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
 def write_post():
@@ -31,7 +31,7 @@ def write_post():
                            top_title='Write post', back_url=url_for('posts.all_posts'))
 
 
-@posts.route('/edit_post/<post_id>', methods=['GET', 'POST'])
+@posts_blueprint.route('/edit_post/<post_id>', methods=['GET', 'POST'])
 @login_required
 @confirmed_required
 def edit_post(post_id):
@@ -60,14 +60,14 @@ def edit_post(post_id):
     return render_template('posts/add_post.html', form=form, top_title='Edit post', back_url=url_for('posts.my_posts'))
 
 
-@posts.route('/all_posts')
+@posts_blueprint.route('/all_posts')
 def all_posts():
     a_posts = post.get_posts()
     session['from_endpoint'] = 'posts.all_posts'
     return render_template('posts/all_posts.html', posts=a_posts, top_title='All Posts')
 
 
-@posts.route('/my_posts')
+@posts_blueprint.route('/my_posts')
 @login_required
 @confirmed_required
 def my_posts():
@@ -76,7 +76,7 @@ def my_posts():
     return render_template('posts/my_posts.html', posts=c_posts, top_title='My posts')
 
 
-@posts.route('/post_detail/<post_id>')
+@posts_blueprint.route('/post_detail/<post_id>')
 @login_required
 @confirmed_required
 def post_detail(post_id):
@@ -90,7 +90,7 @@ def post_detail(post_id):
                            back_endpoint=back_endpoint)
 
 
-@posts.route('/_del_post', methods=['POST'])
+@posts_blueprint.route('/_del_post', methods=['POST'])
 @login_required
 @confirmed_required
 def ajax_delete_post():

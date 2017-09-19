@@ -1,6 +1,6 @@
 import traceback
 from flask import redirect, url_for, current_app, render_template, flash, request, jsonify
-from . import auth
+from . import auth_blueprint
 from .form import RegisterForm, LoginForm, PasswordResetRequestForm, PasswordResetForm
 from ..lib import users
 from ..lib.utils import Captcha
@@ -8,7 +8,7 @@ from ..email import send_confirm_mail, send_reset_pwd_mail
 from flask_login import login_user, current_user, login_required, logout_user
 
 
-@auth.route('/register', methods=['GET', 'POST'])
+@auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def register():
     return render_template('auth/register.html', form=form, captcha_stm=captcha_stm)
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if request.method == 'POST':
@@ -58,7 +58,7 @@ def login():
     return render_template('auth/login.html', form=form, captcha_stm=captcha_stm)
 
 
-@auth.route('/logout')
+@auth_blueprint.route('/logout')
 @login_required
 def logout():
     try:
@@ -70,7 +70,7 @@ def logout():
         return redirect(url_for('auth.login'))
 
 
-@auth.route('/confirm/<token>')
+@auth_blueprint.route('/confirm/<token>')
 @login_required
 def confirm(token):
     if current_user.confirmed:
@@ -86,7 +86,7 @@ def confirm(token):
                                warn_detail='The confirmation link is invalid or has expired.')
 
 
-@auth.route('/resend_confirm')
+@auth_blueprint.route('/resend_confirm')
 @login_required
 def resend_confirm():
     try:
@@ -102,7 +102,7 @@ def resend_confirm():
     return redirect(url_for('main.index'))
 
 
-@auth.route('/_change_captcha')
+@auth_blueprint.route('/_change_captcha')
 def change_captcha():
     result = {'status': -1,
               'data': ''}
@@ -116,7 +116,7 @@ def change_captcha():
     return jsonify(result)
 
 
-@auth.route('/password_reset_request', methods=['GET', 'POST'])
+@auth_blueprint.route('/password_reset_request', methods=['GET', 'POST'])
 def password_reset_request():
     form = PasswordResetRequestForm()
     if request.method == 'POST':
@@ -138,7 +138,7 @@ def password_reset_request():
     return render_template('auth/send_reset_pwd.html', form=form)
 
 
-@auth.route('/reset_password/<token>', methods=['GET', 'POST'])
+@auth_blueprint.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     form = PasswordResetForm()
     if request.method == 'POST':
