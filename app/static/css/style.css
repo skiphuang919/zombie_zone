@@ -316,3 +316,13 @@ body{
     float: right;
     padding-top: 10px;
 }
+
+.pagination_div{
+    margin: 15px;
+    border-top: 1px solid #d9d9d9;
+}
+
+.page_btn{
+    border: 1px solid #d9d9d9;
+    border-radius: 10px;
+}

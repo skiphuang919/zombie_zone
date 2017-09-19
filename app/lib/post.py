@@ -1,6 +1,7 @@
 from .. import db
 from tools import get_db_unique_id, current_utc_time
 from ..model import Posts
+from flask import current_app
 
 
 def write_blog(title, content, author):
@@ -27,6 +28,11 @@ def get_posts(limit=None, offset=None):
         sql = sql.offset(offset)
 
     return sql.all()
+
+
+def get_paginate_posts(page_num):
+    return Posts.query.order_by(Posts.timestamp.desc()).\
+        paginate(page=page_num, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
 
 
 def update_post(post_id, title=None, body=None):

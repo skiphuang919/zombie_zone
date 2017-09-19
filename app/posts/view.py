@@ -70,8 +70,6 @@ def my_posts():
 
 
 @posts_blueprint.route('/post_detail/<post_id>')
-@login_required
-@confirmed_required
 def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     if not post_obj:

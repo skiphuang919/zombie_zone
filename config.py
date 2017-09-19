@@ -30,6 +30,8 @@ class Config(object):
 
     CONFIRM_MAIL_SUBJECT = '[Zombie Zone]'
 
+    POSTS_PER_PAGE = 10
+
     @staticmethod
     def init_app(app):
         pass
