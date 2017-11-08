@@ -23,3 +23,6 @@
 
 ### to do list
 增加评论
+
+## celery
+`celery worker -A celery_worker.celery -l INFO`

@@ -24,23 +24,32 @@ login_manager.login_message = u'Please login to access this page.'
 celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
 
 
-def create_app(config_name):
-    app = Flask(__name__)
+def configure_celery(app, celery_app):
+    """
+    creates a new Celery object, configures it with the broker from the application config,
+    updates the rest of the Celery config from the Flask config and then
+    creates a subclass of the task that wraps the task execution in an application context.
+    """
+    app.config.update({'backend': app.config['CELERY_RESULT_BACKEND'],
+                       'broker': app.config['CELERY_BROKER_URL']})
+    celery_app.conf.update(app.config)
 
-    app.config.from_object(config_name)
-    config_name.init_app(app)
+    task_base = celery.Task
 
-    # register custom filter `prettify` in app
-    app.jinja_env.filters['prettify'] = prettify
+    class ContextTask(task_base):
+        abstract = True
 
-    cache.init_app(app)
-    mail.init_app(app)
-    db.init_app(app)
-    login_manager.init_app(app)
-    pagedown.init_app(app)
-    celery.conf.update(app.config)
-    moment.init_app(app)
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return task_base.__call__(self, *args, **kwargs)
 
+    celery.Task = ContextTask
+
+
+def configure_blueprint(app):
+    """
+    register blueprint to the app
+    """
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
@@ -55,5 +64,24 @@ def create_app(config_name):
 
     from .party import party_blueprint
     app.register_blueprint(party_blueprint, url_prefix='/party')
+
+
+def create_app(config_name):
+    app = Flask(__name__)
+
+    app.config.from_object(config_name)
+    config_name.init_app(app)
+
+    # register custom filter `prettify` in app
+    app.jinja_env.filters['prettify'] = prettify
+
+    cache.init_app(app)
+    mail.init_app(app)
+    db.init_app(app)
+    login_manager.init_app(app)
+    pagedown.init_app(app)
+    moment.init_app(app)
+    configure_celery(app, celery)
+    configure_blueprint(app)
 
     return app
