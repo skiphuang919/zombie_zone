@@ -18,7 +18,6 @@ def register():
                                                name=form.name.data,
                                                password=form.password.data)
                 token = new_user.generate_confirm_token()
-                print token
                 send_confirm_mail(recipient=new_user.email,
                                   mail_info=dict(name=new_user.name,
                                                  confirm_url=url_for('auth.confirm', token=token, _external=True)))
