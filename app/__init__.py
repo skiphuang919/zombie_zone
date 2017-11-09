@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_pagedown import PageDown
 from flask_moment import Moment
-from config import Config
 from celery import Celery
 from lib.tools import prettify
 
@@ -21,7 +20,7 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 login_manager.login_message = u'Please login to access this page.'
 
-celery = Celery(__name__, broker=Config.CELERY_BROKER_URL)
+celery = Celery(__name__)
 
 
 def configure_celery(app, celery_app):

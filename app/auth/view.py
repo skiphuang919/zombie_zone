@@ -123,7 +123,6 @@ def password_reset_request():
             user = users.get_user(email=form.email.data)
             if user:
                 token = user.generate_reset_pwd_token()
-                print token
                 send_reset_pwd_mail(recipient=user.email,
                                     mail_info={'name': user.name,
                                                'reset_pwd_url': url_for('auth.reset_password',
