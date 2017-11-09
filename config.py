@@ -19,6 +19,8 @@ class Config(object):
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_TASK_SERIALIZER = 'json'
 
+    ZOMBIE_ZONE_ADMIN = ''
+
     MAIL_SERVER = 'smtp.163.com'
     MAIL_PORT = 25
     MAIL_USE_TLS = True

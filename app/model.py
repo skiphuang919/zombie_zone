@@ -54,6 +54,10 @@ class Users(db.Model, UserMixin):
             db.session.add(self)
             db.session.commit()
 
+
+    def is_administrator(self):
+        return True if self.email == current_app.config['ZOMBIE_ZONE_ADMIN'] else False
+
     @property
     def password(self):
         raise AttributeError('Unreadable attribute')
