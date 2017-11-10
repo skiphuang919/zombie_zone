@@ -28,6 +28,9 @@ class Config(object):
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', '')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '')
 
+    HTTP_GRAVATAR_URL = 'http://www.gravatar.com/avatar'
+    HTTPS_GRAVATAR_URL = 'https://secure.gravatar.com/avatar'
+
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
 
     CONFIRM_MAIL_SUBJECT = '[Zombie Zone]'

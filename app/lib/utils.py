@@ -4,17 +4,14 @@ from flask import session, current_app, request
 from captcha.image import ImageCaptcha
 from flask_wtf import FlaskForm
 
-LOW_LETTERS = 'abcdefghjkmnpqrstuvwxyz'
-UPPER_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
-NUMBERS = '1234567890'
-
-HTTP_GRAVATAR_URL = 'http://www.gravatar.com/avatar'
-HTTPS_GRAVATAR_URL = 'https://secure.gravatar.com/avatar'
-
 
 class Captcha(object):
+    LOW_LETTERS = 'abcdefghjkmnpqrstuvwxyz'
+    UPPER_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ'
+    NUMBERS = '1234567890'
+
     def __init__(self):
-        self.char_pool = ''.join((LOW_LETTERS, NUMBERS, UPPER_LETTERS))
+        self.char_pool = ''.join((self.LOW_LETTERS, self.NUMBERS, self.UPPER_LETTERS))
 
     def generate_captcha_stream(self):
         try:
@@ -57,11 +54,12 @@ class Gravatar(object):
         self.email = email.lower()
         self.size = size
         self.email_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
+        self.gravatar_url = current_app.config['HTTPS_GRAVATAR_URL'] if request.is_secure \
+            else current_app.config['HTTP_GRAVATAR_URL']
 
     def avatar_url(self):
-        url = HTTPS_GRAVATAR_URL if request.is_secure else HTTP_GRAVATAR_URL
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
-            url=url, hash=self.email_hash, size=self.size, default='identicon', rating='g')
+            url=self.gravatar_url, hash=self.email_hash, size=self.size, default='identicon', rating='g')
 
 
 
