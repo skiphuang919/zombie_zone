@@ -41,7 +41,5 @@ def get_parties(available=False, limit=None, offset=None):
 
 
 def delete_party(party_id):
-    party = Parties.query.filter_by(party_id=party_id).first()
-    if party:
-        db.session.delete(party)
-        db.session.commit()
+    Parties.query.filter_by(party_id=party_id).delete()
+    db.session.commit()

@@ -39,6 +39,9 @@ def edit_post(post_id):
     if not my_post:
         abort(404)
 
+    if my_post.author_id != current_user.user_id:
+        abort(403)
+
     form = PostForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -87,12 +90,18 @@ def post_detail(post_id):
 def ajax_delete_post():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     post_id = request.form.get('post_id')
-    if post_id:
-        try:
-            post.del_post(post_id)
-        except:
-            current_app.logger.error(traceback.format_exc())
-        else:
-            result['status'] = 0
-            result['msg'] = 'success'
+
+    my_post = post.get_post_by_id(post_id)
+    if not my_post:
+        abort(404)
+    if my_post.author_id != current_user.user_id:
+        abort(403)
+
+    try:
+        post.del_post(post_id)
+    except:
+        current_app.logger.error(traceback.format_exc())
+    else:
+        result['status'] = 0
+        result['msg'] = 'success'
     return jsonify(result)

@@ -8,6 +8,12 @@ from .lib import tools
 from .lib.utils import Gravatar
 
 
+class Permission(object):
+    LOGIN = 0x01
+    CONFIRMED = 0x02
+    ADMINISTRATOR = 0x40
+
+
 class Participate(db.Model):
     __tablename__ = 'participate'
     participator_id = db.Column(db.String(64), db.ForeignKey('users.user_id'), primary_key=True)
@@ -54,6 +60,7 @@ class Users(db.Model, UserMixin):
             db.session.add(self)
             db.session.commit()
 
+    @property
     def is_administrator(self):
         return True if self.email == current_app.config['ZOMBIE_ZONE_ADMIN'] else False
 

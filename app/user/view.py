@@ -2,14 +2,14 @@ import traceback
 from . import user_blueprint
 from flask import render_template, abort, request, current_app, jsonify, flash, redirect, url_for
 from flask_login import login_required, current_user
-from ..wrap import confirmed_required
+from ..wrap import permission_required, confirmed_required
 from ..lib import users
 from .form import ChangePwdForm
+from app.model import Permission
 
 
 @user_blueprint.route('/my_zone')
-@login_required
-@confirmed_required
+@permission_required(Permission.LOGIN)
 def my_zone():
     return render_template('user/my_zone.html',
                            joined_c=users.get_joined_parties(current_user.user_id, get_count=True),
