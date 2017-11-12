@@ -3,13 +3,13 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, c
 from . import party_blueprint
 from .form import PartyForm
 from ..lib import party, tools, users
-from flask_login import current_user, login_required
-from ..wrap import confirmed_required
+from flask_login import current_user
+from ..wrap import permission_required
+from ..model import Permission
 
 
 @party_blueprint.route('/')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def party_list():
     all_party_list = party.get_parties()
     session['from_endpoint'] = 'party_list'
@@ -17,8 +17,7 @@ def party_list():
 
 
 @party_blueprint.route('/add_party', methods=['GET', 'POST'])
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def add_party():
     form = PartyForm()
     if request.method == 'POST':
@@ -44,8 +43,7 @@ def add_party():
 
 
 @party_blueprint.route('/party_detail/<party_id>')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def party_detail(party_id):
     party_obj = party.get_party_by_id(party_id=party_id)
     if not party_obj:
@@ -69,8 +67,7 @@ def party_detail(party_id):
 
 
 @party_blueprint.route('/_join_or_quit')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def ajax_join_or_quit():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id')
@@ -100,8 +97,7 @@ def ajax_join_or_quit():
 
 
 @party_blueprint.route('/_get_party_guys')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def ajax_get_party_guys():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.args.get('party_id')
@@ -125,8 +121,7 @@ def ajax_get_party_guys():
 
 
 @party_blueprint.route('/get_parties/<_type>')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def get_parties(_type):
     if _type == 'created':
         c_party_list = users.get_created_parties(current_user.user_id)
@@ -141,8 +136,7 @@ def get_parties(_type):
 
 
 @party_blueprint.route('/_del_party', methods=['POST'])
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def ajax_delete_party():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.form.get('party_id')

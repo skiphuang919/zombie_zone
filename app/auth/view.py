@@ -5,7 +5,9 @@ from .form import RegisterForm, LoginForm, PasswordResetRequestForm, PasswordRes
 from ..lib import users
 from ..lib.utils import Captcha
 from ..email import send_confirm_mail, send_reset_pwd_mail
-from flask_login import login_user, current_user, login_required, logout_user
+from flask_login import login_user, current_user, logout_user
+from ..wrap import permission_required
+from ..model import Permission
 
 
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
@@ -58,7 +60,7 @@ def login():
 
 
 @auth_blueprint.route('/logout')
-@login_required
+@permission_required(Permission.LOGIN)
 def logout():
     try:
         logout_user()
@@ -70,7 +72,7 @@ def logout():
 
 
 @auth_blueprint.route('/confirm/<token>')
-@login_required
+@permission_required(Permission.LOGIN)
 def confirm(token):
     if current_user.confirmed:
         return redirect(url_for('main.index'))
@@ -86,7 +88,7 @@ def confirm(token):
 
 
 @auth_blueprint.route('/resend_confirm')
-@login_required
+@permission_required(Permission.LOGIN)
 def resend_confirm():
     try:
         token = current_user.generate_confirm_token()

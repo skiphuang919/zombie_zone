@@ -1,8 +1,8 @@
 import traceback
 from . import user_blueprint
 from flask import render_template, abort, request, current_app, jsonify, flash, redirect, url_for
-from flask_login import login_required, current_user
-from ..wrap import permission_required, confirmed_required
+from flask_login import current_user
+from ..wrap import permission_required
 from ..lib import users
 from .form import ChangePwdForm
 from app.model import Permission
@@ -19,22 +19,19 @@ def my_zone():
 
 
 @user_blueprint.route('/user_info')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def user_info():
     return render_template('user/user_info.html', top_title='Profile')
 
 
 @user_blueprint.route('/user_settings')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def user_settings():
     return render_template('user/user_settings.html', top_title='Settings')
 
 
 @user_blueprint.route('/edit_profile/<item>')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def edit_profile(item):
     if item not in ('name', 'gender', 'city', 'slogan'):
         abort(404)
@@ -43,8 +40,7 @@ def edit_profile(item):
 
 
 @user_blueprint.route('/_update_profile')
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def ajax_update_profile():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     item = request.args.get('item')
@@ -61,8 +57,7 @@ def ajax_update_profile():
 
 
 @user_blueprint.route('/update_password', methods=['GET', 'POST'])
-@login_required
-@confirmed_required
+@permission_required(Permission.CONFIRMED)
 def update_password():
     form = ChangePwdForm()
     if request.method == 'POST':
