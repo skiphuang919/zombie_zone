@@ -74,3 +74,9 @@ def update_password():
             warn_msg = form.get_one_err_msg()
         flash(warn_msg, category='warn')
     return render_template('user/update_pwd.html', form=form)
+
+
+@user_blueprint.route('/admin_zone')
+@permission_required(Permission.ADMINISTRATOR)
+def admin_zone():
+    return jsonify('to be continue')

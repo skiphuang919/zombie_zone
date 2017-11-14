@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, c
 from . import posts_blueprint
 from .form import PostForm
 from ..lib import users, post
-from flask_login import current_user, login_required
+from flask_login import current_user
 from ..wrap import permission_required
 from app.model import Permission
 
