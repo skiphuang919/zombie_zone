@@ -73,4 +73,4 @@ def update_password():
 @user_blueprint.route('/admin_zone')
 @permission_required(Permission.ADMINISTRATOR)
 def admin_zone():
-    return jsonify('to be continue')
+    return render_template('user/admin_zone.html', top_title='Admin Zone')
