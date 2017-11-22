@@ -24,12 +24,6 @@ def user_info():
     return render_template('user/user_info.html', top_title='Profile')
 
 
-@user_blueprint.route('/user_settings')
-@permission_required(Permission.CONFIRMED)
-def user_settings():
-    return render_template('user/user_settings.html', top_title='Settings')
-
-
 @user_blueprint.route('/edit_profile/<item>')
 @permission_required(Permission.CONFIRMED)
 def edit_profile(item):
@@ -79,4 +73,4 @@ def update_password():
 @user_blueprint.route('/admin_zone')
 @permission_required(Permission.ADMINISTRATOR)
 def admin_zone():
-    return jsonify('to be continue')
+    return render_template('user/admin_zone.html', top_title='Admin Zone')

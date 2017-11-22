@@ -48,22 +48,13 @@
     </div>
 
     <div class="weui-cells">
-        <a class="weui-cell weui-cell_access" href="{{ url_for('user.user_settings') }}">
-            <div class="weui-cell__hd">
-                <img class='party_icon' src="{{ url_for('static', filename='img/settings.png') }}">
-            </div>
-            <div class="weui-cell__bd">
-                <div class="u_info">Settings</div>
-            </div>
-            <div class="weui-cell__ft"></div>
-        </a>
         {% if current_user.is_administrator %}
             <a class="weui-cell weui-cell_access" href="{{ url_for('user.admin_zone') }}">
                 <div class="weui-cell__hd">
-                    <img class='party_icon' src="{{ url_for('static', filename='img/admin.png') }}">
+                    <img class='party_icon' src="{{ url_for('static', filename='img/admin_zone.png') }}">
                 </div>
                 <div class="weui-cell__bd">
-                    <div class="u_info">Settings</div>
+                    <div class="u_info">Admin Zone</div>
                 </div>
                 <div class="weui-cell__ft"></div>
             </a>

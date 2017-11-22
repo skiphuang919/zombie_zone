@@ -19,7 +19,7 @@ class Config(object):
     CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
     CELERY_TASK_SERIALIZER = 'json'
 
-    ZOMBIE_ZONE_ADMIN = ''
+    ZOMBIE_ZONE_ADMIN = '492050882@qq.com'
 
     MAIL_SERVER = 'smtp.163.com'
     MAIL_PORT = 25
