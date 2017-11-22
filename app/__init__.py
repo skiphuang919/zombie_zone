@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request, jsonify, render_template
 from flask_cache import Cache
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
@@ -14,12 +14,7 @@ mail = Mail()
 db = SQLAlchemy()
 pagedown = PageDown()
 moment = Moment()
-
 login_manager = LoginManager()
-login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
-login_manager.login_message = u'Please login to access this page.'
-
 celery = Celery(__name__)
 
 
@@ -65,7 +60,45 @@ def configure_blueprint(app):
     app.register_blueprint(party_blueprint, url_prefix='/party')
 
 
+def configure_extension(app):
+    """
+    config and init extension with flask app instance
+    """
+
+    db.init_app(app)
+
+    cache.init_app(app)
+
+    mail.init_app(app)
+
+    login_manager.session_protection = 'strong'
+    login_manager.login_view = 'auth.login'
+    login_manager.login_message = u'Please login to access this page.'
+    login_manager.init_app(app)
+
+    pagedown.init_app(app)
+
+    moment.init_app(app)
+
+
+def configure_error_handler(app):
+    """
+    configure the error handler
+    """
+    @app.errorhandler(404)
+    def forbidden_page(e):
+        if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+            res = jsonify({'status': -1, 'msg': 'access forbidden', 'data': ''})
+            res.status_code = 403
+            return res
+        return render_template('error/403.html')
+
+
 def create_app(config_name):
+    """
+    create flask app instance and do the configure
+    """
+
     app = Flask(__name__)
 
     app.config.from_object(config_name)
@@ -74,13 +107,9 @@ def create_app(config_name):
     # register custom filter `prettify` in app
     app.jinja_env.filters['prettify'] = prettify
 
-    cache.init_app(app)
-    mail.init_app(app)
-    db.init_app(app)
-    login_manager.init_app(app)
-    pagedown.init_app(app)
-    moment.init_app(app)
+    configure_extension(app)
     configure_celery(app, celery)
     configure_blueprint(app)
+    configure_error_handler(app)
 
     return app
