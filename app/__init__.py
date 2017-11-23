@@ -85,13 +85,29 @@ def configure_error_handler(app):
     """
     configure the error handler
     """
-    @app.errorhandler(404)
+    @app.errorhandler(403)
     def forbidden_page(e):
         if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
             res = jsonify({'status': -1, 'msg': 'access forbidden', 'data': ''})
             res.status_code = 403
             return res
         return render_template('error/403.html')
+
+    @app.errorhandler(404)
+    def not_found_page(e):
+        if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+            res = jsonify({'status': -1, 'msg': 'not found', 'data': ''})
+            res.status_code = 404
+            return res
+        return render_template('error/404.html')
+
+    @app.errorhandler(500)
+    def internal_error_page(e):
+        if request.accept_mimetypes.accept_json and not request.accept_mimetypes.accept_html:
+            res = jsonify({'status': -1, 'msg': 'internal error', 'data': ''})
+            res.status_code = 500
+            return res
+        return render_template('error/500.html')
 
 
 def create_app(config_name):
