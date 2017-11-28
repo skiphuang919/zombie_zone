@@ -1,7 +1,8 @@
 from .. import db
 from tools import get_db_unique_id, current_utc_time
 from ..model import Posts
-from flask import current_app
+from flask import current_app, abort
+from flask_login import current_user
 
 
 def write_blog(title, content, author):
@@ -15,7 +16,7 @@ def write_blog(title, content, author):
 
 
 def get_post_by_id(post_id):
-    return Posts.query.get(post_id)
+    return Posts.query.get_or_404(post_id)
 
 
 def get_posts(limit=None, offset=None):
@@ -36,7 +37,11 @@ def get_paginate_posts(page_num):
 
 
 def update_post(post_id, title=None, body=None):
-    post_obj = get_post_by_id(post_id)
+    post_obj = Posts.query.get_or_404(post_id)
+
+    if post_obj.author_id != current_user.user_id:
+        abort(403)
+
     if post_obj:
         _commit = False
         if title is not None:
@@ -53,7 +58,8 @@ def update_post(post_id, title=None, body=None):
 
 
 def del_post(post_id):
-    post = get_post_by_id(post_id)
-    if post:
-        db.session.delete(post)
-        db.session.commit()
+    my_post = Posts.query.get_or_404(post_id)
+    if my_post.author_id != current_user.user_id:
+        abort(403)
+    db.session.delete(my_post)
+    db.session.commit()

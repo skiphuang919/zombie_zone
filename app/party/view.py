@@ -74,25 +74,26 @@ def ajax_join_or_quit():
     action_type = request.args.get('action_type')
     if party_id and (action_type in ('join', 'quit')):
         party_obj = party.get_party_by_id(party_id)
-        if party_obj:
-            try:
-                if action_type == 'join':
-                    if party_obj.is_full:
-                        result['msg'] = 'Participators is full'
-                        return jsonify(result)
-                    if party_obj.host_id == current_user.user_id:
-                        result['msg'] = "Host needn't join"
-                        return jsonify(result)
-                    current_user.join(party_obj)
-                else:
-                    current_user.quit(party_obj)
-                participators = [p.name for p in party.get_participators(party_id)]
-                result['status'] = 0
-                result['msg'] = 'success'
-                result['data'] = {'joined_count': len(participators),
-                                  'participators': ', '.join(participators)}
-            except:
-                current_app.logger.error(traceback.format_exc())
+        if not party_obj:
+            abort(404)
+        try:
+            if action_type == 'join':
+                if party_obj.is_full:
+                    result['msg'] = 'Participators is full'
+                    return jsonify(result)
+                if party_obj.host_id == current_user.user_id:
+                    result['msg'] = "Host needn't join"
+                    return jsonify(result)
+                current_user.join(party_obj)
+            else:
+                current_user.quit(party_obj)
+            participators = [p.name for p in party.get_participators(party_id)]
+            result['status'] = 0
+            result['msg'] = 'success'
+            result['data'] = {'joined_count': len(participators),
+                              'participators': ', '.join(participators)}
+        except:
+            current_app.logger.error(traceback.format_exc())
     return jsonify(result)
 
 

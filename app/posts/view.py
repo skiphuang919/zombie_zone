@@ -35,11 +35,6 @@ def write_post():
 @permission_required(Permission.CONFIRMED)
 def edit_post(post_id):
     my_post = post.get_post_by_id(post_id)
-    if not my_post:
-        abort(404)
-
-    if my_post.author_id != current_user.user_id:
-        abort(403)
 
     form = PostForm()
     if request.method == 'POST':
@@ -73,8 +68,6 @@ def my_posts():
 @posts_blueprint.route('/post_detail/<post_id>')
 def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
-    if not post_obj:
-        abort(404)
     back_endpoint = session.get('from_endpoint', 'main.index')
     return render_template('posts/post_detail.html',
                            post=post_obj,
@@ -87,13 +80,6 @@ def post_detail(post_id):
 def ajax_delete_post():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     post_id = request.form.get('post_id')
-
-    my_post = post.get_post_by_id(post_id)
-    if not my_post:
-        abort(404)
-    if my_post.author_id != current_user.user_id:
-        abort(403)
-
     try:
         post.del_post(post_id)
     except:
