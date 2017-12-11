@@ -3,14 +3,12 @@ from .. import db
 from flask import current_app
 from flask_login import current_user
 from ..model import Users, Participate, Parties, Posts
-from tools import get_db_unique_id
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 
 def register_user(email, name, password):
 
-    user = Users(user_id=get_db_unique_id(),
-                 email=email,
+    user = Users(email=email,
                  name=name,
                  password=password,
                  timestamp=datetime.utcnow())

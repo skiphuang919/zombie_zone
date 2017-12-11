@@ -1,13 +1,12 @@
 from .. import db
-from tools import get_db_unique_id, current_utc_time
+from tools import current_utc_time
 from ..model import Posts
 from flask import current_app, abort
 from flask_login import current_user
 
 
 def write_blog(title, content, author):
-    new_post = Posts(post_id=get_db_unique_id(),
-                     title=title,
+    new_post = Posts(title=title,
                      body=content,
                      author=author)
     db.session.add(new_post)
@@ -59,7 +58,7 @@ def update_post(post_id, title=None, body=None):
 
 def del_post(post_id):
     my_post = Posts.query.get_or_404(post_id)
-    if my_post.author_id != current_user.user_id:
+    if str(my_post.author_id) != str(current_user.user_id):
         abort(403)
     db.session.delete(my_post)
     db.session.commit()

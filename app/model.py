@@ -23,7 +23,7 @@ class Participate(db.Model):
 
 class Users(db.Model, UserMixin):
     __tablename__ = 'users'
-    user_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     open_id = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     name = db.Column(db.String(64), unique=True, index=True)
@@ -143,7 +143,7 @@ def load_user(user_id):
 
 class Parties(db.Model):
     __tablename__ = 'parties'
-    party_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
+    party_id = db.Column(db.Integer, primary_key=True)
     subject = db.Column(db.String(128), nullable=False)
     party_time = db.Column(db.DateTime)
     address = db.Column(db.String(128), nullable=False)
@@ -178,7 +178,7 @@ class Parties(db.Model):
 
 class Posts(db.Model):
     __tablename__ = 'posts'
-    post_id = db.Column(db.String(64), unique=True, index=True, primary_key=True)
+    post_id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(512))
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)

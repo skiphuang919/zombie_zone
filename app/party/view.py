@@ -141,13 +141,6 @@ def get_parties(_type):
 def ajax_delete_party():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     party_id = request.form.get('party_id')
-
-    party_obj = party.get_party_by_id(party_id)
-    if not party_obj:
-        abort(404)
-    if party_obj.host_id != current_user.user_id:
-        abort(403)
-
     try:
         party.delete_party(party_id)
     except:

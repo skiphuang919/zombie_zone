@@ -1,12 +1,13 @@
 from .. import db
 from ..model import Parties, Participate
-from tools import get_db_unique_id, get_calculated_datetime, current_utc_time
+from tools import get_calculated_datetime, current_utc_time
+from flask_login import current_user
+from flask import abort
 
 
 def add_party(subject=None, party_time=None, address=None, host_id=None,
               required_count=None, note=None):
-    party = Parties(party_id=get_db_unique_id(),
-                    subject=subject,
+    party = Parties(subject=subject,
                     party_time=party_time,
                     address=address,
                     host_id=host_id,
@@ -41,5 +42,8 @@ def get_parties(available=False, limit=None, offset=None):
 
 
 def delete_party(party_id):
-    Parties.query.filter_by(party_id=party_id).delete()
+    party_obj = Parties.query.get_or_404(party_id)
+    if str(party_obj.host_id) != str(current_user.user_id):
+        abort(403)
+    db.session.delete(party_obj)
     db.session.commit()
