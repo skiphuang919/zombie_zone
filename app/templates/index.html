@@ -2,7 +2,7 @@
 {% import "_macros.html" as macros %}
 {% block page_content %}
 
-    {% for post in posts %}
+    {% for post in pagination.items %}
         <div class="weui-form-preview preview_card">
             <div class="card_body">
                 <a href="{{ url_for('posts.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
