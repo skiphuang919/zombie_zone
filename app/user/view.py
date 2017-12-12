@@ -79,4 +79,8 @@ def admin_zone():
 @user_blueprint.route('/user_list')
 @permission_required(Permission.ADMINISTRATOR)
 def user_list():
-    pass
+    page = request.args.get('page', 1, type=int)
+    users_pagination = users.get_paginate_users(page_num=page)
+    return render_template('user/user_list.html', pagination=users_pagination, top_title='All users')
+
+

@@ -122,3 +122,8 @@ def get_current_user_post(get_count=False):
     if get_count:
         return current_user.posts.count()
     return current_user.posts.order_by(Posts.timestamp.desc()).all()
+
+
+def get_paginate_users(page_num):
+    return Users.query.order_by(Users.timestamp.desc()).\
+        paginate(page=page_num, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)

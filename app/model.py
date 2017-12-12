@@ -29,7 +29,7 @@ class Users(db.Model, UserMixin):
     name = db.Column(db.String(64), unique=True, index=True)
     email = db.Column(db.String(128), unique=True, index=True)
     cellphone = db.Column(db.String(16), unique=True, index=True)
-    gender = db.Column(db.Integer)
+    gender = db.Column(db.Integer, default=1)
     city = db.Column(db.String(32))
     slogan = db.Column(db.String(512))
     head_img_url = db.Column(db.String(512))

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import "_macros.html" as macros %}
+{% block page_content %}
+
+    {% for user in pagination.items %}
+        <div class="weui-form-preview preview_card">
+            <div class="card_body weui-flex">
+                <div class="weui-flex__item">
+                    <img src="{{ user.head_img_url }}" class="participators_head">
+                </div>
+                <div class="weui-flex__item">
+                    <div class="guy_info">{{ user.name }}</div>
+                    <div class="guy_info">
+                        {% if user.gender == 0 %}
+                            Female
+                        {% else %}
+                            Male
+                        {% endif %}
+                    </div>
+                    <div class="guy_info">{{ user.email }}</div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    {% if pagination.pages > 1 %}
+        <div class="pagination_div">
+            {{ macros.pagination_widget(pagination, 'user.user_list') }}
+        </div>
+    {% endif %}
+
+{% endblock %}
