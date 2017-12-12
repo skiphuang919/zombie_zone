@@ -18,18 +18,6 @@ def get_post_by_id(post_id):
     return Posts.query.get_or_404(post_id)
 
 
-def get_posts(limit=None, offset=None):
-    sql = Posts.query.order_by(Posts.timestamp.desc())
-
-    if limit is not None:
-        sql = sql.limit(limit)
-
-    if offset is not None:
-        sql = sql.offset(offset)
-
-    return sql.all()
-
-
 def get_paginate_posts(page_num):
     return Posts.query.order_by(Posts.timestamp.desc()).\
         paginate(page=page_num, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)

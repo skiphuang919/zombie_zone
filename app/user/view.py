@@ -74,3 +74,9 @@ def update_password():
 @permission_required(Permission.ADMINISTRATOR)
 def admin_zone():
     return render_template('user/admin_zone.html', top_title='Admin Zone')
+
+
+@user_blueprint.route('/user_list')
+@permission_required(Permission.ADMINISTRATOR)
+def user_list():
+    pass
