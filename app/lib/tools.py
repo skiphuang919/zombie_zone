@@ -77,15 +77,17 @@ def obj2dic(obj):
     return res
 
 
-def markdown_to_safe_html(md):
+def markdown_to_safe_html(md, content_type):
     """
     convert the markdown to the safe html
     :param md: str markdown txt
+    :param content_type content type
     :return: str html
     """
     allowed_tags = ['a', 'abbr', 'acronym', 'b', 'blockquote', 'code',
                     'em', 'i', 'li', 'ol', 'pre', 'strong', 'ul',
-                    'h1', 'h2', 'h3', 'p']
+                    'h1', 'h2', 'h3', 'p'] if content_type == 'post' else \
+        ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
 
     # convert markdown to html
     origin_html = markdown(md, output_format='html')

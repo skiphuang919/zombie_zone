@@ -16,8 +16,8 @@ class Permission(object):
 
 class Participate(db.Model):
     __tablename__ = 'participate'
-    participator_id = db.Column(db.String(64), db.ForeignKey('users.user_id'), primary_key=True)
-    joined_party_id = db.Column(db.String(64), db.ForeignKey('parties.party_id'), primary_key=True)
+    participator_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
+    joined_party_id = db.Column(db.Integer, db.ForeignKey('parties.party_id'), primary_key=True)
     join_time = db.Column(db.DateTime, default=datetime.utcnow)
 
 
@@ -41,15 +41,13 @@ class Users(db.Model, UserMixin):
                                       backref='host',
                                       lazy='dynamic')
 
-    # more that one foreign key between two table, use `foreign_keys` to
-    # qualify each relationship by instructing which foreign key column should be considered
     joined_parties = db.relationship('Participate',
-                                     foreign_keys=[Participate.participator_id],
                                      backref=db.backref('participator', lazy='joined'),
-                                     lazy='dynamic',
-                                     cascade='all, delete-orphan')
+                                     lazy='dynamic')
 
-    posts = db.relationship('Posts', backref='author', lazy='dynamic')
+    posts = db.relationship('Posts',
+                            backref='author',
+                            lazy='dynamic')
 
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
@@ -147,14 +145,13 @@ class Parties(db.Model):
     subject = db.Column(db.String(128), nullable=False)
     party_time = db.Column(db.DateTime)
     address = db.Column(db.String(128), nullable=False)
-    host_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
+    host_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     required_count = db.Column(db.Integer, nullable=False)
     note = db.Column(db.String(512))
     status = db.Column(db.Integer, default=0)
     create_time = db.Column(db.DateTime, default=datetime.utcnow)
 
     participators = db.relationship('Participate',
-                                    foreign_keys=[Participate.joined_party_id],
                                     backref=db.backref('joined_party', lazy='joined'),
                                     lazy='dynamic',
                                     cascade='all, delete-orphan')
@@ -183,7 +180,8 @@ class Posts(db.Model):
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    author_id = db.Column(db.String(64), db.ForeignKey('users.user_id'))
+    author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    disabled = db.Column(db.Integer, default=0)
 
     @staticmethod
     def on_changed_body(target, value, old_value, initiator):
@@ -195,9 +193,24 @@ class Posts(db.Model):
         :param initiator: An instance of attributes.Event representing the initiation of the event.
         :return:
         """
-        target.body_html = tools.markdown_to_safe_html(md=value)
+        target.body_html = tools.markdown_to_safe_html(md=value, content_type='post')
 
 # register set event listening
 db.event.listen(Posts.body, 'set', Posts.on_changed_body)
 
 
+class Comments(db.Model):
+    __tablename__ = 'comments'
+    comment_id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.post_id'))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    body = db.Column(db.Text)
+    body_html = db.Column(db.Text)
+    disabled = db.Column(db.Integer, default=0)
+
+    @staticmethod
+    def on_changed_body(target, value, old_value, initiator):
+        target.body_html = tools.markdown_to_safe_html(md=value, content_type='comment')
+
+db.event.listen(Comments.body, 'set', Posts.on_changed_body)
