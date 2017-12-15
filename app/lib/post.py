@@ -6,12 +6,17 @@ from flask_login import current_user
 
 
 def write_blog(title, content, author):
-    new_post = Posts(title=title,
-                     body=content,
-                     author=author)
-    db.session.add(new_post)
-    db.session.commit()
-    return new_post
+    try:
+        new_post = Posts(title=title,
+                         body=content,
+                         author=author)
+        db.session.add(new_post)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
+    else:
+        return new_post
 
 
 def get_post_by_id(post_id):

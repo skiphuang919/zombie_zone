@@ -7,15 +7,20 @@ from flask import abort
 
 def add_party(subject=None, party_time=None, address=None, host_id=None,
               required_count=None, note=None):
-    party = Parties(subject=subject,
-                    party_time=party_time,
-                    address=address,
-                    host_id=host_id,
-                    required_count=required_count,
-                    note=note)
-    db.session.add(party)
-    db.session.commit()
-    return party
+    try:
+        party = Parties(subject=subject,
+                        party_time=party_time,
+                        address=address,
+                        host_id=host_id,
+                        required_count=required_count,
+                        note=note)
+        db.session.add(party)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
+    else:
+        return party
 
 
 def get_party_by_id(party_id):
