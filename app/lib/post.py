@@ -31,7 +31,7 @@ def get_paginate_posts(page_num):
 def update_post(post_id, title=None, body=None):
     post_obj = Posts.query.get_or_404(post_id)
 
-    if post_obj.author_id != current_user.user_id:
+    if str(post_obj.author_id) != str(current_user.user_id):
         abort(403)
 
     if post_obj:
