@@ -1,35 +1,29 @@
 {% extends "base.html" %}
 {% block page_content %}
-    <div class="post_d_title">{{ post.title }}</div>
+    <div class="post_d_title">{{ post.title }}</div class="post_d_title">
     <div class="post_d_meta">
         <span class="float_right">{{ moment(post.timestamp).fromNow() }}</span>
         <span>{{  post.author.name}}</span>
     </div>
+    <form method="post">
     <div class="post_detail">
         <div class="psot_body">
             {{ post.body_html|safe }}
         </div>
         <div class="post_cmt">
-            <h4>Comment</h4>
-            <form method="post">
+
                 {{ form.hidden_tag() }}
-                {{ form.body(rows="3") }}
-                <div class="weui-flex">
-                    <div class="weui-flex__item">
-                        <img class="weui-vcode-img captcha_img" src="data:image/gif;base64,{{ captcha_stm}}">
-                    </div>
-                    <div class="weui-flex__item">
-                        {{ form.captcha(placeholder="enter captcha" ,maxlength="4") }}
-                    </div>
-                    <div class="weui-flex__item text_right">
-                        <a href="javascript:void (0)" class="weui-btn weui-btn_mini weui-btn_primary update_act">Save</a>
-                    </div>
-                </div>
-            </form>
+                <h4>Comment</h4>
+                {{ form.body(rows="4", class="form-control") }}
+                <h4>Captcha</h4>
+                <img class="cmt_captcha_img captcha_img " src="data:image/gif;base64,{{ captcha_stm}}">
+                {{ form.captcha(class='form-control captcha_input', placeholder="enter captcha" ,maxlength="4") }}
 
         </div>
     </div>
     <div class="weui-btn-area">
-        <a href="{{ url_for(back_endpoint) }}" class="weui-btn weui-btn_plain-primary">Back</a>
+        {{ form.submit(class="weui-btn weui-btn_primary" ) }}
+        <a href="{{ url_for(back_endpoint) }}" class="weui-btn weui-btn_default">Back</a>
     </div>
+    </form>
 {% endblock %}

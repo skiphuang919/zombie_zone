@@ -297,6 +297,7 @@ body{
 .post_d_title{
     font-size: 20px;
     padding: 15px;
+    font-weight: bold;
 }
 
 
@@ -326,4 +327,13 @@ body{
 .page_btn{
     border: 1px solid #d9d9d9;
     border-radius: 10px;
+}
+
+.cmt_captcha_img{
+    height: 30px;
+}
+
+.captcha_input{
+    display: inline-block;
+    width: 30%;
 }
