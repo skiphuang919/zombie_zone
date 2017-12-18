@@ -1,7 +1,7 @@
 import traceback
 from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort, session
 from . import posts_blueprint
-from .form import PostForm
+from .form import PostForm, CommentForm
 from ..lib import users, post
 from flask_login import current_user
 from ..wrap import permission_required
@@ -12,7 +12,7 @@ from app.model import Permission
 @permission_required(Permission.CONFIRMED)
 def write_post():
     form = PostForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             try:
                 post.write_blog(title=form.title.data,
@@ -37,7 +37,7 @@ def edit_post(post_id):
     my_post = post.get_post_by_id(post_id)
 
     form = PostForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             try:
                 post.update_post(post_id=post_id,

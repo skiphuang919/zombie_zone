@@ -20,7 +20,7 @@ def party_list():
 @permission_required(Permission.CONFIRMED)
 def add_party():
     form = PartyForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             try:
                 party.add_party(subject=form.subject.data,

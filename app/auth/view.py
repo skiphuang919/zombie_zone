@@ -13,7 +13,7 @@ from ..model import Permission
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             try:
                 new_user = users.register_user(email=form.email.data,
@@ -43,7 +43,7 @@ def register():
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             user = users.get_user(email=form.email.data)
             if user is not None and user.verify_password(form.password.data):
@@ -120,7 +120,7 @@ def change_captcha():
 @auth_blueprint.route('/password_reset_request', methods=['GET', 'POST'])
 def password_reset_request():
     form = PasswordResetRequestForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             user = users.get_user(email=form.email.data)
             if user:
@@ -141,7 +141,7 @@ def password_reset_request():
 @auth_blueprint.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     form = PasswordResetForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             user = users.get_user(email=form.email.data)
             if user and user.reset_pwd(token, form.password.data):

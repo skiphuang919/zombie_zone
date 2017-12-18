@@ -54,7 +54,7 @@ def ajax_update_profile():
 @permission_required(Permission.CONFIRMED)
 def update_password():
     form = ChangePwdForm()
-    if request.method == 'POST':
+    if form.is_submitted():
         if form.validate_on_submit():
             try:
                 users.change_pwd(form.new_password.data)
