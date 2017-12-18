@@ -64,7 +64,7 @@ def my_posts():
     return render_template('posts/my_posts.html', posts=c_posts, top_title='My posts')
 
 
-@posts_blueprint.route('/post_detail/<post_id>')
+@posts_blueprint.route('/post_detail/<post_id>', methods=['GET', 'POST'])
 def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     back_endpoint = session.get('from_endpoint', 'main.index')
