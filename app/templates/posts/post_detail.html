@@ -5,7 +5,30 @@
         <span class="float_right">{{ moment(post.timestamp).fromNow() }}</span>
         <span>{{  post.author.name}}</span>
     </div>
-    <div class="post_detail">{{ post.body_html|safe }}</div>
+    <div class="post_detail">
+        <div class="psot_body">
+            {{ post.body_html|safe }}
+        </div>
+        <div class="post_cmt">
+            <h4>Comment</h4>
+            <form method="post">
+                {{ form.hidden_tag() }}
+                {{ form.body(rows="3") }}
+                <div class="weui-flex">
+                    <div class="weui-flex__item">
+                        <img class="weui-vcode-img captcha_img" src="data:image/gif;base64,{{ captcha_stm}}">
+                    </div>
+                    <div class="weui-flex__item">
+                        {{ form.captcha(placeholder="enter captcha" ,maxlength="4") }}
+                    </div>
+                    <div class="weui-flex__item text_right">
+                        <a href="javascript:void (0)" class="weui-btn weui-btn_mini weui-btn_primary update_act">Save</a>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
     <div class="weui-btn-area">
         <a href="{{ url_for(back_endpoint) }}" class="weui-btn weui-btn_plain-primary">Back</a>
     </div>

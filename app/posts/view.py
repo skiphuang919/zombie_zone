@@ -3,9 +3,9 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, c
 from . import posts_blueprint
 from .form import PostForm, CommentForm
 from ..lib import users, post
-from flask_login import current_user
 from ..wrap import permission_required
 from app.model import Permission
+from ..lib.utils import Captcha
 
 
 @posts_blueprint.route('/write_post', methods=['GET', 'POST'])
@@ -16,8 +16,7 @@ def write_post():
         if form.validate_on_submit():
             try:
                 post.write_blog(title=form.title.data,
-                                content=form.body.data,
-                                author=current_user._get_current_object())
+                                content=form.body.data)
             except:
                 current_app.logger.error(traceback.format_exc())
             else:
@@ -69,9 +68,28 @@ def my_posts():
 def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
     back_endpoint = session.get('from_endpoint', 'main.index')
+
+    comment_form = CommentForm()
+    if comment_form.is_submitted():
+        if comment_form.validate_on_submit():
+            try:
+                post.add_comment(post_id=post_id,
+                                 content=comment_form.body.data)
+            except:
+                current_app.logger.error(traceback.format_exc())
+            else:
+                flash('comment successfully', category='info')
+                return redirect(url_for('posts.post_detail', post_id=post_id))
+        warn_msg = comment_form.get_one_err_msg() or 'commit comment failed.'
+        flash(warn_msg, category='warn')
+
+    captcha = Captcha()
+    captcha_stm = captcha.generate_captcha_stream()
     return render_template('posts/post_detail.html',
                            post=post_obj,
+                           form=comment_form,
                            top_title='Post Detail',
+                           captcha_stm=captcha_stm,
                            back_endpoint=back_endpoint)
 
 

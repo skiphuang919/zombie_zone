@@ -1,15 +1,15 @@
 from .. import db
 from tools import current_utc_time
-from ..model import Posts
+from ..model import Posts, Comments
 from flask import current_app, abort
 from flask_login import current_user
 
 
-def write_blog(title, content, author):
+def write_blog(title, content):
     try:
         new_post = Posts(title=title,
                          body=content,
-                         author=author)
+                         author_id=current_user.user_id)
         db.session.add(new_post)
         db.session.commit()
     except:
@@ -55,3 +55,17 @@ def del_post(post_id):
         abort(403)
     db.session.delete(my_post)
     db.session.commit()
+
+
+def add_comment(post_id, content):
+    try:
+        new_cmt = Comments(author_id=current_user.user_id,
+                           post_id=post_id,
+                           body=content)
+        db.session.add(new_cmt)
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
+    else:
+        return new_cmt
