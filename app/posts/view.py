@@ -1,5 +1,7 @@
 import traceback
-from flask import render_template, flash, redirect, url_for, request, jsonify, current_app, abort, session
+from flask import render_template, flash, redirect, url_for, request, \
+    jsonify, current_app, session
+from flask_login import current_user
 from . import posts_blueprint
 from .form import PostForm, CommentForm
 from ..lib import users, post
@@ -72,6 +74,10 @@ def post_detail(post_id):
     comment_form = CommentForm()
     if comment_form.is_submitted():
         if comment_form.validate_on_submit():
+            if current_user.is_anonymous:
+                flash('Login first', category='message')
+                return redirect(url_for('posts.post_detail', post_id=post_id))
+
             try:
                 post.add_comment(post_id=post_id,
                                  content=comment_form.body.data)
@@ -83,6 +89,7 @@ def post_detail(post_id):
         warn_msg = comment_form.get_one_err_msg() or 'commit comment failed.'
         flash(warn_msg, category='warn')
 
+    comment_form.captcha.data = ''
     captcha = Captcha()
     captcha_stm = captcha.generate_captcha_stream()
     return render_template('posts/post_detail.html',
