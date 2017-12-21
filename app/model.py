@@ -49,6 +49,10 @@ class Users(db.Model, UserMixin):
                             backref='author',
                             lazy='dynamic')
 
+    comments = db.relationship('Comments',
+                               backref='author',
+                               lazy='dynamic')
+
     def __init__(self, **kwargs):
         super(Users, self).__init__(**kwargs)
 

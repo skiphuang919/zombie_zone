@@ -1,6 +1,7 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 {% block page_content %}
-    <div class="post_d_title">{{ post.title }}</div class="post_d_title">
+    <div class="post_d_title">{{ post.title }}</div>
     <div class="post_d_meta">
         <span class="float_right">{{ moment(post.timestamp).fromNow() }}</span>
         <span>{{  post.author.name}}</span>
@@ -10,20 +11,101 @@
         <div class="post_body">
             {{ post.body_html|safe }}
         </div>
-        <div class="post_cmt">
-
-                {{ form.hidden_tag() }}
-                <h4>Comment</h4>
-                {{ form.body(rows="4", class="form-control") }}
-                <h4>Captcha</h4>
-                <img class="cmt_captcha_img captcha_img " src="data:image/gif;base64,{{ captcha_stm}}">
-                {{ form.captcha(class='form-control captcha_input', placeholder="enter captcha" ,maxlength="4") }}
-
+    </div>
+    <ul class="cmt_list">
+        <li id="cmt_demo_li" style="display: none">
+            <div class="cmt_thumbnail">
+                <img width="100%" class="thumb_img" src="">
+            </div>
+            <div class="cmt_body_div">
+                <div class="cmt_body_head">
+                    <span class="cmt_author">kevin huang</span>
+                    <span class="cmt_time">A days ago</span>
+                </div>
+                <div class="cmt_body_content">it is cool!</div>
+            </div>
+        </li>
+    </ul>
+    <div class="pagination_div" style="display: none">
+        <div class="weui-btn-area">
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <a href="javascript:void (0)" data-p_num='1' class="weui-btn weui-btn_mini weui-btn_default page_btn prev_btn">← Prev</a>
+                </div>
+                <div class="weui-flex__item text_right">
+                    <a href="javascript:void (0)" data-p_num='1' class="weui-btn weui-btn_mini weui-btn_default page_btn next_btn">Next →</a>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="post_cmt">
+        {{ form.hidden_tag() }}
+        <h4>Comment</h4>
+        {{ form.body(rows="4", class="form-control") }}
+        <h4>Captcha</h4>
+        <img class="cmt_captcha_img captcha_img " src="data:image/gif;base64,{{ captcha_stm}}">
+        {{ form.captcha(class='form-control captcha_input', placeholder="enter captcha" ,maxlength="4") }}
     </div>
     <div class="weui-btn-area">
         {{ form.submit(class="weui-btn weui-btn_primary" ) }}
         <a href="{{ url_for(back_endpoint) }}" class="weui-btn weui-btn_default">Back</a>
     </div>
     </form>
+    <script>
+        $(document).ready(function () {
+            get_post_cmt(1);
+            $('.page_btn').bind('click', function () {
+                go_to_page(this)
+            })
+        });
+
+        function go_to_page(obj) {
+            var page_num = $(obj).attr('data-p_num');
+            get_post_cmt(page_num)
+        }
+
+        function get_post_cmt(page_num) {
+            $.ajax({
+                type: 'GET',
+                url: '/posts/_get_post_cmt',
+                dataType: 'json',
+                data: {'post_id': '{{ post.post_id }}', 'page':  page_num},
+                success: function (data) {
+                    // handle page info
+                    var page_info = data.data.paginate_info;
+                    if(page_info.pages > 1){
+                        $('.pagination_div').show();
+
+                        if(page_info.has_prev){
+                            $('.prev_btn').attr('data-p_num', page_info.prev_num).show();
+                        }else {
+                            $('.prev_btn').hide();
+                        }
+
+                        if(page_info.has_next){
+                            $('.next_btn').attr('data-p_num', page_info.next_num).show()
+                        }else {
+                            $('.next_btn').hide();
+                        }
+                    }
+
+                    // handle comment
+                    var cmt_list = data.data.cmt_list;
+                    var $cmt_list = $('.cmt_list');
+                    $cmt_list.find('.p_comment').remove();
+                    $.each(cmt_list, function (index, element) {
+                        var $new_cmt = $('#cmt_demo_li').clone();
+                        $new_cmt.addClass('p_comment');
+                        $new_cmt.prop('id', element.comment_id);
+                        $new_cmt.find('.thumb_img').attr('src', element.head_img_url);
+                        $new_cmt.find('.cmt_author').text(element.author);
+                        $new_cmt.find('.cmt_time').text(element.timestamp);
+                        $new_cmt.find('.cmt_body_content').html(element.body_html);
+                        $new_cmt.css({'display': 'block'});
+                        $cmt_list.append($new_cmt)
+                    });
+                }
+            })
+        }
+</script>
 {% endblock %}

@@ -337,3 +337,42 @@ body{
     display: inline-block;
     width: 30%;
 }
+
+.post_cmt{
+    padding: 20px 15px;
+}
+
+.cmt_list{
+    padding: 10px 15px;
+    list-style: none;
+}
+
+.cmt_list li{
+    min-height: 120px;
+    padding-top: 15px;
+}
+
+.cmt_thumbnail{
+    position: absolute;
+    width: 50px;
+}
+
+.cmt_body_div{
+    margin-left: 60px;
+}
+
+.cmt_time{
+    float: right;
+}
+
+.cmt_author{
+    color: white;
+    background-color: #586C94;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.cmt_body_content{
+    padding-top: 5px;
+    overflow: auto;
+}

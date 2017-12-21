@@ -25,7 +25,7 @@ def get_post_by_id(post_id):
 
 def get_paginate_posts(page_num):
     return Posts.query.order_by(Posts.timestamp.desc()).\
-        paginate(page=page_num, per_page=current_app.config['POSTS_PER_PAGE'], error_out=False)
+        paginate(page=page_num, per_page=current_app.config.get('POSTS_PER_PAGE', 10), error_out=False)
 
 
 def update_post(post_id, title=None, body=None):
@@ -69,3 +69,8 @@ def add_comment(post_id, content):
         raise
     else:
         return new_cmt
+
+
+def get_paginate_cmt(post_id, page_num):
+    return Comments.query.filter_by(post_id=post_id).order_by(Comments.timestamp.desc()).\
+        paginate(page=page_num, per_page=current_app.config.get('COMMENTS_PER_PAGE', 10), error_out=False)

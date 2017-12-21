@@ -4,7 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, \
 from flask_login import current_user
 from . import posts_blueprint
 from .form import PostForm, CommentForm
-from ..lib import users, post
+from ..lib import users, post, tools
 from ..wrap import permission_required
 from app.model import Permission
 from ..lib.utils import Captcha
@@ -107,6 +107,40 @@ def ajax_delete_post():
     post_id = request.form.get('post_id')
     try:
         post.del_post(post_id)
+    except:
+        current_app.logger.error(traceback.format_exc())
+    else:
+        result['status'] = 0
+        result['msg'] = 'success'
+    return jsonify(result)
+
+
+@posts_blueprint.route('/_get_post_cmt')
+def get_post_cmt():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    post_id = request.args.get('post_id')
+    page = request.args.get('page', 1)
+    print page
+    try:
+        page = int(page)
+        cmt_pagination = post.get_paginate_cmt(post_id=post_id, page_num=page)
+        paginate_info = dict()
+        paginate_info['has_prev'] = cmt_pagination.has_prev
+        paginate_info['has_next'] = cmt_pagination.has_next
+        paginate_info['prev_num'] = cmt_pagination.prev_num
+        paginate_info['next_num'] = cmt_pagination.next_num
+        paginate_info['pages'] = cmt_pagination.pages
+
+        cmt_list = [{'comment_id': item.comment_id,
+                     'author': item.author.name,
+                     'body_html': item.body_html,
+                     'head_img_url': item.author.head_img_url,
+                     'timestamp': item.timestamp} for item in cmt_pagination.items]
+        result['data'] = {
+            'paginate_info': paginate_info,
+            'cmt_list': cmt_list
+        }
+        print result['data']['paginate_info']
     except:
         current_app.logger.error(traceback.format_exc())
     else:
