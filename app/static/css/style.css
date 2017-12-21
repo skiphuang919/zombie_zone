@@ -350,6 +350,7 @@ body{
 .cmt_list li{
     min-height: 120px;
     padding-top: 15px;
+    border-bottom: 1px solid #d9d9d9;
 }
 
 .cmt_thumbnail{
