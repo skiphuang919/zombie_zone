@@ -187,6 +187,10 @@ class Posts(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     disabled = db.Column(db.Integer, default=0)
 
+    comments = db.relationship('Comments',
+                               backref='post',
+                               lazy='dynamic')
+
     @staticmethod
     def on_changed_body(target, value, old_value, initiator):
         """

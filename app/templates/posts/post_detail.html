@@ -12,6 +12,9 @@
             {{ post.body_html|safe }}
         </div>
     </div>
+    {% if cmt_count>0 %}
+        <div class="cmt_total">Total: {{ cmt_count }}</div>
+    {% endif %}
     <ul class="cmt_list">
         <li id="cmt_demo_li" style="display: none">
             <div class="cmt_thumbnail">
@@ -40,9 +43,9 @@
     </div>
     <div class="post_cmt">
         {{ form.hidden_tag() }}
-        <h4>Comment</h4>
+        <h4>comment</h4>
         {{ form.body(rows="4", class="form-control") }}
-        <h4>Captcha</h4>
+        <h4>captcha</h4>
         <img class="cmt_captcha_img captcha_img " src="data:image/gif;base64,{{ captcha_stm}}">
         {{ form.captcha(class='form-control captcha_input', placeholder="enter captcha" ,maxlength="4") }}
     </div>
@@ -99,7 +102,7 @@
                         $new_cmt.prop('id', element.comment_id);
                         $new_cmt.find('.thumb_img').attr('src', element.head_img_url);
                         $new_cmt.find('.cmt_author').text(element.author);
-                        $new_cmt.find('.cmt_time').text(element.timestamp);
+                        $new_cmt.find('.cmt_time').text(moment(element.timestamp).fromNow());
                         $new_cmt.find('.cmt_body_content').html(element.body_html);
                         $new_cmt.css({'display': 'block'});
                         $cmt_list.append($new_cmt)

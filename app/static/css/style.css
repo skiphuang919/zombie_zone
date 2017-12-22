@@ -377,3 +377,12 @@ body{
     padding-top: 5px;
     overflow: auto;
 }
+
+.cmt_total{
+    border-bottom: 1px solid #d9d9d9;
+    margin-left: 15px;
+    margin-right: 15px;
+    text-align: right;
+    padding-top: 15px;
+    color: #9b9b9b;
+}

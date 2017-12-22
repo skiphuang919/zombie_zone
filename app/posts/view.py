@@ -94,6 +94,7 @@ def post_detail(post_id):
     captcha_stm = captcha.generate_captcha_stream()
     return render_template('posts/post_detail.html',
                            post=post_obj,
+                           cmt_count=post_obj.comments.count(),
                            form=comment_form,
                            top_title='Post Detail',
                            captcha_stm=captcha_stm,
@@ -120,16 +121,17 @@ def get_post_cmt():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     post_id = request.args.get('post_id')
     page = request.args.get('page', 1)
-    print page
     try:
         page = int(page)
         cmt_pagination = post.get_paginate_cmt(post_id=post_id, page_num=page)
+
         paginate_info = dict()
         paginate_info['has_prev'] = cmt_pagination.has_prev
         paginate_info['has_next'] = cmt_pagination.has_next
         paginate_info['prev_num'] = cmt_pagination.prev_num
         paginate_info['next_num'] = cmt_pagination.next_num
         paginate_info['pages'] = cmt_pagination.pages
+        paginate_info['total'] = cmt_pagination.total
 
         cmt_list = [{'comment_id': item.comment_id,
                      'author': item.author.name,
@@ -140,7 +142,6 @@ def get_post_cmt():
             'paginate_info': paginate_info,
             'cmt_list': cmt_list
         }
-        print result['data']['paginate_info']
     except:
         current_app.logger.error(traceback.format_exc())
     else:
