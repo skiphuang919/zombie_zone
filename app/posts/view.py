@@ -134,6 +134,7 @@ def get_post_cmt():
         paginate_info['total'] = cmt_pagination.total
 
         cmt_list = [{'comment_id': item.comment_id,
+                     'status': item.disabled,
                      'author': item.author.name,
                      'body_html': item.body_html,
                      'head_img_url': item.author.head_img_url,
@@ -148,3 +149,31 @@ def get_post_cmt():
         result['status'] = 0
         result['msg'] = 'success'
     return jsonify(result)
+
+
+@posts_blueprint.route('/_modify_comment_status')
+@permission_required(Permission.ADMINISTRATOR)
+def modify_comment_status():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    comment_id = request.args.get('comment_id')
+    status = request.args.get('status')
+
+    if not comment_id:
+        result['msg'] = 'missing comment_id'
+        return result
+    if status not in ('disabled', 'enabled'):
+        result['msg'] = 'invalid status'
+        return result
+
+    try:
+        comment_obj = post.update_comment_status(comment_id, status)
+    except:
+        current_app.logger.error(traceback.format_exc())
+    else:
+        result['status'] = 0
+        result['msg'] = 'success'
+        result['data'] = {'status': comment_obj.disabled}
+    return jsonify(result)
+
+
+

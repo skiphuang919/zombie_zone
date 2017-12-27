@@ -386,3 +386,11 @@ body{
     padding-top: 15px;
     color: #9b9b9b;
 }
+
+.cmt_ctr_btn{
+    color: white;
+    background-color: darkred;
+    padding: 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}

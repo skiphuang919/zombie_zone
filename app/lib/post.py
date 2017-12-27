@@ -72,5 +72,19 @@ def add_comment(post_id, content):
 
 
 def get_paginate_cmt(post_id, page_num):
-    return Comments.query.filter_by(post_id=post_id).order_by(Comments.timestamp.desc()).\
+    sql = Comments.query.filter_by(post_id=post_id)
+    if current_user.is_anonymous or not current_user.is_administrator:
+        sql = sql.filter_by(disabled=0)
+    return sql.order_by(Comments.timestamp.desc()).\
         paginate(page=page_num, per_page=current_app.config.get('COMMENTS_PER_PAGE', 10), error_out=False)
+
+
+def update_comment_status(comment_id, status):
+    try:
+        comment_obj = Comments.query.get_or_404(comment_id)
+        comment_obj.disabled = 1 if status == 'disabled' else 0
+        db.session.commit()
+    except:
+        db.session.rollback()
+        raise
+    return comment_obj

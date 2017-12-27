@@ -189,7 +189,6 @@
                     $.ajax({
                          type: 'GET',
                          url: '/auth/_change_captcha',
-                         dataType: 'json',
                          success: function (data) {
                              $this.attr("src", "data:image/gif;base64,"+data['data']);
                          }

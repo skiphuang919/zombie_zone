@@ -24,6 +24,9 @@
                 <div class="cmt_body_head">
                     <span class="cmt_author">kevin huang</span>
                     <span class="cmt_time">A days ago</span>
+                    {% if current_user.is_administrator %}
+                        <a class="cmt_ctr_btn" onclick="modify_cmt_status(this)">disable</a>
+                    {% endif %}
                 </div>
                 <div class="cmt_body_content">it is cool!</div>
             </div>
@@ -59,7 +62,7 @@
             get_post_cmt(1);
             $('.page_btn').bind('click', function () {
                 go_to_page(this)
-            })
+            });
         });
 
         function go_to_page(obj) {
@@ -67,11 +70,24 @@
             get_post_cmt(page_num)
         }
 
+        function modify_cmt_status(obj) {
+            var $obj = $(obj);
+            $.ajax({
+                type: 'GET',
+                url: '/posts/_modify_comment_status',
+                data: {'comment_id': $obj.parents('li').prop('id'), 'status': $obj.attr('data-status') == '1'? 'enabled': 'disabled'},
+                success: function (data) {
+                    if(data.status == 0){
+                    $obj.attr('data-status', data.data.status).text(data.data.status == 1 ? 'enable': 'disable')
+                }
+                }
+            })
+        }
+
         function get_post_cmt(page_num) {
             $.ajax({
                 type: 'GET',
                 url: '/posts/_get_post_cmt',
-                dataType: 'json',
                 data: {'post_id': '{{ post.post_id }}', 'page':  page_num},
                 success: function (data) {
                     // handle page info
@@ -100,6 +116,8 @@
                         var $new_cmt = $('#cmt_demo_li').clone();
                         $new_cmt.addClass('p_comment');
                         $new_cmt.prop('id', element.comment_id);
+                        $new_cmt.find('.cmt_ctr_btn').attr('data-status', element.status).
+                            text(element.status == 1 ? 'enable': 'disable');
                         $new_cmt.find('.thumb_img').attr('src', element.head_img_url);
                         $new_cmt.find('.cmt_author').text(element.author);
                         $new_cmt.find('.cmt_time').text(moment(element.timestamp).fromNow());
