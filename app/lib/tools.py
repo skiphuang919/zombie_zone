@@ -90,7 +90,9 @@ def markdown_to_safe_html(md, content_type):
         ['a', 'abbr', 'acronym', 'b', 'code', 'em', 'i', 'strong']
 
     # convert markdown to html
-    origin_html = markdown(md, output_format='html')
+    origin_html = markdown(md, output_format='html', extensions=['markdown.extensions.extra',
+                                                                 'markdown.extensions.codehilite',
+                                                                 'markdown.extensions.toc'])
 
     # remove the tag not in allowed_tags list
     filtered_html = bleach.clean(origin_html, tags=allowed_tags, strip=True)
