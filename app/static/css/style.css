@@ -294,6 +294,12 @@ body{
     padding-left: 15px;
 }
 
+.post_detail pre{
+    color: snow;
+    background-color: #353535;
+}
+
+
 .post_d_title{
     font-size: 20px;
     padding: 15px;
