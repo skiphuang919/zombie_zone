@@ -258,6 +258,12 @@ body{
     padding-left: 15px;
 }
 
+.flask-pagedown-preview pre{
+    padding-left: 15px;
+    color: snow;
+    background-color: #353535;
+}
+
 .card_body{
     padding: 15px;
 }
