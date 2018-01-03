@@ -24,8 +24,7 @@ def configure_celery(app, celery_app):
     updates the rest of the Celery config from the Flask config and then
     creates a subclass of the task that wraps the task execution in an application context.
     """
-    app.config.update({'backend': app.config['CELERY_RESULT_BACKEND'],
-                       'broker': app.config['CELERY_BROKER_URL']})
+
     celery_app.conf.update(app.config)
 
     task_base = celery.Task
