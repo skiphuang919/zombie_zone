@@ -185,7 +185,7 @@ class Posts(db.Model):
     body_html = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    disabled = db.Column(db.Integer, default=0)
+    status = db.Column(db.Integer, default=0)
 
     comments = db.relationship('Comments',
                                backref='post',
