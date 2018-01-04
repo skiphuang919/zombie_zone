@@ -23,12 +23,13 @@ def get_post_by_id(post_id):
     return Posts.query.get_or_404(post_id)
 
 
-def get_paginate_posts(page_num):
-    return Posts.query.order_by(Posts.timestamp.desc()).\
+def get_paginate_posts(page_num, status=1):
+    return Posts.query.filter_by(status=status).\
+        order_by(Posts.timestamp.desc()).\
         paginate(page=page_num, per_page=current_app.config.get('POSTS_PER_PAGE', 10), error_out=False)
 
 
-def update_post(post_id, title=None, body=None):
+def update_post(post_id, title=None, body=None, status=None):
     post_obj = Posts.query.get_or_404(post_id)
 
     if str(post_obj.author_id) != str(current_user.user_id):
@@ -41,6 +42,9 @@ def update_post(post_id, title=None, body=None):
             _commit = True
         if body is not None:
             post_obj.body = body
+            _commit = True
+        if status is not None:
+            post_obj.status = status
             _commit = True
         if _commit:
             post_obj.timestamp = current_utc_time()

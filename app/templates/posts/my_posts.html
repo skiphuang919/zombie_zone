@@ -5,6 +5,11 @@
             <div class="weui-form-preview preview_card" id="{{ post.post_id }}">
                 <div class="card_body">
                     <a href="{{ url_for('posts.post_detail', post_id=post.post_id) }}"><h3 class="post_title">{{ post.title }}</h3></a>
+                    {% if post.status == 0 %}
+                        <a href="javascript:confirm_change_status('{{ post.post_id }}')" data-status=0 class="weui-btn weui-btn_mini weui-btn_warn pub_btn">Private</a>
+                    {% else %}
+                        <a href="javascript:confirm_change_status('{{ post.post_id }}')" data-status=1 class="weui-btn weui-btn_mini weui-btn_primary pub_btn">Public</a>
+                    {% endif %}
                     <div class="post_data"><span>{{ post.author.name }}</span><span class="float_right">{{ moment(post.timestamp).fromNow() }}</span></div>
                     <div class="post_content">
                         {{ post.body_html|truncate(180, True)|prettify|safe}}
@@ -12,7 +17,7 @@
                 </div>
                 <div class="weui-form-preview__ft">
                     <a class="weui-form-preview__btn weui-form-preview__btn_default"  href="javascript:void (0)" onclick="confirm_del('{{ post.post_id }}')">Del</a>
-                    <a type="submit" class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('posts.edit_post', post_id=post.post_id) }}">Edit</a>
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('posts.edit_post', post_id=post.post_id) }}">Edit</a>
                 </div>
             </div>
         {% endfor %}
@@ -39,11 +44,21 @@
             });
             $dialog.show()
         }
+        function confirm_change_status(post_id) {
+            var $dialog = $('#ajax_dialog2');
+            var current_status = parseInt($('#'+post_id+' .pub_btn').attr('data-status'));
+            var msg = current_status==0? 'Are you sure to publish it?': 'Are you sure to set it private?';
+            var des_status = current_status==0? 1:0;
+            $dialog.find('.weui-dialog__bd').text(msg);
+            $dialog.find('.weui-dialog__btn_primary').on('click', function(){
+                ajax_change_post_status(post_id, des_status);
+            });
+            $dialog.show()
+        }
         function ajax_del_post(post_id) {
             $.ajax({
                 type: 'POST',
                 url: '/posts/_del_post',
-                dataType: 'json',
                 data: {'post_id': post_id,
                     'a': Math.random()},
                 success: function (data) {
@@ -51,6 +66,27 @@
                         $("#"+post_id).remove();
                         if($('.preview_card').length==0){
                             window.location="{{ url_for('user.my_zone') }}"
+                        }
+                    }
+                }
+            })
+        }
+
+        function ajax_change_post_status(post_id, des_status) {
+            $.ajax({
+                type: 'POST',
+                url: '/posts/_set_post_status',
+                data: {'post_id': post_id, 'des_status': des_status,
+                    'a': Math.random()},
+                success: function (data) {
+                    if(data.status==0){
+                        var $btn = $('#'+post_id+' .pub_btn');
+                        if(des_status==0){
+                            $btn.attr('data-status', des_status).
+                            removeClass('weui-btn_primary').addClass('weui-btn_warn').text('Private')
+                        }else{
+                            $btn.attr('data-status', des_status).
+                            removeClass('weui-btn_warn').addClass('weui-btn_primary').text('Public')
                         }
                     }
                 }

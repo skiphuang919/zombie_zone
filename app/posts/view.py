@@ -116,6 +116,22 @@ def ajax_delete_post():
     return jsonify(result)
 
 
+@posts_blueprint.route('/_set_post_status', methods=['POST'])
+@permission_required(Permission.CONFIRMED)
+def ajax_set_post_status():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    post_id = request.form.get('post_id')
+    des_status = request.form.get('des_status')
+    try:
+        post.update_post(post_id, status=int(des_status))
+    except:
+        current_app.logger.error(traceback.format_exc())
+    else:
+        result['status'] = 0
+        result['msg'] = 'success'
+    return jsonify(result)
+
+
 @posts_blueprint.route('/_get_post_cmt')
 def get_post_cmt():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
