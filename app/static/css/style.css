@@ -401,3 +401,7 @@ body{
     top: 15px;
     right: 15px;
 }
+
+pre code{
+    white-space: pre!important;
+}
