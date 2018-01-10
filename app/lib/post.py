@@ -25,7 +25,7 @@ def get_post_by_id(post_id):
 
 def get_paginate_posts(page_num, status=1):
     return Posts.query.filter_by(status=status).\
-        order_by(Posts.timestamp.desc()).\
+        order_by(Posts.post_id.desc()).\
         paginate(page=page_num, per_page=current_app.config.get('POSTS_PER_PAGE', 10), error_out=False)
 
 
