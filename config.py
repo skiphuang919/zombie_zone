@@ -15,15 +15,16 @@ class Config(object):
     CACHE_REDIS_DB = ''
     CACHE_REDIS_PASSWORD = ''
 
-    BROKER_URL = 'redis://localhost:6379/0'
-    CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+    BROKER_URL = 'amqp://localhost:5672//'
+    CELERY_RESULT_BACKEND = ''
     CELERY_TASK_SERIALIZER = 'json'
 
-    ZOMBIE_ZONE_ADMIN = '492050882@qq.com'
+    ZOMBIE_ZONE_ADMIN = os.getenv('ADMIN', '')
 
     MAIL_SERVER = 'smtp.163.com'
-    MAIL_PORT = 25
-    MAIL_USE_TLS = True
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+
     MAIL_USERNAME = os.getenv('MAIL_USERNAME', '')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD', '')
     MAIL_DEFAULT_SENDER = os.getenv('MAIL_DEFAULT_SENDER', '')
