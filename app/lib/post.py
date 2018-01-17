@@ -92,3 +92,8 @@ def update_comment_status(comment_id, status):
         db.session.rollback()
         raise
     return comment_obj
+
+
+def search_title(title_key):
+    return Posts.query.with_entities(Posts.post_id, Posts.title).\
+        filter(Posts.title.like('%{}%'.format(title_key))).all()

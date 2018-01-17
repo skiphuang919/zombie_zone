@@ -192,4 +192,20 @@ def modify_comment_status():
     return jsonify(result)
 
 
+@posts_blueprint.route('/_search_by_title')
+def search_by_title():
+    result = {'status': -1, 'msg': 'failed', 'data': ''}
+    title_key = request.args.get('title_key')
+    if not title_key:
+        result['msg'] = 'missing title_key value'
+        return result
+
+    try:
+        result['data'] = [{'title': item[1], 'url': url_for('posts.post_detail', post_id=item[0])}
+                          for item in post.search_title(title_key)]
+        result['msg'] = 'success'
+        result['status'] = 0
+    except:
+        current_app.logger.error(traceback.format_exc())
+    return jsonify(result)
 
