@@ -15,7 +15,7 @@
         </form>
         <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">Cancel</a>
     </div>
-    <div class="weui-cells" id="searchResult"></div>
+    <div class="weui-cells" id="searchResult" style="margin-top: 0px"></div>
     <script type="text/javascript" class="searchbar js_show">
     $(function(){
         var $searchBar = $('#searchBar'),
@@ -38,7 +38,6 @@
         $searchText.on('click', function(){
             $searchBar.addClass('weui-search-bar_focusing');
             $searchInput.focus();
-            search_by_title()
         });
         $searchInput
             .on('blur', function () {
@@ -46,6 +45,7 @@
             })
             .on('input', function(){
                 if(this.value.length) {
+                    search_by_title(this.value);
                     $searchResult.show();
                 } else {
                     $searchResult.hide();
@@ -61,13 +61,19 @@
             $searchInput.blur();
         });
         
-        function search_by_title() {
+        function search_by_title(title_key) {
+            $searchResult.empty();
             $.ajax({
                 type: 'GET',
                 url: '/posts/_search_by_title',
-                data: {'title_key': '1'},
+                data: {'title_key': title_key},
                 success: function (data) {
-                    console.log(data)
+                    if(data.status == 0){
+                        var r_data = data.data;
+                        for(var i =0;i<r_data.length;i++){
+                            $searchResult.append('<a class="weui-cell weui-cell_access" href="'+r_data[i].url+'"><div class="weui-cell__bd weui-cell_primary"><p style="margin: 0px">'+r_data[i].title+'</p></div></a>')
+                        }
+                    }
                 }
             })
         }

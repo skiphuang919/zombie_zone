@@ -95,5 +95,5 @@ def update_comment_status(comment_id, status):
 
 
 def search_title(title_key):
-    return Posts.query.with_entities(Posts.post_id, Posts.title).\
+    return Posts.query.with_entities(Posts.post_id, Posts.title).filter(Posts.status == 1).\
         filter(Posts.title.like('%{}%'.format(title_key))).all()
