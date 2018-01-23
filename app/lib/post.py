@@ -95,7 +95,7 @@ def update_comment_status(comment_id, status):
 
 
 def search_title(title_key):
-    @cache.cached(timeout=300, key_prefix='search_title_{}'.format(title_key))
+    @cache.cached(timeout=300, key_prefix=u'search_title_{}'.format(title_key))
     def search_cached():
         return Posts.query.with_entities(Posts.post_id, Posts.title).filter(Posts.status == 1).\
             filter(Posts.title.like(u'%{}%'.format(title_key))).all()
