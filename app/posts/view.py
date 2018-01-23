@@ -200,7 +200,6 @@ def modify_comment_status():
 
 
 @posts_blueprint.route('/_search_by_title')
-@cache.cached(timeout=300)
 def search_by_title():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     title_key = request.args.get('title_key')
