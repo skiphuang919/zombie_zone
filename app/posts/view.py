@@ -4,10 +4,11 @@ from flask import render_template, flash, redirect, url_for, request, \
 from flask_login import current_user
 from . import posts_blueprint
 from .form import PostForm, CommentForm
-from ..lib import users, post, tools
+from ..lib import users, post
 from ..wrap import permission_required
 from app.model import Permission
 from ..lib.utils import Captcha
+from .. import cache
 
 
 @posts_blueprint.route('/write_post', methods=['GET', 'POST'])
@@ -113,6 +114,9 @@ def ajax_delete_post():
     else:
         result['status'] = 0
         result['msg'] = 'success'
+    finally:
+        # expire the index cache
+        cache.delete('index')
     return jsonify(result)
 
 
@@ -129,6 +133,9 @@ def ajax_set_post_status():
     else:
         result['status'] = 0
         result['msg'] = 'success'
+    finally:
+        # expire the index cache
+        cache.delete('index')
     return jsonify(result)
 
 
@@ -193,6 +200,7 @@ def modify_comment_status():
 
 
 @posts_blueprint.route('/_search_by_title')
+@cache.cached(timeout=300)
 def search_by_title():
     result = {'status': -1, 'msg': 'failed', 'data': ''}
     title_key = request.args.get('title_key')
