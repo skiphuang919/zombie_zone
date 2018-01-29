@@ -30,13 +30,13 @@ def write_post():
         flash(warn_msg, category='warn')
 
     return render_template('posts/add_post.html', form=form,
-                           top_title='Write post', back_url=url_for('main.index'))
+                           top_title='Write post', back_url=url_for('posts.my_posts'))
 
 
 @posts_blueprint.route('/edit_post/<post_id>', methods=['GET', 'POST'])
 @permission_required(Permission.CONFIRMED)
 def edit_post(post_id):
-    my_post = post.get_post_by_id(post_id)
+    my_post = post.get_post_by_id(int(post_id))
 
     form = PostForm()
     if form.is_submitted():
@@ -63,14 +63,14 @@ def edit_post(post_id):
 @permission_required(Permission.CONFIRMED)
 def my_posts():
     c_posts = users.get_current_user_post()
-    session['from_endpoint'] = 'posts.my_posts'
+    session['from_url'] = request.url
     return render_template('posts/my_posts.html', posts=c_posts, top_title='My posts')
 
 
 @posts_blueprint.route('/post_detail/<post_id>', methods=['GET', 'POST'])
 def post_detail(post_id):
     post_obj = post.get_post_by_id(post_id)
-    back_endpoint = session.get('from_endpoint', 'main.index')
+    from_url = session.get('from_url', url_for('main.index'))
 
     comment_form = CommentForm()
     if comment_form.is_submitted():
@@ -99,7 +99,7 @@ def post_detail(post_id):
                            form=comment_form,
                            top_title='Post Detail',
                            captcha_stm=captcha_stm,
-                           back_endpoint=back_endpoint)
+                           back_url=from_url)
 
 
 @posts_blueprint.route('/_del_post', methods=['POST'])
