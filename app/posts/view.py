@@ -116,7 +116,7 @@ def ajax_delete_post():
         result['msg'] = 'success'
     finally:
         # expire the index cache
-        cache.delete('index')
+        cache.delete('index_page')
     return jsonify(result)
 
 
@@ -135,7 +135,7 @@ def ajax_set_post_status():
         result['msg'] = 'success'
     finally:
         # expire the index cache
-        cache.delete('index')
+        cache.delete('index_page')
     return jsonify(result)
 
 
