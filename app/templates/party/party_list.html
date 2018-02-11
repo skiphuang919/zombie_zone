@@ -1,30 +1,45 @@
 {% extends "base.html" %}
 {% block page_content %}
-    {% for party_info in party_info_list %}
-        <div class="weui-form-preview preview_card">
-            <div class="weui-form-preview__hd">
-                <div class="weui-form-preview__item">
-                    <label class="weui-form-preview__label">Subject</label>
-                    <em class="weui-form-preview__value">{{ party_info.subject }}</em>
+    {% if party_info_list %}
+
+        {% for party_info in party_info_list %}
+            <div class="weui-form-preview preview_card">
+                <div class="weui-form-preview__hd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">Subject</label>
+                        <em class="weui-form-preview__value">{{ party_info.subject }}</em>
+                    </div>
+                </div>
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">Time</label>
+                        <span class="weui-form-preview__value">{{ party_info.party_time }}</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">Address</label>
+                        <span class="weui-form-preview__value">{{ party_info.address }}</span>
+                    </div>
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">Guys In</label>
+                        <span class="weui-form-preview__value">{{ party_info.participant_count }}/{{ party_info.required_count }}</span>
+                    </div>
+                </div>
+                <div class="weui-form-preview__ft">
+                    <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('party.party_detail', party_id=party_info.party_id) }}">Detail</a>
                 </div>
             </div>
-            <div class="weui-form-preview__bd">
-                <div class="weui-form-preview__item">
-                    <label class="weui-form-preview__label">Time</label>
-                    <span class="weui-form-preview__value">{{ party_info.party_time }}</span>
-                </div>
-                <div class="weui-form-preview__item">
-                    <label class="weui-form-preview__label">Address</label>
-                    <span class="weui-form-preview__value">{{ party_info.address }}</span>
-                </div>
-                <div class="weui-form-preview__item">
-                    <label class="weui-form-preview__label">Guys In</label>
-                    <span class="weui-form-preview__value">{{ party_info.participant_count }}/{{ party_info.required_count }}</span>
-                </div>
+        {% endfor %}
+    {% else %}
+        <div class="weui-msg">
+            <div class="weui-msg__icon-area"><i class="weui-icon-info weui-icon_msg"></i></div>
+            <div class="weui-msg__text-area">
+                <p class="weui-msg__desc">No party.</p>
             </div>
-            <div class="weui-form-preview__ft">
-                <a class="weui-form-preview__btn weui-form-preview__btn_primary" href="{{ url_for('party.party_detail', party_id=party_info.party_id) }}">Detail</a>
+            <div class="weui-msg__opr-area">
+                <p class="weui-btn-area">
+                    <a href="{{ url_for('main.index') }}" class="weui-btn weui-btn_primary">Back</a>
+                </p>
             </div>
         </div>
-    {% endfor %}
+    {% endif %}
 {% endblock %}
